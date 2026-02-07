@@ -1,0 +1,32 @@
+#EXTM3U
+
+# Example 1: Widevine DRM with MPEG-DASH
+#EXTINF:-1 tvg-id="premium1" tvg-logo="https://via.placeholder.com/150" group-title="Premium Movies" drm-scheme="widevine" drm-license-url="https://license.example.com/widevine" stream-format="mpd" tvg-chno="101",Premium Action Movie
+https://stream.example.com/action-movie.mpd
+
+# Example 2: ClearKey DRM for testing
+#EXTINF:-1 tvg-id="test1" tvg-logo="https://via.placeholder.com/150" group-title="Test Channels" drm-scheme="clearkey" drm-key-id="1234567890abcdef1234567890abcdef" drm-key="fedcba0987654321fedcba0987654321" stream-format="mpd" tvg-chno="201",Test ClearKey Channel
+https://stream.example.com/test-clearkey.mpd
+
+# Example 3: PlayReady DRM
+#EXTINF:-1 tvg-id="premium2" tvg-logo="https://via.placeholder.com/150" group-title="Premium Sports" drm-scheme="playready" drm-license-url="https://license.example.com/playready" stream-format="mpd" tvg-chno="102",Premium Sports Channel
+https://stream.example.com/sports.mpd
+
+# Example 4: Regular HLS stream (no DRM)
+#EXTINF:-1 tvg-id="free1" tvg-logo="https://via.placeholder.com/150" group-title="Free Channels" stream-format="hls" tvg-chno="301",Free News Channel
+https://stream.example.com/news.m3u8
+
+# Example 5: Kodi format with Widevine
+#KODIPROP:inputstream.adaptive.license_type=com.widevine.alpha
+#KODIPROP:inputstream.adaptive.license_key=https://license.example.com/widevine|Content-Type=application/octet-stream|R{SSM}|
+#KODIPROP:inputstream.adaptive.manifest_type=mpd
+#EXTINF:-1 tvg-id="kodi1" tvg-logo="https://via.placeholder.com/150" group-title="Kodi Channels" tvg-chno="401",Kodi Widevine Channel
+https://stream.example.com/kodi-channel.mpd
+
+# Example 6: Another ClearKey example
+#EXTINF:-1 tvg-id="test2" tvg-logo="https://via.placeholder.com/150" group-title="Test Channels" drm-scheme="clearkey" drm-key-id="abcdef1234567890abcdef1234567890" drm-key="0987654321fedcba0987654321fedcba" stream-format="mpd" tvg-chno="202",Test ClearKey 2
+https://stream.example.com/test-clearkey-2.mpd
+
+# Example 7: FairPlay DRM (for Apple devices)
+#EXTINF:-1 tvg-id="premium3" tvg-logo="https://via.placeholder.com/150" group-title="Premium Movies" drm-scheme="fairplay" drm-license-url="https://license.example.com/fairplay" stream-format="hls" tvg-chno="103",Premium Drama (FairPlay)
+https://stream.example.com/drama.m3u8

@@ -1,9 +1,11 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { Upload, FileText, CheckCircle, AlertCircle, Play, List, RefreshCw, Edit, X, Save, Trash2, Plus, Trash, Link, Layers } from 'lucide-react';
 
 export default function PlaylistPage() {
+    const router = useRouter();
     const [loading, setLoading] = useState(true);
     const [stats, setStats] = useState(null);
     const [sample, setSample] = useState([]);
@@ -13,6 +15,12 @@ export default function PlaylistPage() {
     // Edit State
     const [editingChannel, setEditingChannel] = useState(null);
     const [editUrl, setEditUrl] = useState('');
+    const [editDrmScheme, setEditDrmScheme] = useState('');
+    const [editDrmLicenseUrl, setEditDrmLicenseUrl] = useState('');
+    const [editDrmKeyId, setEditDrmKeyId] = useState('');
+    const [editDrmKey, setEditDrmKey] = useState('');
+    const [editStreamFormat, setEditStreamFormat] = useState('hls');
+    const [editChannelNumber, setEditChannelNumber] = useState('');
     const [saving, setSaving] = useState(false);
 
     // Delete State
@@ -49,6 +57,7 @@ export default function PlaylistPage() {
     const [showCreatePlaylist, setShowCreatePlaylist] = useState(false);
     const [newPlaylistName, setNewPlaylistName] = useState('');
     const [newPlaylistDesc, setNewPlaylistDesc] = useState('');
+    const [newPlaylistUrl, setNewPlaylistUrl] = useState('');
     const [creatingPlaylist, setCreatingPlaylist] = useState(false);
     const [switchingPlaylist, setSwitchingPlaylist] = useState(null);
     const [deletingPlaylist, setDeletingPlaylist] = useState(null);
@@ -179,7 +188,13 @@ export default function PlaylistPage() {
 
     const startEditing = (channel) => {
         setEditingChannel(channel);
-        setEditUrl(channel.url);
+        setEditUrl(channel.url || '');
+        setEditDrmScheme(channel.drm_scheme || '');
+        setEditDrmLicenseUrl(channel.drm_license_url || '');
+        setEditDrmKeyId(channel.drm_key_id || '');
+        setEditDrmKey(channel.drm_key || '');
+        setEditStreamFormat(channel.stream_format || 'hls');
+        setEditChannelNumber(channel.channel_number || '');
     };
 
     const saveEdit = async () => {
@@ -191,7 +206,16 @@ export default function PlaylistPage() {
             const res = await fetch('/api/playlist/edit', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id: editingChannel.id, url: editUrl })
+                body: JSON.stringify({
+                    id: editingChannel.id,
+                    url: editUrl,
+                    drmScheme: editDrmScheme || null,
+                    drmLicenseUrl: editDrmLicenseUrl || null,
+                    drmKeyId: editDrmKeyId || null,
+                    drmKey: editDrmKey || null,
+                    streamFormat: editStreamFormat || 'hls',
+                    channelNumber: editChannelNumber ? parseInt(editChannelNumber) : null
+                })
             });
 
             const responseData = await res.json();
@@ -199,9 +223,18 @@ export default function PlaylistPage() {
 
             if (res.ok) {
                 // Update local state to reflect change immediately
-                setSample(prev => prev.map(ch => ch.id === editingChannel.id ? { ...ch, url: editUrl } : ch));
+                setSample(prev => prev.map(ch => ch.id === editingChannel.id ? {
+                    ...ch,
+                    url: editUrl,
+                    drm_scheme: editDrmScheme || null,
+                    drm_license_url: editDrmLicenseUrl || null,
+                    drm_key_id: editDrmKeyId || null,
+                    drm_key: editDrmKey || null,
+                    stream_format: editStreamFormat || 'hls',
+                    channel_number: editChannelNumber ? parseInt(editChannelNumber) : null
+                } : ch));
                 setEditingChannel(null);
-                alert('URL updated successfully!');
+                alert('Channel updated successfully!');
             } else {
                 console.error('Edit failed:', responseData);
                 alert('Failed to update URL: ' + (responseData.error || 'Unknown error'));
@@ -303,25 +336,76 @@ export default function PlaylistPage() {
 
         setCreatingPlaylist(true);
         try {
+            // Create the playlist
             const res = await fetch('/api/playlists', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     name: newPlaylistName.trim(),
-                    description: newPlaylistDesc.trim()
+                    description: newPlaylistDesc.trim(),
+                    sourceUrl: newPlaylistUrl.trim() || null
                 })
             });
 
             const data = await res.json();
 
-            if (res.ok) {
+            if (!res.ok) {
+                alert('Failed to create playlist: ' + (data.error || 'Unknown error'));
+                setCreatingPlaylist(false);
+                return;
+            }
+
+            const createdPlaylist = data.playlist;
+
+            // If a source URL was provided, automatically import from it
+            if (newPlaylistUrl.trim()) {
+                try {
+                    console.log('Fetching playlist from URL:', newPlaylistUrl);
+
+                    // Fetch the M3U content from the URL
+                    const urlResponse = await fetch(newPlaylistUrl.trim());
+                    if (!urlResponse.ok) {
+                        throw new Error(`Failed to fetch playlist: ${urlResponse.statusText}`);
+                    }
+
+                    const content = await urlResponse.text();
+                    console.log('Fetched content length:', content.length);
+
+                    // Import the content to the newly created playlist
+                    const importRes = await fetch('/api/playlists/import', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            playlistId: createdPlaylist.id,
+                            content: content,
+                            sourceUrl: newPlaylistUrl.trim()
+                        })
+                    });
+
+                    const importData = await importRes.json();
+
+                    if (importRes.ok) {
+                        await fetchPlaylists();
+                        setShowCreatePlaylist(false);
+                        setNewPlaylistName('');
+                        setNewPlaylistDesc('');
+                        setNewPlaylistUrl('');
+                        alert(`Playlist "${newPlaylistName}" created and imported ${importData.count} channels successfully!`);
+                    } else {
+                        alert(`Playlist created but import failed: ${importData.error || 'Unknown error'}`);
+                    }
+                } catch (importError) {
+                    console.error('Import error:', importError);
+                    alert(`Playlist created but failed to import from URL: ${importError.message}`);
+                }
+            } else {
+                // No URL provided, just show success
                 await fetchPlaylists();
                 setShowCreatePlaylist(false);
                 setNewPlaylistName('');
                 setNewPlaylistDesc('');
+                setNewPlaylistUrl('');
                 alert(`Playlist "${newPlaylistName}" created successfully!`);
-            } else {
-                alert('Failed to create playlist: ' + (data.error || 'Unknown error'));
             }
         } catch (error) {
             console.error('Create playlist error:', error);
@@ -636,6 +720,13 @@ export default function PlaylistPage() {
                                                     <td>
                                                         <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                                                             <button
+                                                                onClick={() => router.push(`/player?id=${ch.id}`)}
+                                                                title="Play Channel"
+                                                                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#10b981' }}
+                                                            >
+                                                                <Play size={16} fill="#10b981" />
+                                                            </button>
+                                                            <button
                                                                 onClick={() => startEditing(ch)}
                                                                 title="Edit URL"
                                                                 style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary)' }}
@@ -695,11 +786,13 @@ export default function PlaylistPage() {
                         borderRadius: '0.5rem',
                         padding: '1.5rem',
                         width: '100%',
-                        maxWidth: '28rem',
+                        maxWidth: '42rem',
+                        maxHeight: '90vh',
+                        overflow: 'auto',
                         boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
                     }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                            <h3 style={{ fontSize: '1.125rem', fontWeight: 'bold', color: '#1f2937' }}>Edit Stream URL</h3>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                            <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#1f2937' }}>Edit Channel</h3>
                             <button
                                 onClick={() => setEditingChannel(null)}
                                 style={{
@@ -714,6 +807,7 @@ export default function PlaylistPage() {
                             </button>
                         </div>
 
+                        {/* Channel Name (Read-only) */}
                         <div style={{ marginBottom: '1rem' }}>
                             <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 500, color: '#374151', marginBottom: '0.25rem' }}>
                                 Channel Name
@@ -723,9 +817,10 @@ export default function PlaylistPage() {
                             </div>
                         </div>
 
-                        <div style={{ marginBottom: '1.5rem' }}>
+                        {/* Stream URL */}
+                        <div style={{ marginBottom: '1rem' }}>
                             <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 500, color: '#374151', marginBottom: '0.25rem' }}>
-                                Stream URL
+                                Stream URL *
                             </label>
                             <input
                                 type="text"
@@ -739,13 +834,160 @@ export default function PlaylistPage() {
                                     fontSize: '0.875rem',
                                     outline: 'none'
                                 }}
-                                placeholder="http://..."
-                                onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
-                                onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
+                                placeholder="https://..."
                             />
                         </div>
 
-                        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
+                        {/* Stream Format */}
+                        <div style={{ marginBottom: '1rem' }}>
+                            <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 500, color: '#374151', marginBottom: '0.25rem' }}>
+                                Stream Format
+                            </label>
+                            <select
+                                value={editStreamFormat}
+                                onChange={(e) => setEditStreamFormat(e.target.value)}
+                                style={{
+                                    width: '100%',
+                                    padding: '0.5rem',
+                                    border: '1px solid #d1d5db',
+                                    borderRadius: '0.375rem',
+                                    fontSize: '0.875rem',
+                                    outline: 'none',
+                                    backgroundColor: 'white'
+                                }}
+                            >
+                                <option value="hls">HLS (.m3u8)</option>
+                                <option value="mpd">MPEG-DASH (.mpd)</option>
+                                <option value="rtmp">RTMP</option>
+                                <option value="ts">Transport Stream (.ts)</option>
+                            </select>
+                        </div>
+
+                        {/* Channel Number */}
+                        <div style={{ marginBottom: '1rem' }}>
+                            <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 500, color: '#374151', marginBottom: '0.25rem' }}>
+                                Channel Number (Optional)
+                            </label>
+                            <input
+                                type="number"
+                                value={editChannelNumber}
+                                onChange={(e) => setEditChannelNumber(e.target.value)}
+                                style={{
+                                    width: '100%',
+                                    padding: '0.5rem',
+                                    border: '1px solid #d1d5db',
+                                    borderRadius: '0.375rem',
+                                    fontSize: '0.875rem',
+                                    outline: 'none'
+                                }}
+                                placeholder="e.g., 101"
+                            />
+                        </div>
+
+                        {/* DRM Section */}
+                        <div style={{ marginTop: '1.5rem', marginBottom: '1rem', paddingTop: '1rem', borderTop: '1px solid #e5e7eb' }}>
+                            <h4 style={{ fontSize: '1rem', fontWeight: 600, color: '#1f2937', marginBottom: '1rem' }}>
+                                DRM Configuration (Optional)
+                            </h4>
+
+                            {/* DRM Scheme */}
+                            <div style={{ marginBottom: '1rem' }}>
+                                <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 500, color: '#374151', marginBottom: '0.25rem' }}>
+                                    DRM Scheme
+                                </label>
+                                <select
+                                    value={editDrmScheme}
+                                    onChange={(e) => setEditDrmScheme(e.target.value)}
+                                    style={{
+                                        width: '100%',
+                                        padding: '0.5rem',
+                                        border: '1px solid #d1d5db',
+                                        borderRadius: '0.375rem',
+                                        fontSize: '0.875rem',
+                                        outline: 'none',
+                                        backgroundColor: 'white'
+                                    }}
+                                >
+                                    <option value="">None</option>
+                                    <option value="widevine">Widevine</option>
+                                    <option value="playready">PlayReady</option>
+                                    <option value="fairplay">FairPlay</option>
+                                    <option value="clearkey">ClearKey</option>
+                                </select>
+                            </div>
+
+                            {/* DRM License URL */}
+                            {editDrmScheme && editDrmScheme !== 'clearkey' && (
+                                <div style={{ marginBottom: '1rem' }}>
+                                    <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 500, color: '#374151', marginBottom: '0.25rem' }}>
+                                        DRM License URL
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={editDrmLicenseUrl}
+                                        onChange={(e) => setEditDrmLicenseUrl(e.target.value)}
+                                        style={{
+                                            width: '100%',
+                                            padding: '0.5rem',
+                                            border: '1px solid #d1d5db',
+                                            borderRadius: '0.375rem',
+                                            fontSize: '0.875rem',
+                                            outline: 'none'
+                                        }}
+                                        placeholder="https://..."
+                                    />
+                                </div>
+                            )}
+
+                            {/* ClearKey Fields */}
+                            {editDrmScheme === 'clearkey' && (
+                                <>
+                                    <div style={{ marginBottom: '1rem' }}>
+                                        <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 500, color: '#374151', marginBottom: '0.25rem' }}>
+                                            Key ID
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={editDrmKeyId}
+                                            onChange={(e) => setEditDrmKeyId(e.target.value)}
+                                            style={{
+                                                width: '100%',
+                                                padding: '0.5rem',
+                                                border: '1px solid #d1d5db',
+                                                borderRadius: '0.375rem',
+                                                fontSize: '0.875rem',
+                                                outline: 'none',
+                                                fontFamily: 'monospace'
+                                            }}
+                                            placeholder="e.g., 1234567890abcdef1234567890abcdef"
+                                        />
+                                    </div>
+                                    <div style={{ marginBottom: '1rem' }}>
+                                        <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 500, color: '#374151', marginBottom: '0.25rem' }}>
+                                            Key
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={editDrmKey}
+                                            onChange={(e) => setEditDrmKey(e.target.value)}
+                                            style={{
+                                                width: '100%',
+                                                padding: '0.5rem',
+                                                border: '1px solid #d1d5db',
+                                                borderRadius: '0.375rem',
+                                                fontSize: '0.875rem',
+                                                outline: 'none',
+                                                fontFamily: 'monospace'
+                                            }}
+                                            placeholder="e.g., fedcba0987654321fedcba0987654321"
+                                        />
+                                    </div>
+                                </>
+                            )}
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid #e5e7eb' }}>
                             <button
                                 onClick={() => setEditingChannel(null)}
                                 style={{
@@ -1352,12 +1594,36 @@ export default function PlaylistPage() {
                                     />
                                 </div>
 
+                                <div style={{ marginBottom: '1rem' }}>
+                                    <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 500, color: '#374151', marginBottom: '0.25rem' }}>
+                                        Source URL (Optional)
+                                    </label>
+                                    <input
+                                        type="url"
+                                        value={newPlaylistUrl}
+                                        onChange={(e) => setNewPlaylistUrl(e.target.value)}
+                                        style={{
+                                            width: '100%',
+                                            padding: '0.5rem',
+                                            border: '1px solid #d1d5db',
+                                            borderRadius: '0.375rem',
+                                            fontSize: '0.875rem',
+                                            outline: 'none'
+                                        }}
+                                        placeholder="https://example.com/playlist.m3u"
+                                    />
+                                    <p style={{ fontSize: '0.75rem', color: '#6b7280', marginTop: '0.25rem' }}>
+                                        Enter the M3U playlist URL to import channels from
+                                    </p>
+                                </div>
+
                                 <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
                                     <button
                                         onClick={() => {
                                             setShowCreatePlaylist(false);
                                             setNewPlaylistName('');
                                             setNewPlaylistDesc('');
+                                            setNewPlaylistUrl('');
                                         }}
                                         style={{
                                             padding: '0.5rem 1rem',

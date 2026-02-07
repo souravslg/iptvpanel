@@ -48,7 +48,14 @@ export async function POST(request) {
                 url: stream.url,
                 logo: stream.logo,
                 category: stream.group,
-                playlist_id: playlistId
+                playlist_id: playlistId,
+                // DRM fields from M3U parser
+                drm_scheme: stream.drmScheme || null,
+                drm_license_url: stream.drmLicenseUrl || null,
+                drm_key_id: stream.drmKeyId || null,
+                drm_key: stream.drmKey || null,
+                stream_format: stream.streamFormat || 'hls',
+                channel_number: stream.channelNumber || null
             }));
 
             const { error: insertError } = await supabase

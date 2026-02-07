@@ -12,16 +12,34 @@ export async function POST(request) {
       return NextResponse.json({ error: 'No streams found' }, { status: 400 });
     }
 
-    // Get active playlist
-    const { data: activePlaylist } = await supabase
+    // Get active playlist or create default one
+    let { data: activePlaylist } = await supabase
       .from('playlists')
       .select('id')
       .eq('is_active', true)
       .single();
 
+    // If no active playlist exists, create a default one
     if (!activePlaylist) {
-      return NextResponse.json({ error: 'No active playlist found' }, { status: 400 });
+      const { data: newPlaylist, error: createError } = await supabase
+        .from('playlists')
+        .insert({
+          name: 'Default Playlist',
+          description: 'Main playlist',
+          is_active: true,
+          total_channels: 0
+        })
+        .select('id')
+        .single();
+
+      if (createError) {
+        console.error('Error creating default playlist:', createError);
+        return NextResponse.json({ error: 'Failed to create default playlist' }, { status: 500 });
+      }
+
+      activePlaylist = newPlaylist;
     }
+
 
     // Delete existing streams in active playlist
     const { error: deleteError } = await supabase
@@ -40,7 +58,14 @@ export async function POST(request) {
         url: stream.url,
         logo: stream.logo,
         category: stream.group,
-        playlist_id: activePlaylist.id
+        playlist_id: activePlaylist.id,
+        // DRM fields from M3U parser
+        drm_scheme: stream.drmScheme || null,
+        drm_license_url: stream.drmLicenseUrl || null,
+        drm_key_id: stream.drmKeyId || null,
+        drm_key: stream.drmKey || null,
+        stream_format: stream.streamFormat || 'hls',
+        channel_number: stream.channelNumber || null
       }));
 
       const { error: insertError } = await supabase
