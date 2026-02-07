@@ -105,11 +105,43 @@ function PlayerContent() {
                         'serverURL': channel.drm_license_url
                     };
                 } else if (channel.drm_scheme === 'clearkey' && channel.drm_key_id && channel.drm_key) {
-                    drmConfig['org.w3.clearkey'] = {
-                        'clearKeys': {
-                            [channel.drm_key_id]: channel.drm_key
-                        }
+                    // Convert hex keys to base64 for ClearKey
+                    const hexToBase64 = (hexString) => {
+                        // Remove any spaces or dashes
+                        const cleanHex = hexString.replace(/[\s-]/g, '');
+                        // Convert hex to bytes
+                        const bytes = new Uint8Array(cleanHex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+                        // Convert bytes to base64
+                        let binary = '';
+                        bytes.forEach(byte => binary += String.fromCharCode(byte));
+                        return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
                     };
+
+                    try {
+                        const keyId = hexToBase64(channel.drm_key_id);
+                        const key = hexToBase64(channel.drm_key);
+
+                        console.log('ClearKey configuration:', {
+                            originalKeyId: channel.drm_key_id,
+                            originalKey: channel.drm_key,
+                            base64KeyId: keyId,
+                            base64Key: key
+                        });
+
+                        drmConfig['org.w3.clearkey'] = {
+                            'clearKeys': {
+                                [keyId]: key
+                            }
+                        };
+                    } catch (e) {
+                        console.error('Error converting ClearKey hex to base64:', e);
+                        // Fallback: try using the keys as-is
+                        drmConfig['org.w3.clearkey'] = {
+                            'clearKeys': {
+                                [channel.drm_key_id]: channel.drm_key
+                            }
+                        };
+                    }
                 }
 
                 newPlayer.configure({
