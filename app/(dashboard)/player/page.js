@@ -4,6 +4,9 @@ import { useState, useEffect, useRef, Suspense } from 'react';
 import { Play, ArrowLeft, Settings, Volume2, VolumeX, Maximize, Minimize } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
+// Force dynamic rendering for this page
+export const dynamic = 'force-dynamic';
+
 function PlayerContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
