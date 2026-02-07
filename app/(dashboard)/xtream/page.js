@@ -23,24 +23,59 @@ export default function XtreamPage() {
     });
 
     const [createdAccount, setCreatedAccount] = useState(null);
+    const [creating, setCreating] = useState(false);
+    const [error, setError] = useState(null);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setCreating(true);
+        setError(null);
+
+        try {
+            console.log('Creating Xtream user:', formData);
+
+            const res = await fetch('/api/xtream/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.error || 'Failed to create user');
+            }
+
+            console.log('User created successfully:', data);
+
+            // Get the current server URL
+            const serverUrl = typeof window !== 'undefined'
+                ? `${window.location.protocol}//${window.location.host}`
+                : 'http://localhost:3000';
+
+            const newAccount = {
+                ...formData,
+                id: data.user.id,
+                serverUrl: serverUrl,
+                createdAt: new Date().toLocaleString()
+            };
+
+            setCreatedAccount(newAccount);
+            alert('Line created successfully!');
+        } catch (err) {
+            console.error('Error creating user:', err);
+            setError(err.message);
+            alert('Failed to create line: ' + err.message);
+        } finally {
+            setCreating(false);
+        }
+    };
 
     const handleGenerate = (field) => {
         setFormData(prev => ({
             ...prev,
             [field]: field === 'username' ? generateString(8) : generateString(10)
         }));
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // In a real app, this would be an API call
-        const newAccount = {
-            ...formData,
-            id: Date.now(),
-            serverUrl: 'http://line.srv-iptv.com:8080',
-            createdAt: new Date().toLocaleString()
-        };
-        setCreatedAccount(newAccount);
     };
 
     const copyToClipboard = (text) => {
@@ -148,12 +183,15 @@ export default function XtreamPage() {
                             ></textarea>
                         </div>
 
+
                         <button
                             type="submit"
+                            disabled={creating}
                             className="w-full py-3 bg-[var(--primary)] text-white font-semibold rounded-[var(--radius)] hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+                            style={{ opacity: creating ? 0.7 : 1, cursor: creating ? 'not-allowed' : 'pointer' }}
                         >
-                            <Save size={18} />
-                            Create Line
+                            {creating ? <RefreshCw size={18} className="animate-spin" /> : <Save size={18} />}
+                            {creating ? 'Creating...' : 'Create Line'}
                         </button>
                     </form>
                 </div>
