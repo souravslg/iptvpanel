@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Upload, FileText, CheckCircle, AlertCircle, Play, List, RefreshCw, Edit, X, Save, Trash2, Plus, Trash, Link } from 'lucide-react';
+import { Upload, FileText, CheckCircle, AlertCircle, Play, List, RefreshCw, Edit, X, Save, Trash2, Plus, Trash, Link, Layers } from 'lucide-react';
 
 export default function PlaylistPage() {
     const [loading, setLoading] = useState(true);
@@ -42,11 +42,35 @@ export default function PlaylistPage() {
     const [playlistUrl, setPlaylistUrl] = useState('');
     const [fetchingUrl, setFetchingUrl] = useState(false);
 
+    // Multiple Playlists State
+    const [showPlaylistsModal, setShowPlaylistsModal] = useState(false);
+    const [playlists, setPlaylists] = useState([]);
+    const [activePlaylist, setActivePlaylist] = useState(null);
+    const [showCreatePlaylist, setShowCreatePlaylist] = useState(false);
+    const [newPlaylistName, setNewPlaylistName] = useState('');
+    const [newPlaylistDesc, setNewPlaylistDesc] = useState('');
+    const [creatingPlaylist, setCreatingPlaylist] = useState(false);
+    const [switchingPlaylist, setSwitchingPlaylist] = useState(null);
+    const [deletingPlaylist, setDeletingPlaylist] = useState(null);
+
     const fileInputRef = useRef(null);
 
     useEffect(() => {
         fetchPlaylistData();
+        fetchPlaylists();
     }, []);
+
+    const fetchPlaylists = async () => {
+        try {
+            const res = await fetch('/api/playlists');
+            const data = await res.json();
+            setPlaylists(data.playlists || []);
+            const active = data.playlists?.find(p => p.is_active);
+            setActivePlaylist(active || null);
+        } catch (err) {
+            console.error('Error fetching playlists:', err);
+        }
+    };
 
     const fetchPlaylistData = async () => {
         setLoading(true);
@@ -63,6 +87,7 @@ export default function PlaylistPage() {
                     lastUpdated: data.lastUpdated
                 });
                 setSample(data.sample);
+                setActivePlaylist(data.activePlaylist);
                 console.log('Set sample state with', data.sample?.length, 'channels');
             } else {
                 setStats(null);
@@ -266,8 +291,99 @@ export default function PlaylistPage() {
         } catch (error) {
             console.error('Add error:', error);
             alert('Error adding channel: ' + error.message);
-        } finally {
             setAdding(false);
+        }
+    };
+
+    const createPlaylist = async () => {
+        if (!newPlaylistName.trim()) {
+            alert('Playlist name is required');
+            return;
+        }
+
+        setCreatingPlaylist(true);
+        try {
+            const res = await fetch('/api/playlists', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: newPlaylistName.trim(),
+                    description: newPlaylistDesc.trim()
+                })
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                await fetchPlaylists();
+                setShowCreatePlaylist(false);
+                setNewPlaylistName('');
+                setNewPlaylistDesc('');
+                alert(`Playlist "${newPlaylistName}" created successfully!`);
+            } else {
+                alert('Failed to create playlist: ' + (data.error || 'Unknown error'));
+            }
+        } catch (error) {
+            console.error('Create playlist error:', error);
+            alert('Error creating playlist: ' + error.message);
+        } finally {
+            setCreatingPlaylist(false);
+        }
+    };
+
+    const switchPlaylist = async (playlistId) => {
+        setSwitchingPlaylist(playlistId);
+        try {
+            const res = await fetch('/api/playlists/switch', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: playlistId })
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                await fetchPlaylists();
+                await fetchPlaylistData();
+                setShowPlaylistsModal(false);
+                alert('Playlist switched successfully!');
+            } else {
+                alert('Failed to switch playlist: ' + (data.error || 'Unknown error'));
+            }
+        } catch (error) {
+            console.error('Switch playlist error:', error);
+            alert('Error switching playlist: ' + error.message);
+        } finally {
+            setSwitchingPlaylist(null);
+        }
+    };
+
+    const deletePlaylist = async (playlistId, playlistName) => {
+        if (!confirm(`Are you sure you want to delete the playlist "${playlistName}"? All channels in this playlist will be deleted.`)) {
+            return;
+        }
+
+        setDeletingPlaylist(playlistId);
+        try {
+            const res = await fetch('/api/playlists', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: playlistId })
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                await fetchPlaylists();
+                alert('Playlist deleted successfully!');
+            } else {
+                alert('Failed to delete playlist: ' + (data.error || 'Unknown error'));
+            }
+        } catch (error) {
+            console.error('Delete playlist error:', error);
+            alert('Error deleting playlist: ' + error.message);
+        } finally {
+            setDeletingPlaylist(null);
         }
     };
 
@@ -317,6 +433,24 @@ export default function PlaylistPage() {
                 </div>
                 {stats && (
                     <div style={{ display: 'flex', gap: '0.75rem' }}>
+                        <button
+                            onClick={() => setShowPlaylistsModal(true)}
+                            style={{
+                                padding: '0.75rem 1.5rem',
+                                backgroundColor: 'var(--primary)',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '0.5rem',
+                                cursor: 'pointer',
+                                fontWeight: 600,
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.5rem'
+                            }}
+                        >
+                            <Layers size={18} />
+                            Manage Playlists
+                        </button>
                         <button
                             onClick={() => setShowAddModal(true)}
                             style={{
@@ -1084,6 +1218,279 @@ export default function PlaylistPage() {
                                 {fetchingUrl ? <RefreshCw size={16} className="animate-spin" /> : <Link size={16} />}
                                 {fetchingUrl ? 'Importing...' : 'Import Playlist'}
                             </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Manage Playlists Modal */}
+            {showPlaylistsModal && (
+                <div style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    zIndex: 50,
+                    padding: '1rem'
+                }}>
+                    <div style={{
+                        backgroundColor: 'white',
+                        borderRadius: '0.5rem',
+                        padding: '1.5rem',
+                        width: '100%',
+                        maxWidth: '48rem',
+                        maxHeight: '80vh',
+                        overflow: 'auto',
+                        boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
+                    }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                            <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#1f2937' }}>Manage Playlists</h3>
+                            <button
+                                onClick={() => setShowPlaylistsModal(false)}
+                                style={{
+                                    background: 'none',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    color: '#6b7280',
+                                    padding: '0.25rem'
+                                }}
+                            >
+                                <X size={20} />
+                            </button>
+                        </div>
+
+                        {activePlaylist && (
+                            <div style={{
+                                padding: '1rem',
+                                backgroundColor: '#eff6ff',
+                                borderRadius: '0.5rem',
+                                marginBottom: '1rem',
+                                border: '1px solid #3b82f6'
+                            }}>
+                                <div style={{ fontSize: '0.875rem', color: '#1e40af', fontWeight: 600 }}>
+                                    Active Playlist: {activePlaylist.name}
+                                </div>
+                                <div style={{ fontSize: '0.75rem', color: '#3b82f6', marginTop: '0.25rem' }}>
+                                    {activePlaylist.total_channels} channels
+                                </div>
+                            </div>
+                        )}
+
+                        <button
+                            onClick={() => setShowCreatePlaylist(true)}
+                            style={{
+                                width: '100%',
+                                padding: '0.75rem',
+                                backgroundColor: '#2563eb',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '0.5rem',
+                                cursor: 'pointer',
+                                fontWeight: 600,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '0.5rem',
+                                marginBottom: '1rem'
+                            }}
+                        >
+                            <Plus size={18} />
+                            Create New Playlist
+                        </button>
+
+                        {showCreatePlaylist && (
+                            <div style={{
+                                padding: '1rem',
+                                backgroundColor: '#f9fafb',
+                                borderRadius: '0.5rem',
+                                marginBottom: '1rem',
+                                border: '1px solid #e5e7eb'
+                            }}>
+                                <div style={{ marginBottom: '1rem' }}>
+                                    <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 500, color: '#374151', marginBottom: '0.25rem' }}>
+                                        Playlist Name *
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={newPlaylistName}
+                                        onChange={(e) => setNewPlaylistName(e.target.value)}
+                                        style={{
+                                            width: '100%',
+                                            padding: '0.5rem',
+                                            border: '1px solid #d1d5db',
+                                            borderRadius: '0.375rem',
+                                            fontSize: '0.875rem',
+                                            outline: 'none'
+                                        }}
+                                        placeholder="e.g., Sports Channels"
+                                    />
+                                </div>
+
+                                <div style={{ marginBottom: '1rem' }}>
+                                    <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 500, color: '#374151', marginBottom: '0.25rem' }}>
+                                        Description (Optional)
+                                    </label>
+                                    <textarea
+                                        value={newPlaylistDesc}
+                                        onChange={(e) => setNewPlaylistDesc(e.target.value)}
+                                        style={{
+                                            width: '100%',
+                                            padding: '0.5rem',
+                                            border: '1px solid #d1d5db',
+                                            borderRadius: '0.375rem',
+                                            fontSize: '0.875rem',
+                                            outline: 'none',
+                                            resize: 'vertical',
+                                            minHeight: '60px'
+                                        }}
+                                        placeholder="Brief description of this playlist"
+                                    />
+                                </div>
+
+                                <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
+                                    <button
+                                        onClick={() => {
+                                            setShowCreatePlaylist(false);
+                                            setNewPlaylistName('');
+                                            setNewPlaylistDesc('');
+                                        }}
+                                        style={{
+                                            padding: '0.5rem 1rem',
+                                            color: '#374151',
+                                            backgroundColor: 'white',
+                                            border: '1px solid #d1d5db',
+                                            borderRadius: '0.375rem',
+                                            cursor: 'pointer',
+                                            fontWeight: 500
+                                        }}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        onClick={createPlaylist}
+                                        disabled={creatingPlaylist}
+                                        style={{
+                                            padding: '0.5rem 1rem',
+                                            backgroundColor: '#2563eb',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: '0.375rem',
+                                            cursor: creatingPlaylist ? 'not-allowed' : 'pointer',
+                                            fontWeight: 500,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '0.5rem',
+                                            opacity: creatingPlaylist ? 0.7 : 1
+                                        }}
+                                    >
+                                        {creatingPlaylist ? <RefreshCw size={16} className="animate-spin" /> : <Plus size={16} />}
+                                        Create
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+
+                        <div style={{ marginTop: '1rem' }}>
+                            <h4 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: '#374151' }}>
+                                All Playlists ({playlists.length})
+                            </h4>
+
+                            {playlists.length === 0 ? (
+                                <div style={{ textAlign: 'center', padding: '2rem', color: '#9ca3af' }}>
+                                    No playlists found. Create one to get started.
+                                </div>
+                            ) : (
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                                    {playlists.map((playlist) => (
+                                        <div
+                                            key={playlist.id}
+                                            style={{
+                                                padding: '1rem',
+                                                border: playlist.is_active ? '2px solid #3b82f6' : '1px solid #e5e7eb',
+                                                borderRadius: '0.5rem',
+                                                backgroundColor: playlist.is_active ? '#eff6ff' : 'white',
+                                                display: 'flex',
+                                                justifyContent: 'space-between',
+                                                alignItems: 'center'
+                                            }}
+                                        >
+                                            <div style={{ flex: 1 }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                                    <h5 style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#1f2937' }}>
+                                                        {playlist.name}
+                                                    </h5>
+                                                    {playlist.is_active && (
+                                                        <span style={{
+                                                            padding: '0.125rem 0.5rem',
+                                                            backgroundColor: '#3b82f6',
+                                                            color: 'white',
+                                                            borderRadius: '0.25rem',
+                                                            fontSize: '0.75rem',
+                                                            fontWeight: 600
+                                                        }}>
+                                                            ACTIVE
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                {playlist.description && (
+                                                    <p style={{ fontSize: '0.875rem', color: '#6b7280', marginTop: '0.25rem' }}>
+                                                        {playlist.description}
+                                                    </p>
+                                                )}
+                                                <div style={{ fontSize: '0.75rem', color: '#9ca3af', marginTop: '0.5rem' }}>
+                                                    {playlist.total_channels} channels • Created {new Date(playlist.created_at).toLocaleDateString()}
+                                                </div>
+                                            </div>
+
+                                            <div style={{ display: 'flex', gap: '0.5rem', marginLeft: '1rem' }}>
+                                                {!playlist.is_active && (
+                                                    <button
+                                                        onClick={() => switchPlaylist(playlist.id)}
+                                                        disabled={switchingPlaylist === playlist.id}
+                                                        style={{
+                                                            padding: '0.5rem 1rem',
+                                                            backgroundColor: '#10b981',
+                                                            color: 'white',
+                                                            border: 'none',
+                                                            borderRadius: '0.375rem',
+                                                            cursor: switchingPlaylist === playlist.id ? 'not-allowed' : 'pointer',
+                                                            fontWeight: 500,
+                                                            fontSize: '0.875rem',
+                                                            whiteSpace: 'nowrap',
+                                                            opacity: switchingPlaylist === playlist.id ? 0.7 : 1
+                                                        }}
+                                                    >
+                                                        {switchingPlaylist === playlist.id ? 'Switching...' : 'Activate'}
+                                                    </button>
+                                                )}
+                                                {!playlist.is_active && (
+                                                    <button
+                                                        onClick={() => deletePlaylist(playlist.id, playlist.name)}
+                                                        disabled={deletingPlaylist === playlist.id}
+                                                        style={{
+                                                            padding: '0.5rem',
+                                                            backgroundColor: 'transparent',
+                                                            color: deletingPlaylist === playlist.id ? '#9ca3af' : '#ef4444',
+                                                            border: 'none',
+                                                            borderRadius: '0.375rem',
+                                                            cursor: deletingPlaylist === playlist.id ? 'not-allowed' : 'pointer',
+                                                            opacity: deletingPlaylist === playlist.id ? 0.5 : 1
+                                                        }}
+                                                        title="Delete Playlist"
+                                                    >
+                                                        {deletingPlaylist === playlist.id ? <RefreshCw size={18} className="animate-spin" /> : <Trash2 size={18} />}
+                                                    </button>
+                                                )}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

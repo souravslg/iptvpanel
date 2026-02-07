@@ -12,11 +12,22 @@ export async function POST(request) {
       return NextResponse.json({ error: 'No streams found' }, { status: 400 });
     }
 
-    // Delete existing streams
+    // Get active playlist
+    const { data: activePlaylist } = await supabase
+      .from('playlists')
+      .select('id')
+      .eq('is_active', true)
+      .single();
+
+    if (!activePlaylist) {
+      return NextResponse.json({ error: 'No active playlist found' }, { status: 400 });
+    }
+
+    // Delete existing streams in active playlist
     const { error: deleteError } = await supabase
       .from('streams')
       .delete()
-      .neq('id', 0); // Delete all where id is not 0 (effectively all)
+      .eq('playlist_id', activePlaylist.id);
 
     if (deleteError) throw deleteError;
 
@@ -28,7 +39,8 @@ export async function POST(request) {
         name: stream.name,
         url: stream.url,
         logo: stream.logo,
-        category: stream.group
+        category: stream.group,
+        playlist_id: activePlaylist.id
       }));
 
       const { error: insertError } = await supabase
@@ -38,8 +50,11 @@ export async function POST(request) {
       if (insertError) throw insertError;
     }
 
-    // Update settings
-    await supabase.from('settings').upsert({ key: 'playlist_updated', value: new Date().toISOString() });
+    // Update playlist metadata
+    await supabase
+      .from('playlists')
+      .update({ updated_at: new Date().toISOString() })
+      .eq('id', activePlaylist.id);
 
     return NextResponse.json({ success: true, count: streams.length });
   } catch (error) {
@@ -51,40 +66,55 @@ export async function POST(request) {
 
 export async function GET() {
   try {
-    const { count } = await supabase.from('streams').select('*', { count: 'exact', head: true });
+    // Get active playlist
+    const { data: activePlaylist } = await supabase
+      .from('playlists')
+      .select('*')
+      .eq('is_active', true)
+      .single();
 
-    // Last Updated
-    const { data: setting } = await supabase.from('settings').select('value').eq('key', 'playlist_updated').single();
-    const lastUpdated = setting?.value;
+    if (!activePlaylist) {
+      return NextResponse.json({
+        totalChannels: 0,
+        lastUpdated: null,
+        groups: [],
+        sample: [],
+        activePlaylist: null
+      });
+    }
 
-    // Get all streams - simple query without channel_number ordering
+    // Get all streams from active playlist
     const { data: sample, error: sampleError } = await supabase
       .from('streams')
       .select('*')
+      .eq('playlist_id', activePlaylist.id)
       .order('id', { ascending: true });
 
     if (sampleError) {
       console.error('Error fetching streams:', sampleError);
       return NextResponse.json({
-        totalChannels: count || 0,
-        lastUpdated,
+        totalChannels: activePlaylist.total_channels || 0,
+        lastUpdated: activePlaylist.updated_at,
         groups: [],
         sample: [],
+        activePlaylist,
         error: sampleError.message
       });
     }
 
     console.log('Playlist API Response:', {
-      totalChannels: count || 0,
+      totalChannels: activePlaylist.total_channels || 0,
       sampleCount: sample?.length || 0,
-      hasError: !!sampleError
+      hasError: !!sampleError,
+      playlistName: activePlaylist.name
     });
 
     return NextResponse.json({
-      totalChannels: count || 0,
-      lastUpdated,
+      totalChannels: activePlaylist.total_channels || 0,
+      lastUpdated: activePlaylist.updated_at,
       groups: [], // TODO: optimize group aggregation
-      sample: sample || []
+      sample: sample || [],
+      activePlaylist
     });
   } catch (error) {
     console.error('GET /api/playlist error:', error);
