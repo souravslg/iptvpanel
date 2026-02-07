@@ -20,7 +20,18 @@ export default function PlaylistPage() {
 
     // Add Channel State
     const [showAddModal, setShowAddModal] = useState(false);
-    const [newChannel, setNewChannel] = useState({ name: '', url: '', category: '', logo: '' });
+    const [newChannel, setNewChannel] = useState({
+        name: '',
+        url: '',
+        category: '',
+        logo: '',
+        channelNumber: '',
+        streamFormat: 'hls',
+        drmScheme: '',
+        drmLicenseUrl: '',
+        drmKeyId: '',
+        drmKey: ''
+    });
     const [adding, setAdding] = useState(false);
 
     // Clear Playlist State
@@ -42,6 +53,8 @@ export default function PlaylistPage() {
         try {
             const res = await fetch('/api/playlist');
             const data = await res.json();
+            console.log('Fetched playlist data:', data);
+            console.log('Sample length:', data.sample?.length);
             if (data.totalChannels > 0) {
                 setStats({
                     totalChannels: data.totalChannels,
@@ -50,11 +63,13 @@ export default function PlaylistPage() {
                     lastUpdated: data.lastUpdated
                 });
                 setSample(data.sample);
+                console.log('Set sample state with', data.sample?.length, 'channels');
             } else {
                 setStats(null);
+                console.log('No channels found');
             }
         } catch (err) {
-            console.error(err);
+            console.error('Error fetching playlist:', err);
         } finally {
             setLoading(false);
         }
@@ -242,7 +257,7 @@ export default function PlaylistPage() {
                     fetchPlaylistData();
                 }
                 setShowAddModal(false);
-                setNewChannel({ name: '', url: '', category: '', logo: '' });
+                setNewChannel({ name: '', url: '', category: '', logo: '', channelNumber: '', streamFormat: 'hls', drmScheme: '', drmLicenseUrl: '', drmKeyId: '', drmKey: '' });
                 alert('Channel added successfully!');
             } else {
                 console.error('Add failed:', responseData);
@@ -467,7 +482,7 @@ export default function PlaylistPage() {
                         </div>
 
                         <div className="stat-card">
-                            <h3 style={{ fontWeight: 600, marginBottom: '1rem' }}>Channel Preview (First 50)</h3>
+                            <h3 style={{ fontWeight: 600, marginBottom: '1rem' }}>Channel List ({stats.totalChannels} Channels)</h3>
                             <div className="table-responsive">
                                 <table>
                                     <thead>
@@ -478,37 +493,46 @@ export default function PlaylistPage() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {sample.map((ch, i) => (
-                                            <tr key={i}>
-                                                <td style={{ maxWidth: '200px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ch.name}</td>
-                                                <td style={{ color: 'var(--muted-foreground)' }}>{ch.category}</td>
-                                                <td>
-                                                    <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                                                        <button
-                                                            onClick={() => startEditing(ch)}
-                                                            title="Edit URL"
-                                                            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary)' }}
-                                                        >
-                                                            <Edit size={16} />
-                                                        </button>
-                                                        <button
-                                                            onClick={() => deleteChannel(ch)}
-                                                            title="Delete Channel"
-                                                            disabled={deleting === ch.id}
-                                                            style={{
-                                                                background: 'none',
-                                                                border: 'none',
-                                                                cursor: deleting === ch.id ? 'not-allowed' : 'pointer',
-                                                                color: deleting === ch.id ? '#9ca3af' : '#ef4444',
-                                                                opacity: deleting === ch.id ? 0.5 : 1
-                                                            }}
-                                                        >
-                                                            {deleting === ch.id ? <RefreshCw size={16} className="animate-spin" /> : <Trash2 size={16} />}
-                                                        </button>
-                                                    </div>
+                                        {console.log('Rendering channels, sample:', sample, 'length:', sample?.length)}
+                                        {sample && sample.length > 0 ? (
+                                            sample.map((ch, i) => (
+                                                <tr key={i}>
+                                                    <td style={{ maxWidth: '200px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ch.name}</td>
+                                                    <td style={{ color: 'var(--muted-foreground)' }}>{ch.category}</td>
+                                                    <td>
+                                                        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                                                            <button
+                                                                onClick={() => startEditing(ch)}
+                                                                title="Edit URL"
+                                                                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary)' }}
+                                                            >
+                                                                <Edit size={16} />
+                                                            </button>
+                                                            <button
+                                                                onClick={() => deleteChannel(ch)}
+                                                                title="Delete Channel"
+                                                                disabled={deleting === ch.id}
+                                                                style={{
+                                                                    background: 'none',
+                                                                    border: 'none',
+                                                                    cursor: deleting === ch.id ? 'not-allowed' : 'pointer',
+                                                                    color: deleting === ch.id ? '#9ca3af' : '#ef4444',
+                                                                    opacity: deleting === ch.id ? 0.5 : 1
+                                                                }}
+                                                            >
+                                                                {deleting === ch.id ? <RefreshCw size={16} className="animate-spin" /> : <Trash2 size={16} />}
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        ) : (
+                                            <tr>
+                                                <td colSpan="3" style={{ textAlign: 'center', padding: '2rem', color: 'var(--muted-foreground)' }}>
+                                                    No channels to display. Check browser console for errors.
                                                 </td>
                                             </tr>
-                                        ))}
+                                        )}
                                     </tbody>
                                 </table>
                             </div>
@@ -655,7 +679,7 @@ export default function PlaylistPage() {
                             <button
                                 onClick={() => {
                                     setShowAddModal(false);
-                                    setNewChannel({ name: '', url: '', category: '', logo: '' });
+                                    setNewChannel({ name: '', url: '', category: '', logo: '', channelNumber: '', streamFormat: 'hls', drmScheme: '', drmLicenseUrl: '', drmKeyId: '', drmKey: '' });
                                 }}
                                 style={{
                                     background: 'none',
@@ -735,7 +759,7 @@ export default function PlaylistPage() {
                             />
                         </div>
 
-                        <div style={{ marginBottom: '1.5rem' }}>
+                        <div style={{ marginBottom: '1rem' }}>
                             <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 500, color: '#374151', marginBottom: '0.25rem' }}>
                                 Logo URL
                             </label>
@@ -757,11 +781,166 @@ export default function PlaylistPage() {
                             />
                         </div>
 
+                        <div style={{ marginBottom: '1rem' }}>
+                            <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 500, color: '#374151', marginBottom: '0.25rem' }}>
+                                Channel Number (Optional)
+                            </label>
+                            <input
+                                type="number"
+                                value={newChannel.channelNumber}
+                                onChange={(e) => setNewChannel(prev => ({ ...prev, channelNumber: e.target.value }))}
+                                style={{
+                                    width: '100%',
+                                    padding: '0.5rem',
+                                    border: '1px solid #d1d5db',
+                                    borderRadius: '0.375rem',
+                                    fontSize: '0.875rem',
+                                    outline: 'none'
+                                }}
+                                placeholder="e.g., 101"
+                                min="1"
+                                onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+                                onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
+                            />
+                            <p style={{ fontSize: '0.75rem', color: '#6b7280', marginTop: '0.25rem' }}>
+                                Set a custom channel number for ordering
+                            </p>
+                        </div>
+
+                        <div style={{ marginBottom: '1rem' }}>
+                            <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 500, color: '#374151', marginBottom: '0.25rem' }}>
+                                Stream Format
+                            </label>
+                            <select
+                                value={newChannel.streamFormat}
+                                onChange={(e) => setNewChannel(prev => ({ ...prev, streamFormat: e.target.value }))}
+                                style={{
+                                    width: '100%',
+                                    padding: '0.5rem',
+                                    border: '1px solid #d1d5db',
+                                    borderRadius: '0.375rem',
+                                    fontSize: '0.875rem',
+                                    outline: 'none',
+                                    backgroundColor: 'white'
+                                }}
+                                onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+                                onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
+                            >
+                                <option value="hls">HLS (.m3u8)</option>
+                                <option value="mpd">DASH/MPD (.mpd)</option>
+                                <option value="ts">MPEG-TS (.ts)</option>
+                                <option value="rtmp">RTMP</option>
+                            </select>
+                        </div>
+
+                        <div style={{ marginBottom: '1rem' }}>
+                            <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 500, color: '#374151', marginBottom: '0.25rem' }}>
+                                DRM Scheme (Optional)
+                            </label>
+                            <select
+                                value={newChannel.drmScheme}
+                                onChange={(e) => setNewChannel(prev => ({ ...prev, drmScheme: e.target.value }))}
+                                style={{
+                                    width: '100%',
+                                    padding: '0.5rem',
+                                    border: '1px solid #d1d5db',
+                                    borderRadius: '0.375rem',
+                                    fontSize: '0.875rem',
+                                    outline: 'none',
+                                    backgroundColor: 'white'
+                                }}
+                                onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+                                onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
+                            >
+                                <option value="">None</option>
+                                <option value="widevine">Widevine</option>
+                                <option value="playready">PlayReady</option>
+                                <option value="fairplay">FairPlay</option>
+                                <option value="clearkey">ClearKey</option>
+                            </select>
+                        </div>
+
+                        {newChannel.drmScheme && newChannel.drmScheme !== '' && (
+                            <>
+                                <div style={{ marginBottom: '1rem' }}>
+                                    <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 500, color: '#374151', marginBottom: '0.25rem' }}>
+                                        DRM License URL
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={newChannel.drmLicenseUrl}
+                                        onChange={(e) => setNewChannel(prev => ({ ...prev, drmLicenseUrl: e.target.value }))}
+                                        style={{
+                                            width: '100%',
+                                            padding: '0.5rem',
+                                            border: '1px solid #d1d5db',
+                                            borderRadius: '0.375rem',
+                                            fontSize: '0.875rem',
+                                            outline: 'none'
+                                        }}
+                                        placeholder="https://license-server.com/..."
+                                        onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+                                        onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
+                                    />
+                                </div>
+
+                                {newChannel.drmScheme === 'clearkey' && (
+                                    <>
+                                        <div style={{ marginBottom: '1rem' }}>
+                                            <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 500, color: '#374151', marginBottom: '0.25rem' }}>
+                                                ClearKey Key ID
+                                            </label>
+                                            <input
+                                                type="text"
+                                                value={newChannel.drmKeyId}
+                                                onChange={(e) => setNewChannel(prev => ({ ...prev, drmKeyId: e.target.value }))}
+                                                style={{
+                                                    width: '100%',
+                                                    padding: '0.5rem',
+                                                    border: '1px solid #d1d5db',
+                                                    borderRadius: '0.375rem',
+                                                    fontSize: '0.875rem',
+                                                    outline: 'none',
+                                                    fontFamily: 'monospace'
+                                                }}
+                                                placeholder="e.g., 1234567890abcdef1234567890abcdef"
+                                                onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+                                                onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
+                                            />
+                                        </div>
+
+                                        <div style={{ marginBottom: '1.5rem' }}>
+                                            <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: 500, color: '#374151', marginBottom: '0.25rem' }}>
+                                                ClearKey Key
+                                            </label>
+                                            <input
+                                                type="text"
+                                                value={newChannel.drmKey}
+                                                onChange={(e) => setNewChannel(prev => ({ ...prev, drmKey: e.target.value }))}
+                                                style={{
+                                                    width: '100%',
+                                                    padding: '0.5rem',
+                                                    border: '1px solid #d1d5db',
+                                                    borderRadius: '0.375rem',
+                                                    fontSize: '0.875rem',
+                                                    outline: 'none',
+                                                    fontFamily: 'monospace'
+                                                }}
+                                                placeholder="e.g., abcdef1234567890abcdef1234567890"
+                                                onFocus={(e) => e.target.style.borderColor = '#3b82f6'}
+                                                onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
+                                            />
+                                        </div>
+                                    </>
+                                )}
+                            </>
+                        )}
+
                         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
                             <button
                                 onClick={() => {
                                     setShowAddModal(false);
-                                    setNewChannel({ name: '', url: '', category: '', logo: '' });
+                                    setNewChannel({ name: '', url: '', category: '', logo: '', channelNumber: '', streamFormat: 'hls', drmScheme: '', drmLicenseUrl: '', drmKeyId: '', drmKey: '' });
                                 }}
                                 style={{
                                     padding: '0.5rem 1rem',

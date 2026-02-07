@@ -43,6 +43,7 @@ export async function GET(request) {
         // Generate M3U playlist
         const host = request.headers.get('host') || 'localhost:3000';
         const protocol = request.headers.get('x-forwarded-proto') || 'http';
+        const useProxy = searchParams.get('proxy') === 'true';
 
         let m3u = '#EXTM3U\n';
 
@@ -53,7 +54,14 @@ export async function GET(request) {
             const groupTitle = stream.category || 'Uncategorized';
 
             m3u += `#EXTINF:-1 tvg-id="${tvgId}" tvg-name="${tvgName}" tvg-logo="${tvgLogo}" group-title="${groupTitle}",${tvgName}\n`;
-            m3u += `${stream.url}\n`;
+
+            // Use proxy URL or direct URL
+            if (useProxy) {
+                const streamUrl = `${protocol}://${host}/live/${username}/${password}/${tvgId}.ts`;
+                m3u += `${streamUrl}\n`;
+            } else {
+                m3u += `${stream.url}\n`;
+            }
         });
 
         return new NextResponse(m3u, {

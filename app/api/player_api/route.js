@@ -53,19 +53,29 @@ export async function GET(request) {
                 .from('streams')
                 .select('*');
 
-            const formattedStreams = (streams || []).map(stream => ({
-                num: stream.id,
-                name: stream.name,
-                stream_type: stream.type || 'live',
-                stream_id: stream.stream_id || stream.id,
-                stream_icon: stream.logo || '',
-                category_id: stream.category || 'Uncategorized',
-                added: stream.created_at,
-                custom_sid: '',
-                tv_archive: 0,
-                direct_source: '',
-                tv_archive_duration: 0
-            }));
+            // Get server URL
+            const protocol = request.headers.get('x-forwarded-proto') || 'http';
+            const host = request.headers.get('host') || 'localhost:3000';
+            const serverUrl = `${protocol}://${host}`;
+
+            const formattedStreams = (streams || []).map(stream => {
+                const streamId = stream.stream_id || stream.id;
+                return {
+                    num: stream.id,
+                    name: stream.name,
+                    stream_type: stream.type || 'live',
+                    stream_id: streamId,
+                    stream_icon: stream.logo || '',
+                    category_id: stream.category || 'Uncategorized',
+                    added: stream.created_at,
+                    custom_sid: '',
+                    tv_archive: 0,
+                    direct_source: stream.url, // Original URL
+                    tv_archive_duration: 0,
+                    // Add container extension for compatibility
+                    container_extension: 'ts'
+                };
+            });
 
             return NextResponse.json(formattedStreams);
         }

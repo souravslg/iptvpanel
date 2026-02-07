@@ -57,13 +57,28 @@ export async function GET() {
     const { data: setting } = await supabase.from('settings').select('value').eq('key', 'playlist_updated').single();
     const lastUpdated = setting?.value;
 
-    // Groups (This is expensive in basic Supabase without Views or RPC, so we might skip or do a simple fetch)
-    // A simplified approach: we won't aggregate groups in API for now to avoid fetching all rows.
-    // Or we can fetch distinct categories if the number is small.
-    // For now, let's just return a sample and total count.
+    // Get all streams - simple query without channel_number ordering
+    const { data: sample, error: sampleError } = await supabase
+      .from('streams')
+      .select('*')
+      .order('id', { ascending: true });
 
-    // Sample
-    const { data: sample } = await supabase.from('streams').select('*').limit(50);
+    if (sampleError) {
+      console.error('Error fetching streams:', sampleError);
+      return NextResponse.json({
+        totalChannels: count || 0,
+        lastUpdated,
+        groups: [],
+        sample: [],
+        error: sampleError.message
+      });
+    }
+
+    console.log('Playlist API Response:', {
+      totalChannels: count || 0,
+      sampleCount: sample?.length || 0,
+      hasError: !!sampleError
+    });
 
     return NextResponse.json({
       totalChannels: count || 0,
@@ -72,6 +87,7 @@ export async function GET() {
       sample: sample || []
     });
   } catch (error) {
+    console.error('GET /api/playlist error:', error);
     return NextResponse.json({ error: 'Failed to fetch playlist data' }, { status: 500 });
   }
 }
