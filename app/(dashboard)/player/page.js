@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import { Play, ArrowLeft, Settings, Volume2, VolumeX, Maximize, Minimize } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-export default function PlayerPage() {
+function PlayerContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const videoRef = useRef(null);
@@ -399,5 +399,17 @@ export default function PlayerPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function PlayerPage() {
+    return (
+        <Suspense fallback={
+            <div style={{ padding: '2rem', textAlign: 'center' }}>
+                <p>Loading player...</p>
+            </div>
+        }>
+            <PlayerContent />
+        </Suspense>
     );
 }
