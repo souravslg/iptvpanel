@@ -3,7 +3,7 @@ import { jwtVerify } from 'jose';
 
 const SECRET_KEY = new TextEncoder().encode('your-secret-key-change-this');
 
-export async function middleware(request) {
+export async function proxy(request) {
     try {
         const session = request.cookies.get('session')?.value;
         const path = request.nextUrl.pathname;
