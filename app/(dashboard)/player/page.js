@@ -94,13 +94,23 @@ function PlayerContent() {
 
                 // Add error handler
                 videoRef.current.onerror = (e) => {
-                    console.error('Native player error:', e);
-                    console.error('Video error code:', videoRef.current.error?.code);
-                    console.error('Video error message:', videoRef.current.error?.message);
+                    const videoError = videoRef.current.error;
+                    console.error('Native player error event:', {
+                        type: e.type,
+                        target: 'video element'
+                    });
+                    console.error('Video error details:', {
+                        code: videoError?.code,
+                        message: videoError?.message,
+                        MEDIA_ERR_ABORTED: videoError?.code === 1,
+                        MEDIA_ERR_NETWORK: videoError?.code === 2,
+                        MEDIA_ERR_DECODE: videoError?.code === 3,
+                        MEDIA_ERR_SRC_NOT_SUPPORTED: videoError?.code === 4
+                    });
 
                     let errorMessage = 'Failed to load stream';
-                    if (videoRef.current.error) {
-                        switch (videoRef.current.error.code) {
+                    if (videoError) {
+                        switch (videoError.code) {
                             case 1:
                                 errorMessage = 'Stream loading aborted';
                                 break;

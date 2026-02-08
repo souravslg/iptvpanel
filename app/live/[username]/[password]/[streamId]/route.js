@@ -77,17 +77,35 @@ export async function GET(request, context) {
             return NextResponse.redirect(invalidSubVideo);
         }
 
-        // Get stream by ID or stream_id
-        const { data: stream, error: streamError } = await supabase
+        // Get active playlists first
+        const { data: activePlaylists, error: playlistError } = await supabase
+            .from('playlists')
+            .select('id')
+            .eq('is_active', true);
+
+        if (playlistError || !activePlaylists || activePlaylists.length === 0) {
+            console.log('No active playlists found');
+            return new NextResponse('No active playlists', { status: 404 });
+        }
+
+        const playlistIds = activePlaylists.map(p => p.id);
+        console.log('Searching in active playlists:', playlistIds);
+
+        // Get stream by ID or stream_id from active playlists only
+        const { data: streams, error: streamError } = await supabase
             .from('streams')
             .select('*')
-            .or(`id.eq.${cleanStreamId},stream_id.eq.${cleanStreamId}`)
-            .single();
+            .in('playlist_id', playlistIds)
+            .or(`id.eq.${cleanStreamId},stream_id.eq.${cleanStreamId}`);
 
-        if (streamError || !stream) {
-            console.log('Stream not found:', cleanStreamId);
-            return new NextResponse('Stream not found', { status: 404 });
+        if (streamError || !streams || streams.length === 0) {
+            console.log('Stream not found in active playlists:', cleanStreamId);
+            return new NextResponse(`Stream not found: ${cleanStreamId}`, { status: 404 });
         }
+
+        // If multiple streams found (from different playlists), use the first one
+        const stream = streams[0];
+        console.log(`Found ${streams.length} stream(s), using:`, stream.name, 'from playlist', stream.playlist_id);
 
         console.log('Redirecting to stream URL:', stream.url);
 

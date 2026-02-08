@@ -53,7 +53,7 @@ export default function PlaylistPage() {
     // Multiple Playlists State
     const [showPlaylistsModal, setShowPlaylistsModal] = useState(false);
     const [playlists, setPlaylists] = useState([]);
-    const [activePlaylist, setActivePlaylist] = useState(null);
+    const [activePlaylists, setActivePlaylists] = useState([]);
     const [showCreatePlaylist, setShowCreatePlaylist] = useState(false);
     const [newPlaylistName, setNewPlaylistName] = useState('');
     const [newPlaylistDesc, setNewPlaylistDesc] = useState('');
@@ -74,8 +74,8 @@ export default function PlaylistPage() {
             const res = await fetch('/api/playlists');
             const data = await res.json();
             setPlaylists(data.playlists || []);
-            const active = data.playlists?.find(p => p.is_active);
-            setActivePlaylist(active || null);
+            const active = data.playlists?.filter(p => p.is_active) || [];
+            setActivePlaylists(active);
         } catch (err) {
             console.error('Error fetching playlists:', err);
         }
@@ -96,10 +96,11 @@ export default function PlaylistPage() {
                     lastUpdated: data.lastUpdated
                 });
                 setSample(data.sample);
-                setActivePlaylist(data.activePlaylist);
+                setActivePlaylists(data.activePlaylists || []);
                 console.log('Set sample state with', data.sample?.length, 'channels');
             } else {
                 setStats(null);
+                setActivePlaylists([]);
                 console.log('No channels found');
             }
         } catch (err) {
@@ -1518,7 +1519,8 @@ export default function PlaylistPage() {
                             </button>
                         </div>
 
-                        {activePlaylist && (
+
+                        {activePlaylists && activePlaylists.length > 0 && (
                             <div style={{
                                 padding: '1rem',
                                 backgroundColor: '#eff6ff',
@@ -1526,14 +1528,22 @@ export default function PlaylistPage() {
                                 marginBottom: '1rem',
                                 border: '1px solid #3b82f6'
                             }}>
-                                <div style={{ fontSize: '0.875rem', color: '#1e40af', fontWeight: 600 }}>
-                                    Active Playlist: {activePlaylist.name}
+                                <div style={{ fontSize: '0.875rem', color: '#1e40af', fontWeight: 600, marginBottom: '0.5rem' }}>
+                                    Active Playlist{activePlaylists.length > 1 ? 's' : ''}:
                                 </div>
-                                <div style={{ fontSize: '0.75rem', color: '#3b82f6', marginTop: '0.25rem' }}>
-                                    {activePlaylist.total_channels} channels
-                                </div>
+                                {activePlaylists.map((playlist, index) => (
+                                    <div key={playlist.id} style={{
+                                        fontSize: '0.75rem',
+                                        color: '#3b82f6',
+                                        marginTop: index > 0 ? '0.25rem' : '0',
+                                        paddingLeft: '0.5rem'
+                                    }}>
+                                        • {playlist.name} ({playlist.total_channels} channels)
+                                    </div>
+                                ))}
                             </div>
                         )}
+
 
                         <button
                             onClick={() => setShowCreatePlaylist(true)}
@@ -1726,26 +1736,26 @@ export default function PlaylistPage() {
                                             </div>
 
                                             <div style={{ display: 'flex', gap: '0.5rem', marginLeft: '1rem' }}>
-                                                {!playlist.is_active && (
-                                                    <button
-                                                        onClick={() => switchPlaylist(playlist.id)}
-                                                        disabled={switchingPlaylist === playlist.id}
-                                                        style={{
-                                                            padding: '0.5rem 1rem',
-                                                            backgroundColor: '#10b981',
-                                                            color: 'white',
-                                                            border: 'none',
-                                                            borderRadius: '0.375rem',
-                                                            cursor: switchingPlaylist === playlist.id ? 'not-allowed' : 'pointer',
-                                                            fontWeight: 500,
-                                                            fontSize: '0.875rem',
-                                                            whiteSpace: 'nowrap',
-                                                            opacity: switchingPlaylist === playlist.id ? 0.7 : 1
-                                                        }}
-                                                    >
-                                                        {switchingPlaylist === playlist.id ? 'Switching...' : 'Activate'}
-                                                    </button>
-                                                )}
+                                                <button
+                                                    onClick={() => switchPlaylist(playlist.id)}
+                                                    disabled={switchingPlaylist === playlist.id}
+                                                    style={{
+                                                        padding: '0.5rem 1rem',
+                                                        backgroundColor: playlist.is_active ? '#ef4444' : '#10b981',
+                                                        color: 'white',
+                                                        border: 'none',
+                                                        borderRadius: '0.375rem',
+                                                        cursor: switchingPlaylist === playlist.id ? 'not-allowed' : 'pointer',
+                                                        fontWeight: 500,
+                                                        fontSize: '0.875rem',
+                                                        whiteSpace: 'nowrap',
+                                                        opacity: switchingPlaylist === playlist.id ? 0.7 : 1
+                                                    }}
+                                                >
+                                                    {switchingPlaylist === playlist.id
+                                                        ? (playlist.is_active ? 'Deactivating...' : 'Activating...')
+                                                        : (playlist.is_active ? 'Deactivate' : 'Activate')}
+                                                </button>
                                                 {!playlist.is_active && (
                                                     <button
                                                         onClick={() => deletePlaylist(playlist.id, playlist.name)}

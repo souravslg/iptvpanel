@@ -12,12 +12,13 @@ export async function POST(request) {
       return NextResponse.json({ error: 'No streams found' }, { status: 400 });
     }
 
-    // Get active playlist or create default one
-    let { data: activePlaylist } = await supabase
+    // Get first active playlist or create default one
+    let { data: activePlaylists } = await supabase
       .from('playlists')
       .select('id')
-      .eq('is_active', true)
-      .single();
+      .eq('is_active', true);
+
+    let activePlaylist = activePlaylists?.[0];
 
     // If no active playlist exists, create a default one
     if (!activePlaylist) {
@@ -91,56 +92,105 @@ export async function POST(request) {
 
 export async function GET() {
   try {
-    // Get active playlist
-    const { data: activePlaylist } = await supabase
+    // Get all active playlists
+    const { data: activePlaylists, error: playlistError } = await supabase
       .from('playlists')
       .select('*')
-      .eq('is_active', true)
-      .single();
+      .eq('is_active', true);
 
-    if (!activePlaylist) {
+    if (playlistError) {
+      console.error('Error fetching active playlists:', playlistError);
+      return NextResponse.json({ error: 'Failed to fetch playlists' }, { status: 500 });
+    }
+
+    if (!activePlaylists || activePlaylists.length === 0) {
       return NextResponse.json({
         totalChannels: 0,
         lastUpdated: null,
         groups: [],
         sample: [],
-        activePlaylist: null
+        activePlaylists: []
       });
     }
 
-    // Get all streams from active playlist (remove default 1000 limit)
-    const { data: sample, error: sampleError } = await supabase
-      .from('streams')
-      .select('*')
-      .eq('playlist_id', activePlaylist.id)
-      .order('id', { ascending: true })
-      .limit(10000); // Set high limit to get all channels
+    // Get all streams from all active playlists
+    const playlistIds = activePlaylists.map(p => p.id);
+
+    // Fetch all streams without limit (Supabase default is 1000, so we need to handle this properly)
+    let allStreams = [];
+    let hasMore = true;
+    let offset = 0;
+    const batchSize = 1000;
+
+    while (hasMore) {
+      const { data: batch, error: batchError } = await supabase
+        .from('streams')
+        .select('*')
+        .in('playlist_id', playlistIds)
+        .order('id', { ascending: true })
+        .range(offset, offset + batchSize - 1);
+
+      if (batchError) {
+        console.error('Error fetching streams batch:', batchError);
+        break;
+      }
+
+      if (batch && batch.length > 0) {
+        allStreams = allStreams.concat(batch);
+        offset += batchSize;
+        hasMore = batch.length === batchSize;
+      } else {
+        hasMore = false;
+      }
+    }
+
+    const sampleError = null;
 
     if (sampleError) {
       console.error('Error fetching streams:', sampleError);
       return NextResponse.json({
-        totalChannels: activePlaylist.total_channels || 0,
-        lastUpdated: activePlaylist.updated_at,
+        totalChannels: 0,
+        lastUpdated: null,
         groups: [],
         sample: [],
-        activePlaylist,
+        activePlaylists,
         error: sampleError.message
       });
     }
 
+    // Calculate total channels across all active playlists
+    const totalChannels = allStreams?.length || 0;
+
+    // Get the most recent update time
+    const lastUpdated = activePlaylists.reduce((latest, playlist) => {
+      const playlistDate = new Date(playlist.updated_at);
+      return !latest || playlistDate > latest ? playlistDate : latest;
+    }, null);
+
+    // Aggregate groups/categories
+    const groupMap = {};
+    allStreams?.forEach(stream => {
+      const category = stream.category || 'Uncategorized';
+      groupMap[category] = (groupMap[category] || 0) + 1;
+    });
+
+    const groups = Object.entries(groupMap).map(([name, count]) => ({ name, count }));
+
     console.log('Playlist API Response:', {
-      totalChannels: activePlaylist.total_channels || 0,
-      sampleCount: sample?.length || 0,
+      totalChannels,
+      sampleCount: allStreams?.length || 0,
+      activePlaylistsCount: activePlaylists.length,
       hasError: !!sampleError,
-      playlistName: activePlaylist.name
+      playlistNames: activePlaylists.map(p => p.name).join(', ')
     });
 
     return NextResponse.json({
-      totalChannels: activePlaylist.total_channels || 0,
-      lastUpdated: activePlaylist.updated_at,
-      groups: [], // TODO: optimize group aggregation
-      sample: sample || [],
-      activePlaylist
+      totalChannels,
+      lastUpdated: lastUpdated?.toISOString() || null,
+      groups,
+      sample: allStreams || [],
+      activePlaylists,
+      activePlaylist: activePlaylists[0] // For backward compatibility
     });
   } catch (error) {
     console.error('GET /api/playlist error:', error);

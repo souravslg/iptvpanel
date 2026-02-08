@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 
-// POST - Switch active playlist
+// POST - Toggle playlist active state (allows multiple active playlists)
 export async function POST(request) {
     try {
         const { id } = await request.json();
@@ -10,7 +10,7 @@ export async function POST(request) {
             return NextResponse.json({ error: 'Playlist ID is required' }, { status: 400 });
         }
 
-        // Verify playlist exists
+        // Get current playlist state
         const { data: playlist, error: fetchError } = await supabase
             .from('playlists')
             .select('*')
@@ -21,23 +21,23 @@ export async function POST(request) {
             return NextResponse.json({ error: 'Playlist not found' }, { status: 404 });
         }
 
-        // Deactivate all playlists
-        await supabase
-            .from('playlists')
-            .update({ is_active: false })
-            .neq('id', 0); // Update all
+        // Toggle the active state
+        const newActiveState = !playlist.is_active;
 
-        // Activate the selected playlist
         const { error: updateError } = await supabase
             .from('playlists')
-            .update({ is_active: true })
+            .update({ is_active: newActiveState })
             .eq('id', id);
 
         if (updateError) throw updateError;
 
-        return NextResponse.json({ success: true, playlist });
+        return NextResponse.json({
+            success: true,
+            playlist: { ...playlist, is_active: newActiveState },
+            message: newActiveState ? 'Playlist activated' : 'Playlist deactivated'
+        });
     } catch (error) {
-        console.error('Error switching playlist:', error);
+        console.error('Error toggling playlist:', error);
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }
