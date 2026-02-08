@@ -12,7 +12,9 @@ export async function GET(request, context) {
         return new NextResponse('Invalid request parameters', { status: 400 });
     }
 
-    const cleanStreamId = decodeURIComponent(streamId.replace(/\.(ts|m3u8|mp4)$/, ''));
+    // Clean any pipe headers from the input ID (e.g. |User-Agent=...)
+    // Also remove extensions
+    const cleanStreamId = decodeURIComponent(streamId.replace(/(\.(ts|m3u8|mp4))?(\|.*)?$/, ''));
 
     try {
         console.log('Live stream request:', { username, password, streamId, cleanStreamId });
@@ -221,8 +223,33 @@ export async function GET(request, context) {
             });
         }
 
-        // Redirect to the actual stream URL
-        return NextResponse.redirect(stream.url);
+        // Construct Final URL with Headers for Player Compatibility
+        // Many players (OTT Navigator, Tivimate) support appending headers via pipe (|)
+        // If we extracted headers during import, we should append them back here
+        // so the player knows what headers to use for the redirect.
+
+        let finalUrl = stream.url;
+
+        if (stream.headers) {
+            const headers = typeof stream.headers === 'string' ? JSON.parse(stream.headers) : stream.headers;
+            const headerParts = [];
+
+            if (headers['User-Agent'] || headers['user-agent']) {
+                headerParts.push(`User-Agent=${headers['User-Agent'] || headers['user-agent']}`);
+            }
+            if (headers['Referer'] || headers['referer']) {
+                headerParts.push(`Referer=${headers['Referer'] || headers['referer']}`);
+            }
+
+            // Append other headers if needed, but UA/Referer are most critical
+
+            if (headerParts.length > 0) {
+                finalUrl += `|${headerParts.join('&')}`;
+            }
+        }
+
+        // Redirect to the actual stream URL with headers appended
+        return NextResponse.redirect(finalUrl);
     } catch (error) {
         console.error('Stream proxy error:', {
             message: error.message,
