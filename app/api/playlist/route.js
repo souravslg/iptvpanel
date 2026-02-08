@@ -116,32 +116,28 @@ export async function GET() {
     // Get all streams from all active playlists
     const playlistIds = activePlaylists.map(p => p.id);
 
-    // Fetch all streams without limit (Supabase default is 1000, so we need to handle this properly)
-    let allStreams = [];
-    let hasMore = true;
-    let offset = 0;
-    const batchSize = 1000;
+    // 1. Get total count efficiently
+    const { count, error: countError } = await supabase
+      .from('streams')
+      .select('*', { count: 'exact', head: true })
+      .in('playlist_id', playlistIds);
 
-    while (hasMore) {
-      const { data: batch, error: batchError } = await supabase
-        .from('streams')
-        .select('*')
-        .in('playlist_id', playlistIds)
-        .order('id', { ascending: true })
-        .range(offset, offset + batchSize - 1);
+    if (countError) {
+      console.error('Error counting streams:', countError);
+    }
 
-      if (batchError) {
-        console.error('Error fetching streams batch:', batchError);
-        break;
-      }
+    // 2. Fetch streams with a limit to prevent timeouts/memory issues
+    // TODO: Implement proper server-side pagination for full access
+    const { data: allStreams, error: streamsError } = await supabase
+      .from('streams')
+      .select('*')
+      .in('playlist_id', playlistIds)
+      .order('id', { ascending: true })
+      .limit(2000); // Increased limit slightly, but keeps it safe
 
-      if (batch && batch.length > 0) {
-        allStreams = allStreams.concat(batch);
-        offset += batchSize;
-        hasMore = batch.length === batchSize;
-      } else {
-        hasMore = false;
-      }
+    if (streamsError) {
+      console.error('Error fetching streams:', streamsError);
+      return NextResponse.json({ error: 'Failed to fetch streams' }, { status: 500 });
     }
 
     const sampleError = null;
@@ -159,7 +155,8 @@ export async function GET() {
     }
 
     // Calculate total channels across all active playlists
-    const totalChannels = allStreams?.length || 0;
+    // Use the count from the head query, or length if fallback
+    const totalChannels = count || allStreams?.length || 0;
 
     // Get the most recent update time
     const lastUpdated = activePlaylists.reduce((latest, playlist) => {

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 import { TataPlay } from '@/lib/tataplay';
+import { SonyLiv } from '@/lib/sonyliv';
 
 export async function GET(request, context) {
     const params = await Promise.resolve(context.params);
@@ -63,24 +64,6 @@ export async function GET(request, context) {
         let targetUrl = stream.url;
         let licenseUrl = null;
 
-        // -------------------------------------------------------------
-        // TATA PLAY SPECIAL HANDLING
-        // -------------------------------------------------------------
-        if (cleanStreamId.startsWith('tataplay-')) {
-            const channelId = cleanStreamId.replace('tataplay-', '');
-            const tpData = await TataPlay.getStreamUrl(channelId);
-            if (tpData) {
-                targetUrl = tpData.url;
-                licenseUrl = tpData.licenseUrl;
-            }
-        }
-        // -------------------------------------------------------------
-
-
-
-
-        if (!targetUrl) return new NextResponse('Missing target URL', { status: 500 });
-
         // 3. Prepare Headers for Fetch
         const fetchHeaders = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
@@ -89,11 +72,37 @@ export async function GET(request, context) {
         if (stream.headers) {
             const storedHeaders = typeof stream.headers === 'string' ? JSON.parse(stream.headers) : stream.headers;
             const getStored = (k) => storedHeaders[k] || storedHeaders[k.toLowerCase()];
-
             if (getStored('User-Agent')) fetchHeaders['User-Agent'] = getStored('User-Agent');
             if (getStored('Referer')) fetchHeaders['Referer'] = getStored('Referer');
             if (getStored('Origin')) fetchHeaders['Origin'] = getStored('Origin');
         }
+
+        // -------------------------------------------------------------
+        // SOURCE-SPECIFIC HANDLING (Tata Play, SonyLiv, etc.)
+        // -------------------------------------------------------------
+        if (cleanStreamId.startsWith('tataplay-')) {
+            const channelId = cleanStreamId.replace('tataplay-', '');
+            const tpData = await TataPlay.getStreamUrl(channelId);
+            if (tpData) {
+                targetUrl = tpData.url;
+                licenseUrl = tpData.licenseUrl;
+                if (tpData.headers) Object.assign(fetchHeaders, tpData.headers);
+            }
+        }
+
+        if (cleanStreamId.startsWith('sonyliv-')) {
+            const channelId = cleanStreamId.replace('sonyliv-', '');
+            const slData = await SonyLiv.getStreamUrl(channelId);
+            if (slData) {
+                targetUrl = slData.url;
+                licenseUrl = slData.licenseUrl;
+                if (slData.headers) Object.assign(fetchHeaders, slData.headers);
+            }
+        }
+        // -------------------------------------------------------------
+
+        if (!targetUrl) return new NextResponse('Missing target URL', { status: 500 });
+
 
         console.log('Fetching source URL:', targetUrl);
 

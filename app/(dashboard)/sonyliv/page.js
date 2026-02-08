@@ -1,22 +1,21 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Play, User, ShieldCheck, RefreshCw, LogOut, CheckCircle2, AlertCircle, HardDrive } from 'lucide-react';
+import { Play, User, ShieldCheck, RefreshCw, LogOut, CheckCircle2, AlertCircle, HardDrive, Smartphone } from 'lucide-react';
 
-export default function TataPlayPage() {
+export default function SonyLivPage() {
     const [status, setStatus] = useState('checking');
     const [session, setSession] = useState(null);
-    const [sid, setSid] = useState('');
+    const [mobileNumber, setMobileNumber] = useState('');
     const [otp, setOtp] = useState('');
     const [step, setStep] = useState(1);
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
     const [useManualMode, setUseManualMode] = useState(false);
     const [manualTokens, setManualTokens] = useState({
-        sid: '',
-        accessToken: '',
-        refreshToken: '',
-        userToken: ''
+        mobileNumber: '',
+        token: '',
+        userId: ''
     });
 
     useEffect(() => {
@@ -24,9 +23,9 @@ export default function TataPlayPage() {
     }, []);
 
     const checkSession = async () => {
-        const res = await fetch('/api/tataplay/session');
+        const res = await fetch('/api/sonyliv/session');
         const data = await res.json();
-        if (data.loggedIn) {
+        if (data.session) {
             setSession(data.session);
             setStatus('connected');
         } else {
@@ -39,15 +38,15 @@ export default function TataPlayPage() {
         setLoading(true);
         setMessage('');
         try {
-            const res = await fetch('/api/tataplay/otp/request', {
+            const res = await fetch('/api/sonyliv/otp/request', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ sid })
+                body: JSON.stringify({ mobileNumber })
             });
             const data = await res.json();
             if (data.success) {
                 setStep(2);
-                setMessage('OTP sent to your registered mobile number');
+                setMessage(data.message || 'OTP sent successfully');
             } else {
                 setMessage(data.error || 'Failed to send OTP');
             }
@@ -62,10 +61,10 @@ export default function TataPlayPage() {
         setLoading(true);
         setMessage('');
         try {
-            const res = await fetch('/api/tataplay/otp/verify', {
+            const res = await fetch('/api/sonyliv/otp/verify', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ sid, otp })
+                body: JSON.stringify({ mobileNumber, otp })
             });
             const data = await res.json();
             if (data.success) {
@@ -79,12 +78,29 @@ export default function TataPlayPage() {
         setLoading(false);
     };
 
+    const handleSync = async () => {
+        setLoading(true);
+        setMessage('Syncing SonyLiv channels...');
+        try {
+            const res = await fetch('/api/sonyliv/sync', { method: 'POST' });
+            const data = await res.json();
+            if (data.success) {
+                setMessage(`Successfully synced ${data.count} channels!`);
+            } else {
+                setMessage(data.error || 'Sync failed');
+            }
+        } catch (e) {
+            setMessage('Sync failed due to network error');
+        }
+        setLoading(false);
+    };
+
     const handleManualLogin = async (e) => {
         e.preventDefault();
         setLoading(true);
         setMessage('');
         try {
-            const res = await fetch('/api/tataplay/manual', {
+            const res = await fetch('/api/sonyliv/manual', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(manualTokens)
@@ -102,26 +118,9 @@ export default function TataPlayPage() {
         setLoading(false);
     };
 
-    const handleSync = async () => {
-        setLoading(true);
-        setMessage('Syncing channels...');
-        try {
-            const res = await fetch('/api/tataplay/sync', { method: 'POST' });
-            const data = await res.json();
-            if (data.success) {
-                setMessage(`Successfully synced ${data.count} channels!`);
-            } else {
-                setMessage(data.error || 'Sync failed');
-            }
-        } catch (e) {
-            setMessage('Sync failed due to network error');
-        }
-        setLoading(false);
-    };
-
     const handleLogout = async () => {
-        if (!confirm('Are you sure you want to logout from Tata Play?')) return;
-        await fetch('/api/tataplay/session', { method: 'DELETE' });
+        if (!confirm('Are you sure you want to logout from SonyLiv?')) return;
+        await fetch('/api/sonyliv/session', { method: 'DELETE' });
         setSession(null);
         setStatus('disconnected');
         setStep(1);
@@ -131,21 +130,21 @@ export default function TataPlayPage() {
     return (
         <div className="p-6 max-w-4xl mx-auto">
             <div className="mb-8">
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">Tata Play Integration</h1>
-                <p className="text-gray-600">Sync and manage your Tata Play subscribed channels</p>
+                <h1 className="text-3xl font-bold text-gray-900 mb-2">SonyLiv Integration</h1>
+                <p className="text-gray-600">Sync and manage your SonyLiv Live TV channels</p>
             </div>
 
             {status === 'connected' ? (
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div className="p-8 bg-gradient-to-r from-red-600 to-rose-700 text-white">
+                    <div className="p-8 bg-gradient-to-r from-[#2c1f3d] to-[#1a1a1a] text-white">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-4">
-                                <div className="p-3 bg-white/20 rounded-xl backdrop-blur-md">
-                                    <Play className="w-8 h-8 fill-current" />
+                                <div className="p-3 bg-white/10 rounded-xl backdrop-blur-md border border-white/20">
+                                    <Play className="w-8 h-8 text-[#ff6a00]" fill="currentColor" />
                                 </div>
                                 <div>
                                     <h2 className="text-xl font-bold">Account Connected</h2>
-                                    <p className="text-red-100">Subscriber ID: {session.sid}</p>
+                                    <p className="text-gray-300">Mobile: {session.number}</p>
                                 </div>
                             </div>
                             <button
@@ -162,16 +161,16 @@ export default function TataPlayPage() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                             <div className="p-6 rounded-2xl bg-gray-50 border border-gray-100 transition-all hover:bg-gray-100">
                                 <div className="flex items-center gap-3 mb-4">
-                                    <RefreshCw className="w-5 h-5 text-red-600" />
+                                    <RefreshCw className="w-5 h-5 text-[#ff6a00]" />
                                     <h3 className="font-semibold text-gray-800">Sync Playlist</h3>
                                 </div>
                                 <p className="text-sm text-gray-600 mb-6 leading-relaxed">
-                                    Fetch all your subscribed channels and add them to the currently active playlist in the panel.
+                                    Fetch SonyLiv channels and add them to the currently active playlist in the panel.
                                 </p>
                                 <button
                                     onClick={handleSync}
                                     disabled={loading}
-                                    className="w-full py-3 bg-red-600 text-white rounded-xl font-bold shadow-md shadow-red-100 hover:bg-red-700 disabled:opacity-50 transition-all flex items-center justify-center gap-2 group"
+                                    className="w-full py-3 bg-[#ff6a00] text-white rounded-xl font-bold shadow-md shadow-orange-100 hover:bg-[#e55f00] disabled:opacity-50 transition-all flex items-center justify-center gap-2 group"
                                 >
                                     {loading ? <RefreshCw className="w-5 h-5 animate-spin" /> : (
                                         <>
@@ -188,16 +187,16 @@ export default function TataPlayPage() {
                                     <h3 className="font-semibold text-gray-800">Connection Status</h3>
                                 </div>
                                 <p className="text-sm text-gray-600 mb-4 leading-relaxed">
-                                    Your Tata Play session is active. Streams will be proxied with Widevine DRM headers automatically.
+                                    SonyLiv session is active. Streams will be proxied with Widevine DRM headers automatically.
                                 </p>
                                 <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-green-100 text-green-700 rounded-full text-xs font-bold uppercase tracking-widest">
-                                    License Active
+                                    Active
                                 </div>
                             </div>
                         </div>
 
                         {message && (
-                            <div className={`p-4 rounded-xl flex items-center gap-3 animate-in fade-in slide-in-from-bottom-2 ${message.includes('success') || message.includes('Syncing') || message.includes('Synced') ? 'bg-green-50 text-green-700 border border-green-100' : 'bg-red-50 text-red-700 border border-red-100'}`}>
+                            <div className={`p-4 rounded-xl flex items-center gap-3 animate-in fade-in slide-in-from-bottom-2 ${message.includes('success') || message.includes('Sync') || message.includes('Synced') ? 'bg-green-50 text-green-700 border border-green-100' : 'bg-red-50 text-red-700 border border-red-100'}`}>
                                 <AlertCircle className="w-5 h-5 flex-shrink-0" />
                                 <span className="font-medium text-sm">{message}</span>
                             </div>
@@ -207,34 +206,34 @@ export default function TataPlayPage() {
             ) : (
                 <div className="max-w-md mx-auto">
                     <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 p-8 text-center relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-red-50 rounded-full -mr-16 -mt-16 opacity-50"></div>
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-orange-50 rounded-full -mr-16 -mt-16 opacity-50"></div>
 
-                        <div className="w-24 h-24 bg-red-50 rounded-3xl flex items-center justify-center mx-auto mb-6 relative">
-                            <Play className="w-12 h-12 text-red-600 fill-current" />
+                        <div className="w-24 h-24 bg-[#2c1f3d] rounded-3xl flex items-center justify-center mx-auto mb-6 relative">
+                            <Smartphone className="w-12 h-12 text-[#ff6a00]" />
                         </div>
 
-                        <h2 className="text-2xl font-black text-gray-900 mb-2 uppercase tracking-tighter italic">Tata Play</h2>
-                        <p className="text-gray-500 mb-8 font-medium">Connect your account to fetch your channels.</p>
+                        <h2 className="text-2xl font-black text-gray-900 mb-2 uppercase tracking-tighter italic">SonyLiv</h2>
+                        <p className="text-gray-500 mb-8 font-medium">Connect your account using mobile number.</p>
 
                         {!useManualMode ? (
                             <>
                                 <form onSubmit={step === 1 ? handleRequestOTP : handleVerifyOTP} className="space-y-4 relative">
                                     <div className="relative group">
-                                        <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 group-focus-within:text-red-500 transition-colors" />
+                                        <Smartphone className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 group-focus-within:text-[#ff6a00] transition-colors" />
                                         <input
                                             type="text"
-                                            placeholder="Subscriber ID"
-                                            value={sid}
-                                            onChange={(e) => setSid(e.target.value)}
+                                            placeholder="Mobile Number (91...)"
+                                            value={mobileNumber}
+                                            onChange={(e) => setMobileNumber(e.target.value)}
                                             disabled={step === 2 || loading}
-                                            className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-red-500/10 focus:border-red-500 outline-none transition-all font-bold placeholder:font-medium"
+                                            className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-orange-500/10 focus:border-[#ff6a00] outline-none transition-all font-bold placeholder:font-medium"
                                             required
                                         />
                                     </div>
 
                                     {step === 2 && (
                                         <div className="relative group animate-in zoom-in-95 duration-200">
-                                            <ShieldCheck className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 group-focus-within:text-red-500 transition-colors" />
+                                            <ShieldCheck className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 group-focus-within:text-[#ff6a00] transition-colors" />
                                             <input
                                                 type="text"
                                                 placeholder="Enter OTP"
@@ -242,7 +241,7 @@ export default function TataPlayPage() {
                                                 onChange={(e) => setOtp(e.target.value)}
                                                 disabled={loading}
                                                 maxLength={6}
-                                                className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-red-500/10 focus:border-red-500 outline-none transition-all font-bold tracking-[0.5em] text-center"
+                                                className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-4 focus:ring-orange-500/10 focus:border-[#ff6a00] outline-none transition-all font-bold tracking-[0.5em] text-center"
                                                 required
                                             />
                                         </div>
@@ -251,19 +250,19 @@ export default function TataPlayPage() {
                                     <button
                                         type="submit"
                                         disabled={loading}
-                                        className="w-full py-4 bg-red-600 text-white rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-red-200 hover:bg-red-700 hover:-translate-y-1 active:translate-y-0 disabled:opacity-50 transition-all flex items-center justify-center gap-3"
+                                        className="w-full py-4 bg-[#ff6a00] text-white rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-orange-200 hover:bg-[#e55f00] hover:-translate-y-1 active:translate-y-0 disabled:opacity-50 transition-all flex items-center justify-center gap-3"
                                     >
                                         {loading && <RefreshCw className="w-5 h-5 animate-spin" />}
-                                        {step === 1 ? 'Get Verification Code' : 'Link Account'}
+                                        {step === 1 ? 'Get OTP' : 'Verify & Login'}
                                     </button>
 
                                     {step === 2 && (
                                         <button
                                             type="button"
                                             onClick={() => setStep(1)}
-                                            className="text-sm text-gray-400 hover:text-red-600 font-bold transition-colors underline decoration-2 underline-offset-4"
+                                            className="text-sm text-gray-400 hover:text-[#ff6a00] font-bold transition-colors underline decoration-2 underline-offset-4"
                                         >
-                                            Change Subscriber ID
+                                            Change Number
                                         </button>
                                     )}
                                 </form>
@@ -280,58 +279,58 @@ export default function TataPlayPage() {
                         ) : (
                             <>
                                 <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6 text-left">
-                                    <h3 className="font-bold text-blue-900 mb-2 text-sm">📝 How to get your tokens:</h3>
+                                    <h3 className="font-bold text-blue-900 mb-2 text-sm">📝 How to get your token:</h3>
                                     <ol className="text-xs text-blue-800 space-y-1 ml-4 list-decimal">
-                                        <li>Open <a href="https://watch.tataplay.com" target="_blank" rel="noopener noreferrer" className="underline">watch.tataplay.com</a> in a new tab</li>
-                                        <li>Login with your Subscriber ID and OTP</li>
+                                        <li>Open <a href="https://www.sonyliv.com" target="_blank" rel="noopener noreferrer" className="underline">www.sonyliv.com</a> in a new tab</li>
+                                        <li>Login with your mobile number and OTP</li>
                                         <li>Press <kbd className="px-1.5 py-0.5 bg-blue-200 rounded text-[10px] font-mono">F12</kbd> to open DevTools</li>
                                         <li>Go to <span className="font-bold">Network</span> tab</li>
-                                        <li>Refresh the page or click any channel</li>
-                                        <li>Find a request to <code className="bg-blue-200 px-1 rounded">tap-api</code></li>
+                                        <li>Refresh the page or browse channels</li>
+                                        <li>Find a request to <code className="bg-blue-200 px-1 rounded">apiv2.sonyliv.com</code></li>
                                         <li>Click it, go to <span className="font-bold">Headers</span></li>
-                                        <li>Copy the <code className="bg-blue-200 px-1 rounded">Authorization</code> value (starts with "Bearer")</li>
+                                        <li>Copy the <code className="bg-blue-200 px-1 rounded">Authorization</code> value (JWT token)</li>
                                     </ol>
                                 </div>
 
                                 <form onSubmit={handleManualLogin} className="space-y-3 text-left">
                                     <div>
-                                        <label className="block text-xs font-bold text-gray-700 mb-1">Subscriber ID</label>
+                                        <label className="block text-xs font-bold text-gray-700 mb-1">Mobile Number</label>
                                         <input
                                             type="text"
-                                            placeholder="Your Subscriber ID"
-                                            value={manualTokens.sid}
-                                            onChange={(e) => setManualTokens({ ...manualTokens, sid: e.target.value })}
-                                            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none text-sm"
+                                            placeholder="91XXXXXXXXXX"
+                                            value={manualTokens.mobileNumber}
+                                            onChange={(e) => setManualTokens({ ...manualTokens, mobileNumber: e.target.value })}
+                                            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500/20 focus:border-[#ff6a00] outline-none text-sm"
                                             required
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block text-xs font-bold text-gray-700 mb-1">Access Token (from Authorization header)</label>
+                                        <label className="block text-xs font-bold text-gray-700 mb-1">JWT Token (from Authorization header)</label>
                                         <textarea
-                                            placeholder="Bearer eyJhbGc..."
-                                            value={manualTokens.accessToken}
-                                            onChange={(e) => setManualTokens({ ...manualTokens, accessToken: e.target.value.replace('Bearer ', '') })}
-                                            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none text-xs font-mono h-20"
+                                            placeholder="eyJhbGciOiJIUzI1..."
+                                            value={manualTokens.token}
+                                            onChange={(e) => setManualTokens({ ...manualTokens, token: e.target.value.replace('Bearer ', '') })}
+                                            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500/20 focus:border-[#ff6a00] outline-none text-xs font-mono h-20"
                                             required
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block text-xs font-bold text-gray-700 mb-1">Refresh Token (optional)</label>
+                                        <label className="block text-xs font-bold text-gray-700 mb-1">User ID (optional)</label>
                                         <input
                                             type="text"
                                             placeholder="Optional"
-                                            value={manualTokens.refreshToken}
-                                            onChange={(e) => setManualTokens({ ...manualTokens, refreshToken: e.target.value })}
-                                            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500/20 focus:border-red-500 outline-none text-sm"
+                                            value={manualTokens.userId}
+                                            onChange={(e) => setManualTokens({ ...manualTokens, userId: e.target.value })}
+                                            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500/20 focus:border-[#ff6a00] outline-none text-sm"
                                         />
                                     </div>
 
                                     <button
                                         type="submit"
                                         disabled={loading}
-                                        className="w-full py-3 bg-red-600 text-white rounded-xl font-bold shadow-lg shadow-red-200 hover:bg-red-700 disabled:opacity-50 transition-all flex items-center justify-center gap-2"
+                                        className="w-full py-3 bg-[#ff6a00] text-white rounded-xl font-bold shadow-lg shadow-orange-200 hover:bg-[#e55f00] disabled:opacity-50 transition-all flex items-center justify-center gap-2"
                                     >
                                         {loading && <RefreshCw className="w-4 h-4 animate-spin" />}
                                         Save & Connect
@@ -350,22 +349,11 @@ export default function TataPlayPage() {
                         )}
 
                         {message && (
-                            <div className="mt-6 p-4 bg-red-50 text-red-600 rounded-2xl text-sm font-bold flex items-center justify-center gap-2 border border-red-100">
+                            <div className={`mt-6 p-4 rounded-2xl text-sm font-bold flex items-center justify-center gap-2 border ${message.includes('success') || message.includes('successfully') || message.includes('Sent') ? 'bg-green-50 text-green-600 border-green-100' : 'bg-red-50 text-red-600 border-red-100'}`}>
                                 <AlertCircle className="w-5 h-5" />
                                 {message}
                             </div>
                         )}
-                    </div>
-
-                    <div className="mt-8 grid grid-cols-2 gap-4">
-                        <div className="p-5 bg-white rounded-3xl border border-gray-100 text-center shadow-sm">
-                            <h4 className="font-black text-gray-900 uppercase text-xs tracking-wider mb-1">DRM Streams</h4>
-                            <p className="text-[10px] text-gray-400 font-bold">Auto-licensed</p>
-                        </div>
-                        <div className="p-5 bg-white rounded-3xl border border-gray-100 text-center shadow-sm">
-                            <h4 className="font-black text-gray-900 uppercase text-xs tracking-wider mb-1">Active Sync</h4>
-                            <p className="text-[10px] text-gray-400 font-bold">Real-time update</p>
-                        </div>
                     </div>
                 </div>
             )}

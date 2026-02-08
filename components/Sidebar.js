@@ -16,6 +16,8 @@ const Sidebar = () => {
         { name: 'Xtream Panel', href: '/xtream', icon: Wifi },
         { name: 'Playlist', href: '/playlist', icon: FileVideo },
         { name: 'Tata Play', href: '/tataplay', icon: Play },
+        { name: 'SonyLiv', href: '/sonyliv', icon: Tv },
+        { name: 'Zee5', href: '/zee5', icon: Tv },
         { name: 'Settings', href: '/settings', icon: Settings },
     ];
 
@@ -30,36 +32,42 @@ const Sidebar = () => {
     };
 
     return (
-        <aside className="sidebar-wrapper">
-            <div className="sidebar-header">
-                <div className="p-2 bg-blue-50 rounded-lg">
-                    <Tv size={24} className="text-primary" />
+        <aside className="w-64 bg-slate-800 border-r border-slate-700 flex flex-col h-screen shrink-0 relative z-20">
+            <div className="h-16 flex items-center px-6 border-b border-slate-700">
+                <div className="flex items-center gap-3">
+                    <div className="bg-blue-600 p-1.5 rounded">
+                        <Tv size={20} className="text-white" />
+                    </div>
+                    <span className="text-lg font-bold text-white">SRV PANEL</span>
                 </div>
-                <span className="sidebar-title">
-                    AdminPanel
-                </span>
             </div>
 
-            <nav className="nav-container">
+            <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
                 {navItems.map((item) => {
                     const isActive = pathname === item.href;
                     return (
                         <Link
                             key={item.name}
                             href={item.href}
-                            className={`nav-item ${isActive ? 'active' : ''}`}
+                            className={`flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md transition-colors ${isActive
+                                    ? 'bg-blue-600 text-white'
+                                    : 'text-slate-300 hover:bg-slate-700 hover:text-white'
+                                }`}
                         >
-                            <item.icon size={20} />
-                            <span>{item.name}</span>
+                            <item.icon size={18} />
+                            {item.name}
                         </Link>
                     );
                 })}
             </nav>
 
-            <div className="sidebar-footer">
-                <button onClick={handleLogout} className="logout-btn">
-                    <LogOut size={20} style={{ marginRight: '0.75rem' }} />
-                    Logout
+            <div className="p-4 border-t border-slate-700">
+                <button
+                    onClick={handleLogout}
+                    className="flex w-full items-center gap-3 px-3 py-2 text-sm font-medium text-red-400 rounded-md hover:bg-slate-700 hover:text-red-300 transition-colors"
+                >
+                    <LogOut size={18} />
+                    Log Out
                 </button>
             </div>
         </aside>
