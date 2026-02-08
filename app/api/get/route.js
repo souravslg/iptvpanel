@@ -35,11 +35,54 @@ export async function GET(request) {
             return new NextResponse('Account expired or inactive', { status: 401 });
         }
 
-        // Get all streams (remove default 1000 limit)
-        const { data: streams } = await supabase
-            .from('streams')
-            .select('*')
-            .limit(10000); // Set high limit to get all channels
+        // Get active playlists first
+        const { data: activePlaylists, error: playlistError } = await supabase
+            .from('playlists')
+            .select('id')
+            .eq('is_active', true);
+
+        if (playlistError || !activePlaylists || activePlaylists.length === 0) {
+            console.log('No active playlists found');
+            return new NextResponse('#EXTM3U\n', {
+                headers: {
+                    'Content-Type': 'application/x-mpegURL',
+                    'Content-Disposition': `attachment; filename="${username}.m3u"`
+                }
+            });
+        }
+
+        const playlistIds = activePlaylists.map(p => p.id);
+        console.log('Fetching streams from active playlists:', playlistIds);
+
+        // Fetch all streams from active playlists using batch pagination
+        let allStreams = [];
+        let hasMore = true;
+        let offset = 0;
+        const batchSize = 1000;
+
+        while (hasMore) {
+            const { data: batch, error: batchError } = await supabase
+                .from('streams')
+                .select('*')
+                .in('playlist_id', playlistIds)
+                .order('id', { ascending: true })
+                .range(offset, offset + batchSize - 1);
+
+            if (batchError) {
+                console.error('Error fetching streams batch:', batchError);
+                break;
+            }
+
+            if (batch && batch.length > 0) {
+                allStreams = allStreams.concat(batch);
+                offset += batchSize;
+                hasMore = batch.length === batchSize;
+            } else {
+                hasMore = false;
+            }
+        }
+
+        console.log(`Fetched ${allStreams.length} streams from ${activePlaylists.length} active playlist(s)`);
 
         // Generate M3U playlist
         const host = request.headers.get('host') || 'localhost:3000';
@@ -48,7 +91,7 @@ export async function GET(request) {
 
         let m3u = '#EXTM3U\n';
 
-        (streams || []).forEach(stream => {
+        allStreams.forEach(stream => {
             const tvgId = stream.stream_id || stream.id;
             const tvgName = stream.name;
             const tvgLogo = stream.logo || '';
