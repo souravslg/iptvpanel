@@ -97,7 +97,7 @@ export async function GET(request, context) {
             return new NextResponse('Stream URL not configured', { status: 500 });
         }
 
-        // Track active stream (upsert based on user and stream)
+        // Track active stream (one stream per user - replace old streams)
         try {
             console.log('📊 Attempting to track stream:', { username, streamId: cleanStreamId });
 
@@ -121,7 +121,7 @@ export async function GET(request, context) {
             }
 
             if (existingStream) {
-                // Update last_ping for existing stream
+                // Update last_ping for existing stream (same channel)
                 console.log('🔄 Updating existing stream record:', existingStream.id);
                 const { error: updateError } = await supabase
                     .from('active_streams')
@@ -137,6 +137,18 @@ export async function GET(request, context) {
                     console.log('✅ Stream updated successfully');
                 }
             } else {
+                // User is switching to a different channel
+                // Delete ALL existing streams for this user first
+                console.log('🗑️  Deleting old streams for user:', username);
+                const { error: deleteError } = await supabase
+                    .from('active_streams')
+                    .delete()
+                    .eq('username', username);
+
+                if (deleteError) {
+                    console.warn('⚠️  Error deleting old streams:', deleteError);
+                }
+
                 // Insert new active stream record
                 console.log('➕ Inserting new stream record');
                 const { data: insertData, error: insertError } = await supabase
