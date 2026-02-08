@@ -56,7 +56,7 @@ export async function GET(request) {
             m3u += `#EXTINF:-1 tvg-id="${tvgId}" tvg-name="${tvgName}" tvg-logo="${tvgLogo}" group-title="${groupTitle}",${tvgName}\n`;
 
             // Always use proxy URL to enforce authentication and expiry checks
-            const streamUrl = `${protocol}://${host}/live/${username}/${password}/${tvgId}.ts`;
+            const streamUrl = `${protocol}://${host}/live/${username}/${password}/${tvgId}.m3u8`;
             m3u += `${streamUrl}\n`;
         });
 
