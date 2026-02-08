@@ -24,16 +24,24 @@ export async function GET(request, { params }) {
         // Check if user is active
         const now = new Date();
         const expireDate = user.expire_date ? new Date(user.expire_date) : null;
-        const isExpired = expireDate && expireDate < now;
+
+        // Compare dates at midnight to avoid timezone issues
+        const nowDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const expireDateOnly = expireDate ? new Date(expireDate.getFullYear(), expireDate.getMonth(), expireDate.getDate()) : null;
+
+        const isExpired = expireDateOnly && expireDateOnly < nowDate;
         const isActive = user.status === 'Active' && !isExpired;
 
-        console.log('User check:', {
+        console.log('User check (DETAILED):', {
             username: user.username,
             status: user.status,
             expireDate: user.expire_date,
+            expireDateParsed: expireDate?.toISOString(),
+            nowDate: nowDate.toISOString(),
+            expireDateOnly: expireDateOnly?.toISOString(),
             isExpired,
             isActive,
-            now: now.toISOString()
+            comparison: expireDateOnly && nowDate ? `${expireDateOnly.toISOString().split('T')[0]} < ${nowDate.toISOString().split('T')[0]} = ${isExpired}` : 'N/A'
         });
 
         if (!isActive) {
