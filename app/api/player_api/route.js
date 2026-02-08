@@ -48,18 +48,62 @@ export async function GET(request) {
 
         // Handle different actions
         if (action === 'get_live_streams' || action === 'get_vod_streams' || action === 'get_series') {
-            // Get all streams (remove default 1000 limit)
-            const { data: streams } = await supabase
-                .from('streams')
-                .select('*')
-                .limit(10000); // Set high limit to get all channels
+            // Get active playlists first
+            const { data: activePlaylists, error: playlistError } = await supabase
+                .from('playlists')
+                .select('id')
+                .eq('is_active', true);
+
+            if (playlistError) {
+                console.error('Error fetching active playlists:', playlistError);
+                return NextResponse.json([], { status: 200 });
+            }
+
+            // If no active playlists, return empty array
+            if (!activePlaylists || activePlaylists.length === 0) {
+                console.log('No active playlists found');
+                return NextResponse.json([]);
+            }
+
+            const playlistIds = activePlaylists.map(p => p.id);
+            console.log('Fetching streams from active playlists:', playlistIds);
+
+            // Get all streams from active playlists (fetch in batches to handle large datasets)
+            let allStreams = [];
+            let hasMore = true;
+            let offset = 0;
+            const batchSize = 1000;
+
+            while (hasMore) {
+                const { data: batch, error: batchError } = await supabase
+                    .from('streams')
+                    .select('*')
+                    .in('playlist_id', playlistIds)
+                    .order('id', { ascending: true })
+                    .range(offset, offset + batchSize - 1);
+
+                if (batchError) {
+                    console.error('Error fetching streams batch:', batchError);
+                    break;
+                }
+
+                if (batch && batch.length > 0) {
+                    allStreams = allStreams.concat(batch);
+                    offset += batchSize;
+                    hasMore = batch.length === batchSize;
+                } else {
+                    hasMore = false;
+                }
+            }
+
+            console.log(`Fetched ${allStreams.length} streams from active playlists`);
 
             // Get server URL
             const protocol = request.headers.get('x-forwarded-proto') || 'http';
             const host = request.headers.get('host') || 'localhost:3000';
             const serverUrl = `${protocol}://${host}`;
 
-            const formattedStreams = (streams || []).map(stream => {
+            const formattedStreams = (allStreams || []).map(stream => {
                 const streamId = stream.stream_id || stream.id;
                 return {
                     num: stream.id,
@@ -82,13 +126,53 @@ export async function GET(request) {
         }
 
         if (action === 'get_live_categories' || action === 'get_vod_categories' || action === 'get_series_categories') {
-            // Get categories (remove default 1000 limit)
-            const { data: streams } = await supabase
-                .from('streams')
-                .select('category')
-                .limit(10000); // Set high limit to get all channels
+            // Get active playlists first
+            const { data: activePlaylists, error: playlistError } = await supabase
+                .from('playlists')
+                .select('id')
+                .eq('is_active', true);
 
-            const categories = [...new Set((streams || []).map(s => s.category).filter(Boolean))];
+            if (playlistError) {
+                console.error('Error fetching active playlists:', playlistError);
+                return NextResponse.json([], { status: 200 });
+            }
+
+            // If no active playlists, return empty array
+            if (!activePlaylists || activePlaylists.length === 0) {
+                console.log('No active playlists found');
+                return NextResponse.json([]);
+            }
+
+            const playlistIds = activePlaylists.map(p => p.id);
+
+            // Get categories from active playlists only
+            let allStreams = [];
+            let hasMore = true;
+            let offset = 0;
+            const batchSize = 1000;
+
+            while (hasMore) {
+                const { data: batch, error: batchError } = await supabase
+                    .from('streams')
+                    .select('category')
+                    .in('playlist_id', playlistIds)
+                    .range(offset, offset + batchSize - 1);
+
+                if (batchError) {
+                    console.error('Error fetching streams batch:', batchError);
+                    break;
+                }
+
+                if (batch && batch.length > 0) {
+                    allStreams = allStreams.concat(batch);
+                    offset += batchSize;
+                    hasMore = batch.length === batchSize;
+                } else {
+                    hasMore = false;
+                }
+            }
+
+            const categories = [...new Set((allStreams || []).map(s => s.category).filter(Boolean))];
             const formattedCategories = categories.map((cat, idx) => ({
                 category_id: idx + 1,
                 category_name: cat,
