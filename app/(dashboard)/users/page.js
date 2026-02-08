@@ -8,6 +8,8 @@ export default function UsersPage() {
     const [search, setSearch] = useState('');
     const [loading, setLoading] = useState(true);
     const [showAddModal, setShowAddModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [editingUser, setEditingUser] = useState(null);
 
     // New User Form State
     const [newUser, setNewUser] = useState({
@@ -16,6 +18,17 @@ export default function UsersPage() {
         maxConnections: 1,
         expireDate: '',
         packageName: 'Full Package',
+        notes: ''
+    });
+
+    // Edit User Form State
+    const [editUser, setEditUser] = useState({
+        username: '',
+        password: '',
+        maxConnections: 1,
+        expireDate: '',
+        packageName: 'Full Package',
+        status: 'Active',
         notes: ''
     });
 
@@ -82,6 +95,51 @@ export default function UsersPage() {
             fetchUsers();
         } catch (error) {
             console.error('Status update failed', error);
+        }
+    };
+
+    const startEditing = (user) => {
+        setEditingUser(user);
+        setEditUser({
+            username: user.username,
+            password: user.password,
+            maxConnections: user.max_connections || 1,
+            expireDate: user.expire_date ? user.expire_date.split('T')[0] : '',
+            packageName: user.package || 'Full Package',
+            status: user.status || 'Active',
+            notes: user.notes || ''
+        });
+        setShowEditModal(true);
+    };
+
+    const handleEditUser = async (e) => {
+        e.preventDefault();
+        try {
+            const res = await fetch('/api/users', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    id: editingUser.id,
+                    username: editUser.username,
+                    password: editUser.password,
+                    maxConnections: editUser.maxConnections,
+                    expireDate: editUser.expireDate,
+                    packageName: editUser.packageName,
+                    status: editUser.status,
+                    notes: editUser.notes
+                })
+            });
+
+            if (res.ok) {
+                setShowEditModal(false);
+                setEditingUser(null);
+                fetchUsers();
+            } else {
+                alert('Failed to update user');
+            }
+        } catch (error) {
+            alert('Failed to update user');
+            console.error(error);
         }
     };
 
@@ -169,6 +227,13 @@ export default function UsersPage() {
                                 <td style={{ textAlign: 'right' }}>
                                     <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
                                         <button
+                                            onClick={() => startEditing(user)}
+                                            style={{ background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer', padding: '0.25rem' }}
+                                            title="Edit User"
+                                        >
+                                            <Edit size={16} />
+                                        </button>
+                                        <button
                                             onClick={() => toggleStatus(user)}
                                             style={{ background: 'none', border: 'none', color: user.status === 'Active' ? '#f87171' : '#4ade80', cursor: 'pointer', padding: '0.25rem' }}
                                             title={user.status === 'Active' ? 'Disable' : 'Enable'}
@@ -235,6 +300,120 @@ export default function UsersPage() {
                             <div className="flex justify-end gap-2 mt-6">
                                 <button type="button" onClick={() => setShowAddModal(false)} className="px-4 py-2 rounded bg-secondary hover:bg-secondary/80">Cancel</button>
                                 <button type="submit" className="px-4 py-2 rounded bg-primary text-white hover:bg-primary/90">Create User</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Edit User Modal */}
+            {showEditModal && editingUser && (
+                <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, backdropFilter: 'blur(4px)' }}>
+                    <div className="stat-card" style={{ width: '100%', maxWidth: '500px', margin: '1rem', maxHeight: '90vh', overflowY: 'auto' }}>
+                        <h2 className="text-xl font-bold mb-4">Edit User: {editingUser.username}</h2>
+                        <form onSubmit={handleEditUser} className="space-y-4">
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label>Username</label>
+                                    <input
+                                        type="text"
+                                        value={editUser.username}
+                                        onChange={e => setEditUser({ ...editUser, username: e.target.value })}
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label>Password</label>
+                                    <div className="flex gap-2">
+                                        <input
+                                            type="text"
+                                            value={editUser.password}
+                                            onChange={e => setEditUser({ ...editUser, password: e.target.value })}
+                                            required
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => setEditUser({ ...editUser, password: Math.random().toString(36).slice(2, 12) })}
+                                            className="p-2 border rounded hover:bg-white/10"
+                                        >
+                                            <RefreshCw size={16} />
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label>Max Connections</label>
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        value={editUser.maxConnections}
+                                        onChange={e => setEditUser({ ...editUser, maxConnections: e.target.value })}
+                                    />
+                                </div>
+                                <div>
+                                    <label>Expiration Date</label>
+                                    <input
+                                        type="date"
+                                        value={editUser.expireDate}
+                                        onChange={e => setEditUser({ ...editUser, expireDate: e.target.value })}
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label>Package</label>
+                                    <select
+                                        value={editUser.packageName}
+                                        onChange={e => setEditUser({ ...editUser, packageName: e.target.value })}
+                                    >
+                                        <option>Full Package</option>
+                                        <option>Sports Only</option>
+                                        <option>Movies Only</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label>Status</label>
+                                    <select
+                                        value={editUser.status}
+                                        onChange={e => setEditUser({ ...editUser, status: e.target.value })}
+                                    >
+                                        <option>Active</option>
+                                        <option>Disabled</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label>Notes (Optional)</label>
+                                <textarea
+                                    value={editUser.notes}
+                                    onChange={e => setEditUser({ ...editUser, notes: e.target.value })}
+                                    rows="3"
+                                    placeholder="Add notes about this user..."
+                                />
+                            </div>
+
+                            <div className="flex justify-end gap-2 mt-6">
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setShowEditModal(false);
+                                        setEditingUser(null);
+                                    }}
+                                    className="px-4 py-2 rounded bg-secondary hover:bg-secondary/80"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="px-4 py-2 rounded bg-primary text-white hover:bg-primary/90"
+                                >
+                                    Save Changes
+                                </button>
                             </div>
                         </form>
                     </div>

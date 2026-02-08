@@ -52,11 +52,16 @@ export async function POST(request) {
 export async function PUT(request) {
     try {
         const body = await request.json();
-        const { id, status, expireDate, notes } = body;
+        const { id, username, password, maxConnections, expireDate, packageName, status, notes } = body;
         const updates = {};
 
-        if (status) updates.status = status;
+        // Add all fields that are provided
+        if (username) updates.username = username;
+        if (password) updates.password = password;
+        if (maxConnections) updates.max_connections = maxConnections;
         if (expireDate) updates.expire_date = expireDate;
+        if (packageName) updates.package = packageName;
+        if (status) updates.status = status;
         if (notes !== undefined) updates.notes = notes;
 
         const { error } = await supabase
@@ -64,10 +69,16 @@ export async function PUT(request) {
             .update(updates)
             .eq('id', id);
 
-        if (error) throw error;
+        if (error) {
+            if (error.code === '23505') { // Unique constraint
+                return NextResponse.json({ error: 'Username already exists' }, { status: 400 });
+            }
+            throw error;
+        }
 
         return NextResponse.json({ success: true });
     } catch (error) {
+        console.error(error);
         return NextResponse.json({ error: 'Failed to update user' }, { status: 500 });
     }
 }
