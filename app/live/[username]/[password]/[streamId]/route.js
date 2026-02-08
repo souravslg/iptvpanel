@@ -97,6 +97,90 @@ export async function GET(request, context) {
             return new NextResponse('Stream URL not configured', { status: 500 });
         }
 
+        // Track active stream (upsert based on user and stream)
+        try {
+            console.log('📊 Attempting to track stream:', { username, streamId: cleanStreamId });
+
+            const userAgent = request.headers.get('user-agent') || 'Unknown';
+            const ipAddress = request.headers.get('x-forwarded-for') ||
+                request.headers.get('x-real-ip') ||
+                'Unknown';
+
+            console.log('📍 Client info:', { userAgent, ipAddress });
+
+            // Check if this user-stream combination already exists
+            const { data: existingStream, error: checkError } = await supabase
+                .from('active_streams')
+                .select('id')
+                .eq('username', username)
+                .eq('stream_id', cleanStreamId)
+                .single();
+
+            if (checkError && checkError.code !== 'PGRST116') {
+                console.warn('⚠️  Error checking existing stream:', checkError);
+            }
+
+            if (existingStream) {
+                // Update last_ping for existing stream
+                console.log('🔄 Updating existing stream record:', existingStream.id);
+                const { error: updateError } = await supabase
+                    .from('active_streams')
+                    .update({
+                        last_ping: new Date().toISOString(),
+                        ip_address: ipAddress
+                    })
+                    .eq('id', existingStream.id);
+
+                if (updateError) {
+                    console.error('❌ Failed to update stream:', updateError);
+                } else {
+                    console.log('✅ Stream updated successfully');
+                }
+            } else {
+                // Insert new active stream record
+                console.log('➕ Inserting new stream record');
+                const { data: insertData, error: insertError } = await supabase
+                    .from('active_streams')
+                    .insert({
+                        user_id: user.id,
+                        username: username,
+                        stream_id: cleanStreamId,
+                        stream_name: stream.name,
+                        user_agent: userAgent,
+                        ip_address: ipAddress,
+                        started_at: new Date().toISOString(),
+                        last_ping: new Date().toISOString()
+                    })
+                    .select();
+
+                if (insertError) {
+                    console.error('❌ Failed to insert stream:', insertError);
+                } else {
+                    console.log('✅ Stream inserted successfully:', insertData);
+                }
+            }
+
+            // Clean up old inactive streams (older than 10 minutes)
+            const { error: cleanupError } = await supabase
+                .from('active_streams')
+                .delete()
+                .lt('last_ping', new Date(Date.now() - 10 * 60 * 1000).toISOString());
+
+            if (cleanupError) {
+                console.warn('⚠️  Cleanup error:', cleanupError);
+            } else {
+                console.log('🧹 Cleanup completed');
+            }
+
+        } catch (trackError) {
+            // Don't fail the stream if tracking fails
+            console.error('❌ TRACKING ERROR:', trackError);
+            console.error('Error details:', {
+                message: trackError.message,
+                stack: trackError.stack
+            });
+        }
+
         // Redirect to the actual stream URL
         return NextResponse.redirect(stream.url);
     } catch (error) {

@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutDashboard, Users, FileVideo, Settings, LogOut, Tv, Wifi } from 'lucide-react';
+import { LayoutDashboard, Users, FileVideo, Settings, LogOut, Tv, Wifi, Activity } from 'lucide-react';
 
 const Sidebar = () => {
     const pathname = usePathname();
@@ -11,6 +11,7 @@ const Sidebar = () => {
 
     const navItems = [
         { name: 'Dashboard', href: '/', icon: LayoutDashboard },
+        { name: 'Active Users', href: '/active-users', icon: Activity },
         { name: 'Users', href: '/users', icon: Users },
         { name: 'Xtream Panel', href: '/xtream', icon: Wifi },
         { name: 'Playlist', href: '/playlist', icon: FileVideo },
