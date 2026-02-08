@@ -51,7 +51,7 @@ function PlayerContent() {
     }, []);
 
     useEffect(() => {
-        if (channel && window.shaka) {
+        if (channel) {
             initializePlayer();
         }
     }, [channel]);
@@ -75,109 +75,147 @@ function PlayerContent() {
     };
 
     const initializePlayer = async () => {
-        if (!window.shaka || !videoRef.current || !channel) return;
+        if (!videoRef.current || !channel) return;
 
         try {
-            // Check if browser supports Shaka Player
-            if (!window.shaka.Player.isBrowserSupported()) {
-                setError('Browser not supported for advanced playback');
-                return;
-            }
+            console.log('Initializing player for channel:', channel.name);
+            console.log('Stream URL:', channel.url);
+            console.log('Stream format:', channel.stream_format);
 
-            // Destroy existing player if any
-            if (player) {
-                await player.destroy();
-            }
-
-            // Create new player
-            const newPlayer = new window.shaka.Player(videoRef.current);
-
-            // Configure DRM if needed
-            if (channel.drm_scheme && channel.drm_scheme !== 'none') {
-                const drmConfig = {};
-
-                if (channel.drm_scheme === 'widevine' && channel.drm_license_url) {
-                    drmConfig['com.widevine.alpha'] = {
-                        'serverURL': channel.drm_license_url
-                    };
-                } else if (channel.drm_scheme === 'playready' && channel.drm_license_url) {
-                    drmConfig['com.microsoft.playready'] = {
-                        'serverURL': channel.drm_license_url
-                    };
-                } else if (channel.drm_scheme === 'clearkey' && channel.drm_key_id && channel.drm_key) {
-                    // Convert hex keys to base64 for ClearKey
-                    const hexToBase64 = (hexString) => {
-                        // Remove any spaces or dashes
-                        const cleanHex = hexString.replace(/[\s-]/g, '');
-                        // Convert hex to bytes
-                        const bytes = new Uint8Array(cleanHex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
-                        // Convert bytes to base64
-                        let binary = '';
-                        bytes.forEach(byte => binary += String.fromCharCode(byte));
-                        return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-                    };
-
-                    try {
-                        const keyId = hexToBase64(channel.drm_key_id);
-                        const key = hexToBase64(channel.drm_key);
-
-                        console.log('ClearKey configuration:', {
-                            originalKeyId: channel.drm_key_id,
-                            originalKey: channel.drm_key,
-                            base64KeyId: keyId,
-                            base64Key: key
-                        });
-
-                        drmConfig['org.w3.clearkey'] = {
-                            'clearKeys': {
-                                [keyId]: key
-                            }
-                        };
-                    } catch (e) {
-                        console.error('Error converting ClearKey hex to base64:', e);
-                        // Fallback: try using the keys as-is
-                        drmConfig['org.w3.clearkey'] = {
-                            'clearKeys': {
-                                [channel.drm_key_id]: channel.drm_key
-                            }
-                        };
-                    }
-                }
-
-                newPlayer.configure({
-                    drm: {
-                        servers: drmConfig
-                    }
-                });
-            }
-
-            // Error handling
-            newPlayer.addEventListener('error', (event) => {
-                console.error('Player error:', event.detail);
-                setError('Playback error: ' + event.detail.message);
-            });
-
-            setPlayer(newPlayer);
-
-            // Load the stream
+            // Get the stream URL - use proxy to avoid CORS issues
             const streamUrl = channel.url;
+            const useProxy = !streamUrl.startsWith(window.location.origin);
+            const playbackUrl = useProxy
+                ? `/api/stream-proxy?url=${encodeURIComponent(streamUrl)}`
+                : streamUrl;
 
-            // Determine if it's DASH or HLS
-            if (channel.stream_format === 'mpd' || streamUrl.includes('.mpd')) {
-                await newPlayer.load(streamUrl);
-            } else if (channel.stream_format === 'hls' || streamUrl.includes('.m3u8')) {
-                // For HLS, use native browser support if available
-                if (videoRef.current.canPlayType('application/vnd.apple.mpegurl')) {
-                    videoRef.current.src = streamUrl;
-                } else {
-                    await newPlayer.load(streamUrl);
+            console.log('Playback URL:', playbackUrl);
+            console.log('Using proxy:', useProxy);
+
+            // Check if Shaka Player is available and needed
+            const needsShaka = channel.drm_scheme && channel.drm_scheme !== 'none';
+            const isDash = channel.stream_format === 'mpd' || streamUrl.includes('.mpd');
+
+            if (window.shaka && (needsShaka || isDash)) {
+                console.log('Using Shaka Player');
+
+                // Check if browser supports Shaka Player
+                if (!window.shaka.Player.isBrowserSupported()) {
+                    console.warn('Browser not supported for Shaka Player, falling back to native');
+                    videoRef.current.src = playbackUrl;
+                    return;
                 }
+
+                // Destroy existing player if any
+                if (player) {
+                    await player.destroy();
+                }
+
+                // Create new player
+                const newPlayer = new window.shaka.Player(videoRef.current);
+
+                // Configure DRM if needed
+                if (channel.drm_scheme && channel.drm_scheme !== 'none') {
+                    const drmConfig = {};
+
+                    if (channel.drm_scheme === 'widevine' && channel.drm_license_url) {
+                        drmConfig['com.widevine.alpha'] = {
+                            'serverURL': channel.drm_license_url
+                        };
+                    } else if (channel.drm_scheme === 'playready' && channel.drm_license_url) {
+                        drmConfig['com.microsoft.playready'] = {
+                            'serverURL': channel.drm_license_url
+                        };
+                    } else if (channel.drm_scheme === 'clearkey' && channel.drm_key_id && channel.drm_key) {
+                        // Convert hex keys to base64 for ClearKey
+                        const hexToBase64 = (hexString) => {
+                            const cleanHex = hexString.replace(/[\s-]/g, '');
+                            const bytes = new Uint8Array(cleanHex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+                            let binary = '';
+                            bytes.forEach(byte => binary += String.fromCharCode(byte));
+                            return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+                        };
+
+                        try {
+                            const keyId = hexToBase64(channel.drm_key_id);
+                            const key = hexToBase64(channel.drm_key);
+
+                            console.log('ClearKey configuration:', {
+                                originalKeyId: channel.drm_key_id,
+                                originalKey: channel.drm_key,
+                                base64KeyId: keyId,
+                                base64Key: key
+                            });
+
+                            drmConfig['org.w3.clearkey'] = {
+                                'clearKeys': {
+                                    [keyId]: key
+                                }
+                            };
+                        } catch (e) {
+                            console.error('Error converting ClearKey hex to base64:', e);
+                            drmConfig['org.w3.clearkey'] = {
+                                'clearKeys': {
+                                    [channel.drm_key_id]: channel.drm_key
+                                }
+                            };
+                        }
+                    }
+
+                    newPlayer.configure({
+                        drm: {
+                            servers: drmConfig
+                        }
+                    });
+                }
+
+                // Error handling
+                newPlayer.addEventListener('error', (event) => {
+                    console.error('Shaka Player error:', event.detail);
+                    setError('Playback error: ' + event.detail.message);
+                    // Fallback to native player
+                    console.log('Falling back to native player');
+                    videoRef.current.src = playbackUrl;
+                });
+
+                setPlayer(newPlayer);
+
+                // Load the stream
+                await newPlayer.load(playbackUrl);
+                console.log('Shaka Player loaded successfully');
             } else {
-                // For other formats, try direct playback
-                videoRef.current.src = streamUrl;
+                // Use native HTML5 video player
+                console.log('Using native HTML5 player');
+                videoRef.current.src = playbackUrl;
+
+                // Add error handler for native player
+                videoRef.current.onerror = (e) => {
+                    console.error('Native player error:', e);
+                    console.error('Video error code:', videoRef.current.error?.code);
+                    console.error('Video error message:', videoRef.current.error?.message);
+
+                    let errorMessage = 'Failed to load stream';
+                    if (videoRef.current.error) {
+                        switch (videoRef.current.error.code) {
+                            case 1:
+                                errorMessage = 'Stream loading aborted';
+                                break;
+                            case 2:
+                                errorMessage = 'Network error while loading stream';
+                                break;
+                            case 3:
+                                errorMessage = 'Stream decoding failed';
+                                break;
+                            case 4:
+                                errorMessage = 'Stream format not supported';
+                                break;
+                        }
+                    }
+                    setError(errorMessage + '. Check console for details.');
+                };
             }
 
-            console.log('Stream loaded successfully');
+            console.log('Player initialization complete');
         } catch (err) {
             console.error('Error initializing player:', err);
             setError('Failed to initialize player: ' + err.message);
