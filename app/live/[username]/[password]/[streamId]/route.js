@@ -29,17 +29,35 @@ export async function GET(request, { params }) {
         const isExpired = expireDate && expireDate < now;
         const isActive = user.status === 'Active' && !isExpired;
 
+        console.log('User check:', {
+            username: user.username,
+            status: user.status,
+            expireDate: user.expire_date,
+            isExpired,
+            isActive,
+            now: now.toISOString()
+        });
+
         if (!isActive) {
             // Fetch invalid subscription video URL from settings
-            const { data: settings } = await supabase
-                .from('settings')
-                .select('invalid_subscription_video')
-                .single();
+            let invalidSubVideo = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
 
-            const invalidSubVideo = settings?.invalid_subscription_video ||
-                'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
+            try {
+                const { data: settings, error: settingsError } = await supabase
+                    .from('settings')
+                    .select('invalid_subscription_video')
+                    .single();
 
-            console.log('User inactive/expired, redirecting to invalid subscription video');
+                if (settingsError) {
+                    console.warn('Settings table error (using default video):', settingsError.message);
+                } else if (settings?.invalid_subscription_video) {
+                    invalidSubVideo = settings.invalid_subscription_video;
+                }
+            } catch (error) {
+                console.warn('Failed to fetch settings (using default video):', error.message);
+            }
+
+            console.log('User inactive/expired, redirecting to:', invalidSubVideo);
             return NextResponse.redirect(invalidSubVideo);
         }
 
