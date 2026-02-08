@@ -76,10 +76,21 @@ export async function GET(request, { params }) {
 
         console.log('Redirecting to stream URL:', stream.url);
 
+        // Validate stream URL before redirecting
+        if (!stream.url || stream.url.trim() === '') {
+            console.error('Stream URL is empty for stream:', cleanStreamId);
+            return new NextResponse('Stream URL not configured', { status: 500 });
+        }
+
         // Redirect to the actual stream URL
         return NextResponse.redirect(stream.url);
     } catch (error) {
-        console.error('Stream proxy error:', error);
-        return new NextResponse('Server error', { status: 500 });
+        console.error('Stream proxy error:', {
+            message: error.message,
+            stack: error.stack,
+            username,
+            streamId: cleanStreamId
+        });
+        return new NextResponse(`Server error: ${error.message}`, { status: 500 });
     }
 }
