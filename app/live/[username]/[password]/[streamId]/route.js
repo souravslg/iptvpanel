@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import { TataPlay } from '@/lib/tataplay';
 
 export async function GET(request, context) {
     const params = await Promise.resolve(context.params);
@@ -60,6 +61,20 @@ export async function GET(request, context) {
 
         const stream = streams[0];
         let targetUrl = stream.url;
+        let licenseUrl = null;
+
+        // -------------------------------------------------------------
+        // TATA PLAY SPECIAL HANDLING
+        // -------------------------------------------------------------
+        if (cleanStreamId.startsWith('tataplay-')) {
+            const channelId = cleanStreamId.replace('tataplay-', '');
+            const tpData = await TataPlay.getStreamUrl(channelId);
+            if (tpData) {
+                targetUrl = tpData.url;
+                licenseUrl = tpData.licenseUrl;
+            }
+        }
+        // -------------------------------------------------------------
 
 
 
@@ -100,7 +115,10 @@ export async function GET(request, context) {
         if (contentType.includes('mpegurl') || contentType.includes('application/vnd.apple.mpegurl') || targetUrl.includes('.m3u8')) {
             let body = await response.text();
 
-
+            // 1. Inject License Info if present (Widevine Support)
+            if (licenseUrl) {
+                body = body.replace('#EXTM3U', `#EXTM3U\n#KODIPROP:inputstream.adaptive.license_type=widevine\n#KODIPROP:inputstream.adaptive.license_key=${licenseUrl}`);
+            }
 
             // 2. Rewrite relative URLs to absolute
             const baseUrl = finalUrl.substring(0, finalUrl.lastIndexOf('/') + 1);
