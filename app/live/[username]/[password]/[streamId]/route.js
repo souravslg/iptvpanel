@@ -1,8 +1,17 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 
-export async function GET(request, { params }) {
+export async function GET(request, context) {
+    // In Next.js 16, params might be async
+    const params = await Promise.resolve(context.params);
     const { username, password, streamId } = params;
+
+    // Validate params exist
+    if (!username || !password || !streamId) {
+        console.error('Missing params:', { username, password, streamId });
+        return new NextResponse('Invalid request parameters', { status: 400 });
+    }
+
     const cleanStreamId = streamId.replace(/\.(ts|m3u8|mp4)$/, '');
 
     try {
