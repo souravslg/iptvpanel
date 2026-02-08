@@ -104,11 +104,10 @@ export async function GET(request) {
                 // Helper to convert Hex to Base64URL (required for JSON Key format)
                 const toBase64Url = (str) => {
                     try {
-                        // If string is valid hex (even length, only hex chars), convert to base64url
-                        if (/^[0-9a-fA-F]+$/.test(str) && str.length % 2 === 0) {
+                        if (str && /^[0-9a-fA-F]+$/.test(str) && str.length % 2 === 0) {
                             return Buffer.from(str, 'hex').toString('base64url');
                         }
-                        return str; // Return as-is if strictly not hex or already likely base64
+                        return str;
                     } catch (e) {
                         return str;
                     }
@@ -118,6 +117,11 @@ export async function GET(request) {
                 const kid = toBase64Url(stream.drm_key_id);
 
                 m3u += `#KODIPROP:inputstream.adaptive.license_key={"keys":[{"kty":"oct","k":"${k}","kid":"${kid}"}],"type":"temporary"}\n`;
+
+                // Standard HLS ClearKey format
+                const keyJson = JSON.stringify({ keys: [{ kty: 'oct', k: k, kid: kid }], type: 'temporary' });
+                const keyBase64 = Buffer.from(keyJson).toString('base64');
+                m3u += `#EXT-X-KEY:METHOD=SAMPLE-AES,URI="data:text/plain;base64,${keyBase64}",KEYFORMAT="clearkey",KEYFORMATVERSIONS="1"\n`;
             } else if (stream.drm_scheme === 'widevine' && stream.drm_license_url) {
                 // Check if we need to append headers to the license URL (for Kodi/OTT Navigator)
                 let licenseUrl = stream.drm_license_url;
@@ -141,6 +145,9 @@ export async function GET(request) {
 
                 m3u += `#KODIPROP:inputstream.adaptive.license_type=com.widevine.alpha\n`;
                 m3u += `#KODIPROP:inputstream.adaptive.license_key=${licenseUrl}\n`;
+
+                // Standard Widevine HLS tag
+                m3u += `#EXT-X-KEY:METHOD=SAMPLE-AES,URI="${licenseUrl}",KEYFORMAT="urn:uuid:edef8ba9-79d6-4ace-a3c8-27dcd51d21ed",KEYFORMATVERSIONS="1"\n`;
             }
 
             // Add headers (User-Agent, etc)

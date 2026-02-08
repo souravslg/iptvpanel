@@ -105,6 +105,41 @@ export async function GET(request) {
 
             const formattedStreams = (allStreams || []).map(stream => {
                 const streamId = stream.stream_id || stream.id;
+
+                // Construct stream URL with headers for player compatibility
+                let streamUrl = stream.url;
+                let licenseUrl = stream.drm_license_url;
+
+                if (stream.headers) {
+                    const headers = typeof stream.headers === 'string' ? JSON.parse(stream.headers) : stream.headers;
+                    const headerParts = [];
+                    const getHeader = (key) => headers[key] || headers[key.toLowerCase()];
+
+                    const ua = getHeader('User-Agent');
+                    if (ua) headerParts.push(`User-Agent=${ua}`);
+
+                    const ref = getHeader('Referer');
+                    if (ref) headerParts.push(`Referer=${ref}`);
+
+                    if (headerParts.length > 0) {
+                        const pipeHeaders = headerParts.join('&');
+                        if (streamUrl) streamUrl += `|${pipeHeaders}`;
+                        if (licenseUrl) licenseUrl += `|${pipeHeaders}`;
+                    }
+                }
+
+                // Convert ClearKey Hex to Base64URL if needed
+                const toBase64Url = (str) => {
+                    try {
+                        if (str && /^[0-9a-fA-F]+$/.test(str) && str.length % 2 === 0) {
+                            return Buffer.from(str, 'hex').toString('base64url');
+                        }
+                        return str;
+                    } catch (e) {
+                        return str;
+                    }
+                };
+
                 const streamData = {
                     num: stream.id,
                     name: stream.name,
@@ -115,18 +150,17 @@ export async function GET(request) {
                     added: stream.created_at,
                     custom_sid: '',
                     tv_archive: 0,
-                    direct_source: stream.url, // Original URL
+                    direct_source: streamUrl, // Use URL with headers if available
                     tv_archive_duration: 0,
-                    // Add container extension for compatibility
                     container_extension: 'ts'
                 };
 
                 // Add DRM information if available
                 if (stream.drm_scheme) {
                     streamData.drm_scheme = stream.drm_scheme;
-                    if (stream.drm_license_url) streamData.drm_license_url = stream.drm_license_url;
-                    if (stream.drm_key_id) streamData.drm_key_id = stream.drm_key_id;
-                    if (stream.drm_key) streamData.drm_key = stream.drm_key;
+                    if (licenseUrl) streamData.drm_license_url = licenseUrl;
+                    if (stream.drm_key_id) streamData.drm_key_id = toBase64Url(stream.drm_key_id);
+                    if (stream.drm_key) streamData.drm_key = toBase64Url(stream.drm_key);
                 }
 
                 return streamData;
