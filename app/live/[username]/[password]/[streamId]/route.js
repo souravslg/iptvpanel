@@ -2,13 +2,11 @@ import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 
 export async function GET(request, { params }) {
+    const { username, password, streamId } = params;
+    const cleanStreamId = streamId.replace(/\.(ts|m3u8|mp4)$/, '');
+
     try {
-        const { username, password, streamId } = params;
-
         console.log('Live stream request:', { username, password, streamId });
-
-        // Remove file extension from streamId
-        const cleanStreamId = streamId.replace(/\.(ts|m3u8|mp4)$/, '');
 
         // Authenticate user
         const { data: user, error: userError } = await supabase
