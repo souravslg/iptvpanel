@@ -12,9 +12,9 @@ export async function GET(request, context) {
         return new NextResponse('Invalid request parameters', { status: 400 });
     }
 
-    // Clean any pipe headers from the input ID (e.g. |User-Agent=...)
-    // Also remove extensions
-    const cleanStreamId = decodeURIComponent(streamId.replace(/(\.(ts|m3u8|mp4))?(\|.*)?$/, ''));
+    // Clean any pipe headers from the input ID (e.g. |User-Agent=... or %7CUser-Agent=...)
+    // Also remove extensions (.ts, .m3u8, .mp4)
+    const cleanStreamId = decodeURIComponent(streamId.replace(/(\.(ts|m3u8|mp4))?(\|.*|%7c.*)?$/i, ''));
 
     try {
         console.log('Live stream request:', { username, password, streamId, cleanStreamId });
@@ -234,14 +234,14 @@ export async function GET(request, context) {
             const headers = typeof stream.headers === 'string' ? JSON.parse(stream.headers) : stream.headers;
             const headerParts = [];
 
-            if (headers['User-Agent'] || headers['user-agent']) {
-                headerParts.push(`User-Agent=${headers['User-Agent'] || headers['user-agent']}`);
-            }
-            if (headers['Referer'] || headers['referer']) {
-                headerParts.push(`Referer=${headers['Referer'] || headers['referer']}`);
-            }
+            // Helper to handle case-insensitive headers
+            const getHeader = (key) => headers[key] || headers[key.toLowerCase()];
 
-            // Append other headers if needed, but UA/Referer are most critical
+            const ua = getHeader('User-Agent');
+            if (ua) headerParts.push(`User-Agent=${ua}`);
+
+            const ref = getHeader('Referer') || getHeader('Origin');
+            if (ref) headerParts.push(`Referer=${ref}`);
 
             if (headerParts.length > 0) {
                 finalUrl += `|${headerParts.join('&')}`;
@@ -249,7 +249,14 @@ export async function GET(request, context) {
         }
 
         // Redirect to the actual stream URL with headers appended
-        return NextResponse.redirect(finalUrl);
+        // Use manual 302 redirect to ensure the pipe character is preserved exactly as players expect
+        return new NextResponse(null, {
+            status: 302,
+            headers: {
+                'Location': finalUrl,
+                'Cache-Control': 'no-cache'
+            }
+        });
     } catch (error) {
         console.error('Stream proxy error:', {
             message: error.message,

@@ -118,7 +118,7 @@ export async function GET(request) {
                     const ua = getHeader('User-Agent');
                     if (ua) headerParts.push(`User-Agent=${ua}`);
 
-                    const ref = getHeader('Referer');
+                    const ref = getHeader('Referer') || getHeader('Origin');
                     if (ref) headerParts.push(`Referer=${ref}`);
 
                     if (headerParts.length > 0) {
