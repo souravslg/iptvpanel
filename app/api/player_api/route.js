@@ -48,10 +48,11 @@ export async function GET(request) {
 
         // Handle different actions
         if (action === 'get_live_streams' || action === 'get_vod_streams' || action === 'get_series') {
-            // Get all streams
+            // Get all streams (remove default 1000 limit)
             const { data: streams } = await supabase
                 .from('streams')
-                .select('*');
+                .select('*')
+                .limit(10000); // Set high limit to get all channels
 
             // Get server URL
             const protocol = request.headers.get('x-forwarded-proto') || 'http';
@@ -81,10 +82,11 @@ export async function GET(request) {
         }
 
         if (action === 'get_live_categories' || action === 'get_vod_categories' || action === 'get_series_categories') {
-            // Get categories
+            // Get categories (remove default 1000 limit)
             const { data: streams } = await supabase
                 .from('streams')
-                .select('category');
+                .select('category')
+                .limit(10000); // Set high limit to get all channels
 
             const categories = [...new Set((streams || []).map(s => s.category).filter(Boolean))];
             const formattedCategories = categories.map((cat, idx) => ({

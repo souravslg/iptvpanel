@@ -35,10 +35,11 @@ export async function GET(request) {
             return new NextResponse('Account expired or inactive', { status: 401 });
         }
 
-        // Get all streams
+        // Get all streams (remove default 1000 limit)
         const { data: streams } = await supabase
             .from('streams')
-            .select('*');
+            .select('*')
+            .limit(10000); // Set high limit to get all channels
 
         // Generate M3U playlist
         const host = request.headers.get('host') || 'localhost:3000';

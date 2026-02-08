@@ -108,12 +108,13 @@ export async function GET() {
       });
     }
 
-    // Get all streams from active playlist
+    // Get all streams from active playlist (remove default 1000 limit)
     const { data: sample, error: sampleError } = await supabase
       .from('streams')
       .select('*')
       .eq('playlist_id', activePlaylist.id)
-      .order('id', { ascending: true });
+      .order('id', { ascending: true })
+      .limit(10000); // Set high limit to get all channels
 
     if (sampleError) {
       console.error('Error fetching streams:', sampleError);
