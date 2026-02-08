@@ -119,29 +119,48 @@ export async function GET(request) {
 
                 m3u += `#KODIPROP:inputstream.adaptive.license_key={"keys":[{"kty":"oct","k":"${k}","kid":"${kid}"}],"type":"temporary"}\n`;
             } else if (stream.drm_scheme === 'widevine' && stream.drm_license_url) {
+                // Check if we need to append headers to the license URL (for Kodi/OTT Navigator)
+                let licenseUrl = stream.drm_license_url;
+                if (stream.headers) {
+                    const headers = typeof stream.headers === 'string' ? JSON.parse(stream.headers) : stream.headers;
+                    const headerParts = [];
+
+                    // Helper to handle case-insensitive headers
+                    const getHeader = (key) => headers[key] || headers[key.toLowerCase()];
+
+                    const ua = getHeader('User-Agent');
+                    if (ua) headerParts.push(`User-Agent=${ua}`);
+
+                    const ref = getHeader('Referer');
+                    if (ref) headerParts.push(`Referer=${ref}`);
+
+                    if (headerParts.length > 0) {
+                        licenseUrl += `|${headerParts.join('&')}`;
+                    }
+                }
+
                 m3u += `#KODIPROP:inputstream.adaptive.license_type=com.widevine.alpha\n`;
-                m3u += `#KODIPROP:inputstream.adaptive.license_type=com.widevine.alpha\n`;
-                m3u += `#KODIPROP:inputstream.adaptive.license_key=${stream.drm_license_url}\n`;
+                m3u += `#KODIPROP:inputstream.adaptive.license_key=${licenseUrl}\n`;
             }
 
             // Add headers (User-Agent, etc)
             if (stream.headers) {
                 const headers = typeof stream.headers === 'string' ? JSON.parse(stream.headers) : stream.headers;
+                const getHeader = (key) => headers[key] || headers[key.toLowerCase()];
 
                 // User-Agent (Common for Kodi/VLC)
-                if (headers['User-Agent'] || headers['user-agent']) {
-                    const ua = headers['User-Agent'] || headers['user-agent'];
+                const ua = getHeader('User-Agent');
+                if (ua) {
                     m3u += `#EXTVLCOPT:http-user-agent=${ua}\n`;
                     m3u += `#KODIPROP:inputstream.adaptive.stream_headers=User-Agent=${ua}\n`;
                 }
 
                 // Referer
-                if (headers['Referer'] || headers['referer']) {
-                    const ref = headers['Referer'] || headers['referer'];
+                const ref = getHeader('Referer');
+                if (ref) {
                     m3u += `#EXTVLCOPT:http-referrer=${ref}\n`;
+                    // For Kodi referer is sometimes separate or part of stream_headers
                 }
-
-                // Generic headers for Kodi (inputstream.adaptive) might need encoding, but UA is most critical
             }
 
             m3u += `#EXTINF:-1 tvg-id="${tvgId}" tvg-name="${tvgName}" tvg-logo="${tvgLogo}" group-title="${groupTitle}",${tvgName}\n`;
