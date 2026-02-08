@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import { JioTV } from '@/lib/jiotv';
 
 export async function GET(request, context) {
     const params = await Promise.resolve(context.params);
@@ -61,6 +62,23 @@ export async function GET(request, context) {
         const stream = streams[0];
         let targetUrl = stream.url;
 
+        // -------------------------------------------------------------
+        // JIO TV SPECIAL HANDLING
+        // -------------------------------------------------------------
+        if (cleanStreamId.startsWith('jiotv-')) {
+            const channelId = cleanStreamId.replace('jiotv-', '');
+            const jioUrl = await JioTV.getStreamUrl(channelId);
+            if (jioUrl) {
+                targetUrl = jioUrl;
+            } else {
+                // Try refreshing token once
+                await JioTV.refreshToken();
+                const retryUrl = await JioTV.getStreamUrl(channelId);
+                if (retryUrl) targetUrl = retryUrl;
+            }
+        }
+        // -------------------------------------------------------------
+
         if (!targetUrl) return new NextResponse('Missing target URL', { status: 500 });
 
         // 3. Prepare Headers for Fetch
@@ -87,7 +105,6 @@ export async function GET(request, context) {
 
         if (!response.ok) {
             console.error('Source fetch failed:', response.status, response.statusText);
-            // Fallback to direct 302 if fetch fails
             return redirectWithHeaders(targetUrl, stream.headers);
         }
 
@@ -113,7 +130,6 @@ export async function GET(request, context) {
                 if (headerParts.length > 0) {
                     const pipeStr = `|${headerParts.join('&')}`;
 
-                    // Replace URI="license_url" with URI="license_url|Headers"
                     body = body.replace(/(URI=")([^"]+)/g, (match, p1, p2) => {
                         if (p2.includes('license') || p2.includes('key') || p2.includes('wv') || p2.includes('widevine') || p2.includes('clearkey')) {
                             const fullP2 = p2.startsWith('http') ? p2 : new URL(p2, baseUrl).toString();
@@ -122,7 +138,6 @@ export async function GET(request, context) {
                         return match;
                     });
 
-                    // Fix relative segments
                     body = body.split('\n').map(line => {
                         const t = line.trim();
                         if (t && !t.startsWith('#') && !t.startsWith('http')) {
@@ -142,7 +157,6 @@ export async function GET(request, context) {
             });
         }
 
-        // 6. Default: Redirect to final URL
         return redirectWithHeaders(finalUrl, stream.headers);
 
     } catch (error) {
