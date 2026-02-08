@@ -43,15 +43,16 @@ export async function GET(request, { params }) {
             let invalidSubVideo = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
 
             try {
-                const { data: settings, error: settingsError } = await supabase
+                const { data: settingRow, error: settingsError } = await supabase
                     .from('settings')
-                    .select('invalid_subscription_video')
+                    .select('value')
+                    .eq('key', 'invalid_subscription_video')
                     .single();
 
                 if (settingsError) {
                     console.warn('Settings table error (using default video):', settingsError.message);
-                } else if (settings?.invalid_subscription_video) {
-                    invalidSubVideo = settings.invalid_subscription_video;
+                } else if (settingRow?.value) {
+                    invalidSubVideo = settingRow.value;
                 }
             } catch (error) {
                 console.warn('Failed to fetch settings (using default video):', error.message);

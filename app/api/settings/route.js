@@ -1,24 +1,28 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 
-// GET - Fetch settings
+// GET - Fetch settings from key-value table
 export async function GET() {
     try {
-        const { data: settings, error } = await supabase
+        const { data: settingsRows, error } = await supabase
             .from('settings')
             .select('*')
-            .single();
+            .in('key', ['invalid_subscription_video', 'server_name', 'server_url']);
 
-        if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
+        if (error && error.code !== 'PGRST116') {
             throw error;
         }
 
-        // Return default settings if none exist
-        if (!settings) {
-            return NextResponse.json({
-                invalid_subscription_video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-                server_name: 'IPTV Panel',
-                server_url: ''
+        // Convert key-value rows to object
+        const settings = {
+            invalid_subscription_video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+            server_name: 'IPTV Panel',
+            server_url: ''
+        };
+
+        if (settingsRows) {
+            settingsRows.forEach(row => {
+                settings[row.key] = row.value;
             });
         }
 
@@ -29,50 +33,37 @@ export async function GET() {
     }
 }
 
-// PUT - Update settings
+// PUT - Update settings in key-value table
 export async function PUT(request) {
     try {
         const body = await request.json();
         const { invalid_subscription_video, server_name, server_url } = body;
 
-        // Check if settings exist
-        const { data: existing } = await supabase
-            .from('settings')
-            .select('id')
-            .single();
+        const updates = [];
 
-        let result;
-        if (existing) {
-            // Update existing settings
-            result = await supabase
-                .from('settings')
-                .update({
-                    invalid_subscription_video,
-                    server_name,
-                    server_url,
-                    updated_at: new Date().toISOString()
-                })
-                .eq('id', existing.id)
-                .select()
-                .single();
-        } else {
-            // Insert new settings
-            result = await supabase
-                .from('settings')
-                .insert([{
-                    invalid_subscription_video,
-                    server_name,
-                    server_url
-                }])
-                .select()
-                .single();
+        if (invalid_subscription_video !== undefined) {
+            updates.push({ key: 'invalid_subscription_video', value: invalid_subscription_video });
+        }
+        if (server_name !== undefined) {
+            updates.push({ key: 'server_name', value: server_name });
+        }
+        if (server_url !== undefined) {
+            updates.push({ key: 'server_url', value: server_url });
         }
 
-        if (result.error) throw result.error;
+        // Upsert each setting
+        for (const setting of updates) {
+            const { error } = await supabase
+                .from('settings')
+                .upsert(setting, { onConflict: 'key' });
 
-        return NextResponse.json(result.data);
+            if (error) throw error;
+        }
+
+        return NextResponse.json({ success: true });
     } catch (error) {
         console.error('Failed to update settings:', error);
         return NextResponse.json({ error: 'Failed to update settings' }, { status: 500 });
     }
 }
+
