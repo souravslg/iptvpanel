@@ -7,8 +7,6 @@ export async function GET(request) {
         const username = searchParams.get('username');
         const password = searchParams.get('password');
 
-        console.log('M3U request:', { username, password });
-
         if (!username || !password) {
             return new NextResponse('Unauthorized', { status: 401 });
         }
@@ -35,14 +33,13 @@ export async function GET(request) {
             return new NextResponse('Account expired or inactive', { status: 401 });
         }
 
-        // Get active playlists first
-        const { data: activePlaylists, error: playlistError } = await supabase
+        // Get active playlists
+        const { data: activePlaylists } = await supabase
             .from('playlists')
             .select('id')
             .eq('is_active', true);
 
-        if (playlistError || !activePlaylists || activePlaylists.length === 0) {
-            console.log('No active playlists found');
+        if (!activePlaylists || activePlaylists.length === 0) {
             return new NextResponse('#EXTM3U\n', {
                 headers: {
                     'Content-Type': 'application/x-mpegURL',
@@ -52,9 +49,8 @@ export async function GET(request) {
         }
 
         const playlistIds = activePlaylists.map(p => p.id);
-        console.log('Fetching streams from active playlists:', playlistIds);
 
-        // Fetch all streams from active playlists using batch pagination
+        // Fetch all streams
         let allStreams = [];
         let hasMore = true;
         let offset = 0;
@@ -68,26 +64,18 @@ export async function GET(request) {
                 .order('id', { ascending: true })
                 .range(offset, offset + batchSize - 1);
 
-            if (batchError) {
-                console.error('Error fetching streams batch:', batchError);
-                break;
-            }
-
-            if (batch && batch.length > 0) {
+            if (batchError || !batch || batch.length === 0) {
+                hasMore = false;
+            } else {
                 allStreams = allStreams.concat(batch);
                 offset += batchSize;
                 hasMore = batch.length === batchSize;
-            } else {
-                hasMore = false;
             }
         }
 
-        console.log(`Fetched ${allStreams.length} streams from ${activePlaylists.length} active playlist(s)`);
-
-        // Generate M3U playlist
+        // Generate M3U
         const host = request.headers.get('host') || 'localhost:3000';
         const protocol = request.headers.get('x-forwarded-proto') || 'http';
-        const useProxy = searchParams.get('proxy') === 'true';
 
         let m3u = '#EXTM3U\n';
 
@@ -97,84 +85,83 @@ export async function GET(request) {
             const tvgLogo = stream.logo || '';
             const groupTitle = stream.category || 'Uncategorized';
 
-            // Add DRM information if stream has ClearKey DRM
+            // 1. DRM Properties (Kodi / Standard HLS)
             if (stream.drm_scheme === 'clearkey' && stream.drm_key_id && stream.drm_key) {
-                m3u += `#KODIPROP:inputstream.adaptive.license_type=clearkey\n`;
-
-                // Helper to convert Hex to Base64URL (required for JSON Key format)
-                const toBase64Url = (str) => {
+                const toBase64Url = (s) => {
                     try {
-                        if (str && /^[0-9a-fA-F]+$/.test(str) && str.length % 2 === 0) {
-                            return Buffer.from(str, 'hex').toString('base64url');
+                        if (s && /^[0-9a-fA-F]+$/.test(s) && s.length % 2 === 0) {
+                            return Buffer.from(s, 'hex').toString('base64url');
                         }
-                        return str;
-                    } catch (e) {
-                        return str;
-                    }
+                        return s;
+                    } catch (e) { return s; }
                 };
-
                 const k = toBase64Url(stream.drm_key);
                 const kid = toBase64Url(stream.drm_key_id);
 
+                m3u += `#KODIPROP:inputstream.adaptive.license_type=clearkey\n`;
                 m3u += `#KODIPROP:inputstream.adaptive.license_key={"keys":[{"kty":"oct","k":"${k}","kid":"${kid}"}],"type":"temporary"}\n`;
 
-                // Standard HLS ClearKey format
                 const keyJson = JSON.stringify({ keys: [{ kty: 'oct', k: k, kid: kid }], type: 'temporary' });
                 const keyBase64 = Buffer.from(keyJson).toString('base64');
                 m3u += `#EXT-X-KEY:METHOD=SAMPLE-AES,URI="data:text/plain;base64,${keyBase64}",KEYFORMAT="clearkey",KEYFORMATVERSIONS="1"\n`;
+
             } else if (stream.drm_scheme === 'widevine' && stream.drm_license_url) {
-                // Check if we need to append headers to the license URL (for Kodi/OTT Navigator)
                 let licenseUrl = stream.drm_license_url;
                 if (stream.headers) {
                     const headers = typeof stream.headers === 'string' ? JSON.parse(stream.headers) : stream.headers;
                     const headerParts = [];
-
-                    // Helper to handle case-insensitive headers
                     const getHeader = (key) => headers[key] || headers[key.toLowerCase()];
-
                     const ua = getHeader('User-Agent');
                     if (ua) headerParts.push(`User-Agent=${ua}`);
-
-                    const ref = getHeader('Referer');
+                    const ref = getHeader('Referer') || getHeader('Origin');
                     if (ref) headerParts.push(`Referer=${ref}`);
 
-                    if (headerParts.length > 0) {
-                        licenseUrl += `|${headerParts.join('&')}`;
-                    }
+                    if (headerParts.length > 0) licenseUrl += `|${headerParts.join('&')}`;
                 }
 
                 m3u += `#KODIPROP:inputstream.adaptive.license_type=com.widevine.alpha\n`;
                 m3u += `#KODIPROP:inputstream.adaptive.license_key=${licenseUrl}\n`;
-
-                // Standard Widevine HLS tag
                 m3u += `#EXT-X-KEY:METHOD=SAMPLE-AES,URI="${licenseUrl}",KEYFORMAT="urn:uuid:edef8ba9-79d6-4ace-a3c8-27dcd51d21ed",KEYFORMATVERSIONS="1"\n`;
             }
 
-            // Add headers (User-Agent, etc)
+            // 2. HTTP Headers (User-Agent, Referer, Origin)
             if (stream.headers) {
                 const headers = typeof stream.headers === 'string' ? JSON.parse(stream.headers) : stream.headers;
                 const getHeader = (key) => headers[key] || headers[key.toLowerCase()];
-
-                // User-Agent (Common for Kodi/VLC)
                 const ua = getHeader('User-Agent');
-                if (ua) {
-                    m3u += `#EXTVLCOPT:http-user-agent=${ua}\n`;
-                    m3u += `#KODIPROP:inputstream.adaptive.stream_headers=User-Agent=${ua}\n`;
-                }
-
-                // Referer
                 const ref = getHeader('Referer');
-                if (ref) {
-                    m3u += `#EXTVLCOPT:http-referrer=${ref}\n`;
-                    // For Kodi referer is sometimes separate or part of stream_headers
+                const org = getHeader('Origin');
+
+                if (ua) m3u += `#EXTVLCOPT:http-user-agent=${ua}\n`;
+                if (ref) m3u += `#EXTVLCOPT:http-referrer=${ref}\n`;
+
+                const kodiHeaders = [];
+                if (ua) kodiHeaders.push(`User-Agent=${ua}`);
+                if (ref) kodiHeaders.push(`Referer=${ref}`);
+                if (org) kodiHeaders.push(`Origin=${org}`);
+                if (kodiHeaders.length > 0) {
+                    m3u += `#KODIPROP:inputstream.adaptive.stream_headers=${kodiHeaders.join('&')}\n`;
                 }
             }
 
+            // 3. Channel Info
             m3u += `#EXTINF:-1 tvg-id="${tvgId}" tvg-name="${tvgName}" tvg-logo="${tvgLogo}" group-title="${groupTitle}",${tvgName}\n`;
 
-            // Always use proxy URL to enforce authentication and expiry checks
-            const streamUrl = `${protocol}://${host}/live/${username}/${password}/${encodeURIComponent(tvgId)}.m3u8`;
-            m3u += `${streamUrl}\n`;
+            // 4. Final Stream URL (Must be immediately after EXTINF)
+            let finalUrl = `${protocol}://${host}/live/${username}/${password}/${encodeURIComponent(tvgId)}.m3u8`;
+
+            if (stream.headers) {
+                const headers = typeof stream.headers === 'string' ? JSON.parse(stream.headers) : stream.headers;
+                const headerParts = [];
+                const getHeader = (key) => headers[key] || headers[key.toLowerCase()];
+                const ua = getHeader('User-Agent');
+                if (ua) headerParts.push(`User-Agent=${ua}`);
+                const ref = getHeader('Referer') || getHeader('Origin');
+                if (ref) headerParts.push(`Referer=${ref}`);
+                if (headerParts.length > 0) finalUrl += `|${headerParts.join('&')}`;
+            }
+
+            m3u += `${finalUrl}\n`;
         });
 
         return new NextResponse(m3u, {
@@ -184,7 +171,7 @@ export async function GET(request) {
             }
         });
     } catch (error) {
-        console.error('M3U generation error:', error);
+        console.error('M3U error:', error);
         return new NextResponse('Server error', { status: 500 });
     }
 }
