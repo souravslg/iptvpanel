@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import { SonyLiv } from '@/lib/sonyliv';
 
 export async function GET(request, context) {
     const params = await Promise.resolve(context.params);
@@ -60,6 +61,20 @@ export async function GET(request, context) {
 
         const stream = streams[0];
         let targetUrl = stream.url;
+        let licenseUrl = null;
+
+        // -------------------------------------------------------------
+        // SONY LIV SPECIAL HANDLING
+        // -------------------------------------------------------------
+        if (cleanStreamId.startsWith('sonyliv-')) {
+            const channelId = cleanStreamId.replace('sonyliv-', '');
+            const sonylivData = await SonyLiv.getStreamUrl(channelId);
+            if (sonylivData) {
+                targetUrl = sonylivData.url;
+                licenseUrl = sonylivData.licenseUrl;
+            }
+        }
+        // -------------------------------------------------------------
 
 
 
@@ -99,8 +114,22 @@ export async function GET(request, context) {
         if (contentType.includes('mpegurl') || contentType.includes('application/vnd.apple.mpegurl') || targetUrl.includes('.m3u8')) {
             let body = await response.text();
 
-            // Rewrite relative URLs to absolute
+            // 1. Inject License Info if present (Widevine Support)
+            if (licenseUrl) {
+                body = body.replace('#EXTM3U', `#EXTM3U\n#KODIPROP:inputstream.adaptive.license_type=widevine\n#KODIPROP:inputstream.adaptive.license_key=${licenseUrl}`);
+            }
+
+            // 2. Rewrite relative URLs to absolute
             const baseUrl = finalUrl.substring(0, finalUrl.lastIndexOf('/') + 1);
+
+            // Standard cleanup before header injection
+            body = body.split('\n').map(line => {
+                const t = line.trim();
+                if (t && !t.startsWith('#') && !t.startsWith('http')) {
+                    try { return new URL(t, baseUrl).toString(); } catch (e) { return line; }
+                }
+                return line;
+            }).join('\n');
 
             if (stream.headers) {
                 const storedHeaders = typeof stream.headers === 'string' ? JSON.parse(stream.headers) : stream.headers;
@@ -121,14 +150,6 @@ export async function GET(request, context) {
                         }
                         return match;
                     });
-
-                    body = body.split('\n').map(line => {
-                        const t = line.trim();
-                        if (t && !t.startsWith('#') && !t.startsWith('http')) {
-                            try { return new URL(t, baseUrl).toString(); } catch (e) { return line; }
-                        }
-                        return line;
-                    }).join('\n');
                 }
             }
 
