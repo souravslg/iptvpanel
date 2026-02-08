@@ -100,7 +100,24 @@ export async function GET(request) {
             // Add DRM information if stream has ClearKey DRM
             if (stream.drm_scheme === 'clearkey' && stream.drm_key_id && stream.drm_key) {
                 m3u += `#KODIPROP:inputstream.adaptive.license_type=clearkey\n`;
-                m3u += `#KODIPROP:inputstream.adaptive.license_key={"keys":[{"kty":"oct","k":"${stream.drm_key}","kid":"${stream.drm_key_id}"}],"type":"temporary"}\n`;
+
+                // Helper to convert Hex to Base64URL (required for JSON Key format)
+                const toBase64Url = (str) => {
+                    try {
+                        // If string is valid hex (even length, only hex chars), convert to base64url
+                        if (/^[0-9a-fA-F]+$/.test(str) && str.length % 2 === 0) {
+                            return Buffer.from(str, 'hex').toString('base64url');
+                        }
+                        return str; // Return as-is if strictly not hex or already likely base64
+                    } catch (e) {
+                        return str;
+                    }
+                };
+
+                const k = toBase64Url(stream.drm_key);
+                const kid = toBase64Url(stream.drm_key_id);
+
+                m3u += `#KODIPROP:inputstream.adaptive.license_key={"keys":[{"kty":"oct","k":"${k}","kid":"${kid}"}],"type":"temporary"}\n`;
             } else if (stream.drm_scheme === 'widevine' && stream.drm_license_url) {
                 m3u += `#KODIPROP:inputstream.adaptive.license_type=com.widevine.alpha\n`;
                 m3u += `#KODIPROP:inputstream.adaptive.license_key=${stream.drm_license_url}\n`;
