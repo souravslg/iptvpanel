@@ -61,6 +61,7 @@ export default function PlaylistPage() {
     const [creatingPlaylist, setCreatingPlaylist] = useState(false);
     const [switchingPlaylist, setSwitchingPlaylist] = useState(null);
     const [deletingPlaylist, setDeletingPlaylist] = useState(null);
+    const [refreshingPlaylist, setRefreshingPlaylist] = useState(null);
 
     // Search State
     const [searchTerm, setSearchTerm] = useState('');
@@ -484,6 +485,38 @@ export default function PlaylistPage() {
             alert('Error deleting playlist: ' + error.message);
         } finally {
             setDeletingPlaylist(null);
+        }
+    };
+
+    const refreshPlaylist = async (playlistId, playlistName) => {
+        if (!confirm(`Are you sure you want to refresh "${playlistName}" from its source URL? This will overwrite current channels in this playlist.`)) {
+            return;
+        }
+
+        setRefreshingPlaylist(playlistId);
+        try {
+            const res = await fetch('/api/playlists/refresh', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: playlistId })
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                await fetchPlaylists();
+                if (activePlaylists.some(p => p.id === playlistId)) {
+                    await fetchPlaylistData();
+                }
+                alert(`Playlist refreshed successfully! ${data.count} channels updated.`);
+            } else {
+                alert('Failed to refresh playlist: ' + (data.error || 'Unknown error'));
+            }
+        } catch (error) {
+            console.error('Refresh playlist error:', error);
+            alert('Error refreshing playlist: ' + error.message);
+        } finally {
+            setRefreshingPlaylist(null);
         }
     };
 
@@ -1770,6 +1803,24 @@ export default function PlaylistPage() {
                                             </div>
 
                                             <div style={{ display: 'flex', gap: '0.5rem', marginLeft: '1rem' }}>
+                                                {playlist.source_url && (
+                                                    <button
+                                                        onClick={() => refreshPlaylist(playlist.id, playlist.name)}
+                                                        disabled={refreshingPlaylist === playlist.id}
+                                                        style={{
+                                                            padding: '0.5rem',
+                                                            backgroundColor: 'transparent',
+                                                            color: refreshingPlaylist === playlist.id ? '#9ca3af' : '#2563eb',
+                                                            border: 'none',
+                                                            borderRadius: '0.375rem',
+                                                            cursor: refreshingPlaylist === playlist.id ? 'not-allowed' : 'pointer',
+                                                            opacity: refreshingPlaylist === playlist.id ? 0.5 : 1
+                                                        }}
+                                                        title="Refresh from Source"
+                                                    >
+                                                        <RefreshCw size={18} className={refreshingPlaylist === playlist.id ? "animate-spin" : ""} />
+                                                    </button>
+                                                )}
                                                 <button
                                                     onClick={() => switchPlaylist(playlist.id)}
                                                     disabled={switchingPlaylist === playlist.id}
