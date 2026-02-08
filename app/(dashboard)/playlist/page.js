@@ -162,13 +162,19 @@ export default function PlaylistPage() {
         try {
             console.log('Fetching playlist from URL:', playlistUrl);
 
-            // Fetch the M3U content from the URL
-            const response = await fetch(playlistUrl);
-            if (!response.ok) {
-                throw new Error(`Failed to fetch playlist: ${response.statusText}`);
+            // Use server-side proxy to avoid CORS issues
+            const proxyResponse = await fetch('/api/playlist/fetch-url', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: playlistUrl.trim() })
+            });
+
+            if (!proxyResponse.ok) {
+                const errorData = await proxyResponse.json();
+                throw new Error(errorData.error || `Failed to fetch playlist: ${proxyResponse.statusText}`);
             }
 
-            const content = await response.text();
+            const { content } = await proxyResponse.json();
             console.log('Fetched content length:', content.length);
 
             // Upload the content
@@ -362,13 +368,19 @@ export default function PlaylistPage() {
                 try {
                     console.log('Fetching playlist from URL:', newPlaylistUrl);
 
-                    // Fetch the M3U content from the URL
-                    const urlResponse = await fetch(newPlaylistUrl.trim());
-                    if (!urlResponse.ok) {
-                        throw new Error(`Failed to fetch playlist: ${urlResponse.statusText}`);
+                    // Use server-side proxy to avoid CORS issues
+                    const proxyResponse = await fetch('/api/playlist/fetch-url', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ url: newPlaylistUrl.trim() })
+                    });
+
+                    if (!proxyResponse.ok) {
+                        const errorData = await proxyResponse.json();
+                        throw new Error(errorData.error || `Failed to fetch playlist: ${proxyResponse.statusText}`);
                     }
 
-                    const content = await urlResponse.text();
+                    const { content } = await proxyResponse.json();
                     console.log('Fetched content length:', content.length);
 
                     // Import the content to the newly created playlist
