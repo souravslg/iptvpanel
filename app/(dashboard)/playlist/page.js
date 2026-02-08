@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { Upload, FileText, CheckCircle, AlertCircle, Play, List, RefreshCw, Edit, X, Save, Trash2, Plus, Trash, Link, Layers } from 'lucide-react';
+import { Upload, FileText, CheckCircle, AlertCircle, Play, List, RefreshCw, Edit, X, Save, Trash2, Plus, Trash, Link, Layers, Search } from 'lucide-react';
 
 export default function PlaylistPage() {
     const router = useRouter();
@@ -61,6 +61,9 @@ export default function PlaylistPage() {
     const [creatingPlaylist, setCreatingPlaylist] = useState(false);
     const [switchingPlaylist, setSwitchingPlaylist] = useState(null);
     const [deletingPlaylist, setDeletingPlaylist] = useState(null);
+
+    // Search State
+    const [searchTerm, setSearchTerm] = useState('');
 
     const fileInputRef = useRef(null);
 
@@ -713,7 +716,26 @@ export default function PlaylistPage() {
                         </div>
 
                         <div className="stat-card">
-                            <h3 style={{ fontWeight: 600, marginBottom: '1rem' }}>Channel List ({stats.totalChannels} Channels)</h3>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                                <h3 style={{ fontWeight: 600 }}>Channel List ({stats.totalChannels} Channels)</h3>
+                                <div style={{ position: 'relative' }}>
+                                    <Search size={16} style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--muted-foreground)' }} />
+                                    <input
+                                        type="text"
+                                        placeholder="Search channels..."
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                        style={{
+                                            padding: '0.5rem 0.75rem 0.5rem 2.25rem',
+                                            borderRadius: '0.5rem',
+                                            border: '1px solid var(--border)',
+                                            backgroundColor: 'var(--background)',
+                                            fontSize: '0.875rem',
+                                            width: '240px'
+                                        }}
+                                    />
+                                </div>
+                            </div>
                             <div className="table-responsive">
                                 <table>
                                     <thead>
@@ -724,53 +746,65 @@ export default function PlaylistPage() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {console.log('Rendering channels, sample:', sample, 'length:', sample?.length)}
-                                        {sample && sample.length > 0 ? (
-                                            sample.map((ch, i) => (
-                                                <tr key={i}>
-                                                    <td style={{ maxWidth: '200px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ch.name}</td>
-                                                    <td style={{ color: 'var(--muted-foreground)' }}>{ch.category}</td>
-                                                    <td>
-                                                        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                                                            <button
-                                                                onClick={() => router.push(`/player?id=${ch.id}`)}
-                                                                title="Play Channel"
-                                                                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#10b981' }}
-                                                            >
-                                                                <Play size={16} fill="#10b981" />
-                                                            </button>
-                                                            <button
-                                                                onClick={() => startEditing(ch)}
-                                                                title="Edit URL"
-                                                                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary)' }}
-                                                            >
-                                                                <Edit size={16} />
-                                                            </button>
-                                                            <button
-                                                                onClick={() => deleteChannel(ch)}
-                                                                title="Delete Channel"
-                                                                disabled={deleting === ch.id}
-                                                                style={{
-                                                                    background: 'none',
-                                                                    border: 'none',
-                                                                    cursor: deleting === ch.id ? 'not-allowed' : 'pointer',
-                                                                    color: deleting === ch.id ? '#9ca3af' : '#ef4444',
-                                                                    opacity: deleting === ch.id ? 0.5 : 1
-                                                                }}
-                                                            >
-                                                                {deleting === ch.id ? <RefreshCw size={16} className="animate-spin" /> : <Trash2 size={16} />}
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            ))
-                                        ) : (
-                                            <tr>
-                                                <td colSpan="3" style={{ textAlign: 'center', padding: '2rem', color: 'var(--muted-foreground)' }}>
-                                                    No channels to display. Check browser console for errors.
-                                                </td>
-                                            </tr>
-                                        )}
+                                        {/* Filter and render channels */}
+                                        {(() => {
+                                            const filteredChannels = sample?.filter(ch =>
+                                                ch.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                                ch.category.toLowerCase().includes(searchTerm.toLowerCase())
+                                            ) || [];
+
+                                            // Debug log
+                                            console.log('Rendering channels, total:', sample?.length, 'filtered:', filteredChannels.length);
+
+                                            if (filteredChannels.length > 0) {
+                                                return filteredChannels.map((ch, i) => (
+                                                    <tr key={i}>
+                                                        <td style={{ maxWidth: '200px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ch.name}</td>
+                                                        <td style={{ color: 'var(--muted-foreground)' }}>{ch.category}</td>
+                                                        <td>
+                                                            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                                                                <button
+                                                                    onClick={() => router.push(`/player?id=${ch.id}`)}
+                                                                    title="Play Channel"
+                                                                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#10b981' }}
+                                                                >
+                                                                    <Play size={16} fill="#10b981" />
+                                                                </button>
+                                                                <button
+                                                                    onClick={() => startEditing(ch)}
+                                                                    title="Edit URL"
+                                                                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary)' }}
+                                                                >
+                                                                    <Edit size={16} />
+                                                                </button>
+                                                                <button
+                                                                    onClick={() => deleteChannel(ch)}
+                                                                    title="Delete Channel"
+                                                                    disabled={deleting === ch.id}
+                                                                    style={{
+                                                                        background: 'none',
+                                                                        border: 'none',
+                                                                        cursor: deleting === ch.id ? 'not-allowed' : 'pointer',
+                                                                        color: deleting === ch.id ? '#9ca3af' : '#ef4444',
+                                                                        opacity: deleting === ch.id ? 0.5 : 1
+                                                                    }}
+                                                                >
+                                                                    {deleting === ch.id ? <RefreshCw size={16} className="animate-spin" /> : <Trash2 size={16} />}
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                ))
+                                            } else {
+                                                return (
+                                                    <tr>
+                                                        <td colSpan="3" style={{ textAlign: 'center', padding: '2rem', color: 'var(--muted-foreground)' }}>
+                                                            {searchTerm ? 'No channels found matching your search.' : 'No channels to display.'}
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            }
+                                        })()}
                                     </tbody>
                                 </table>
                             </div>

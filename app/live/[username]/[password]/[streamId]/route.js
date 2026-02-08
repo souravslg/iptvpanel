@@ -12,10 +12,10 @@ export async function GET(request, context) {
         return new NextResponse('Invalid request parameters', { status: 400 });
     }
 
-    const cleanStreamId = streamId.replace(/\.(ts|m3u8|mp4)$/, '');
+    const cleanStreamId = decodeURIComponent(streamId.replace(/\.(ts|m3u8|mp4)$/, ''));
 
     try {
-        console.log('Live stream request:', { username, password, streamId });
+        console.log('Live stream request:', { username, password, streamId, cleanStreamId });
 
         // Authenticate user
         const { data: user, error: userError } = await supabase
@@ -91,12 +91,22 @@ export async function GET(request, context) {
         const playlistIds = activePlaylists.map(p => p.id);
         console.log('Searching in active playlists:', playlistIds);
 
-        // Get stream by ID or stream_id from active playlists only
-        const { data: streams, error: streamError } = await supabase
+        // Build query efficiently
+        let query = supabase
             .from('streams')
             .select('*')
-            .in('playlist_id', playlistIds)
-            .or(`id.eq.${cleanStreamId},stream_id.eq.${cleanStreamId}`);
+            .in('playlist_id', playlistIds);
+
+        // Handle numeric vs string IDs to avoid "invalid input syntax for integer"
+        const isNumeric = /^\d+$/.test(cleanStreamId);
+
+        if (isNumeric) {
+            query = query.or(`id.eq.${cleanStreamId},stream_id.eq.${cleanStreamId}`);
+        } else {
+            query = query.eq('stream_id', cleanStreamId);
+        }
+
+        const { data: streams, error: streamError } = await query;
 
         if (streamError || !streams || streams.length === 0) {
             console.log('Stream not found in active playlists:', cleanStreamId);

@@ -27,11 +27,30 @@ export async function POST(request) {
         }
 
         // Parse M3U content
-        const streams = parseM3U(content);
+        // Parse M3U content
+        let streams = parseM3U(content);
 
         if (streams.length === 0) {
             return NextResponse.json({ error: 'No streams found in M3U content' }, { status: 400 });
         }
+
+        // Ensure unique stream IDs to prevent 'streams_playlist_stream_unique' constraint violation
+        const seenIds = new Set();
+        const uniqueStreams = streams.map(stream => {
+            let uniqueId = stream.id;
+            // If ID already exists in this import batch, append a counter
+            if (seenIds.has(uniqueId)) {
+                let counter = 1;
+                while (seenIds.has(`${stream.id}_${counter}`)) {
+                    counter++;
+                }
+                uniqueId = `${stream.id}_${counter}`;
+            }
+            seenIds.add(uniqueId);
+            return { ...stream, id: uniqueId };
+        });
+
+        streams = uniqueStreams;
 
         // Delete existing streams in this playlist
         await supabase
