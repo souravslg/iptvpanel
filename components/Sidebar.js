@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutDashboard, Users, FileVideo, Settings, LogOut, Tv, Wifi, Activity } from 'lucide-react';
+import { LayoutDashboard, Users, FileVideo, Settings, LogOut, Tv, Wifi, Activity, Play } from 'lucide-react';
 
 const Sidebar = () => {
     const pathname = usePathname();
