@@ -2,105 +2,50 @@ import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 
 export async function GET(request, context) {
-    // In Next.js 16, params might be async
     const params = await Promise.resolve(context.params);
     const { username, password, streamId } = params;
 
-    // Validate params exist
     if (!username || !password || !streamId) {
-        console.error('Missing params:', { username, password, streamId });
         return new NextResponse('Invalid request parameters', { status: 400 });
     }
 
-    // Clean any pipe headers from the input ID (e.g. |User-Agent=... or %7CUser-Agent=...)
-    // Also remove extensions (.ts, .m3u8, .mp4)
     const cleanStreamId = decodeURIComponent(streamId.replace(/(\.(ts|m3u8|mp4))?(\|.*|%7c.*)?$/i, ''));
 
     try {
-        console.log('Live stream request:', { username, password, streamId, cleanStreamId });
+        console.log('--- Smart Stream Proxy Start ---');
+        console.log('Request:', { username, streamId: cleanStreamId });
 
-        // Authenticate user
-        const { data: user, error: userError } = await supabase
+        // 1. Authenticate User
+        const { data: user } = await supabase
             .from('users')
             .select('*')
             .eq('username', username)
             .eq('password', password)
             .single();
 
-        if (userError || !user) {
-            console.log('Authentication failed');
-            return new NextResponse('Unauthorized', { status: 401 });
+        if (!user || user.status !== 'Active') {
+            return new NextResponse('Unauthorized or Inactive', { status: 401 });
         }
 
-        // Check if user is active
         const now = new Date();
         const expireDate = user.expire_date ? new Date(user.expire_date) : null;
-
-        // Compare dates at midnight to avoid timezone issues
-        const nowDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        const expireDateOnly = expireDate ? new Date(expireDate.getFullYear(), expireDate.getMonth(), expireDate.getDate()) : null;
-
-        const isExpired = expireDateOnly && expireDateOnly < nowDate;
-        const isActive = user.status === 'Active' && !isExpired;
-
-        console.log('User check (DETAILED):', {
-            username: user.username,
-            status: user.status,
-            expireDate: user.expire_date,
-            expireDateParsed: expireDate?.toISOString(),
-            nowDate: nowDate.toISOString(),
-            expireDateOnly: expireDateOnly?.toISOString(),
-            isExpired,
-            isActive,
-            comparison: expireDateOnly && nowDate ? `${expireDateOnly.toISOString().split('T')[0]} < ${nowDate.toISOString().split('T')[0]} = ${isExpired}` : 'N/A'
-        });
-
-        if (!isActive) {
-            // Fetch invalid subscription video URL from settings
-            let invalidSubVideo = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
-
-            try {
-                const { data: settingRow, error: settingsError } = await supabase
-                    .from('settings')
-                    .select('value')
-                    .eq('key', 'invalid_subscription_video')
-                    .single();
-
-                if (settingsError) {
-                    console.warn('Settings table error (using default video):', settingsError.message);
-                } else if (settingRow?.value) {
-                    invalidSubVideo = settingRow.value;
-                }
-            } catch (error) {
-                console.warn('Failed to fetch settings (using default video):', error.message);
-            }
-
-            console.log('User inactive/expired, redirecting to:', invalidSubVideo);
-            return NextResponse.redirect(invalidSubVideo);
+        if (expireDate && expireDate < now) {
+            return new NextResponse('Subscription Expired', { status: 401 });
         }
 
-        // Get active playlists first
-        const { data: activePlaylists, error: playlistError } = await supabase
+        // 2. Fetch Stream Data
+        const { data: activePlaylists } = await supabase
             .from('playlists')
             .select('id')
             .eq('is_active', true);
 
-        if (playlistError || !activePlaylists || activePlaylists.length === 0) {
-            console.log('No active playlists found');
+        if (!activePlaylists || activePlaylists.length === 0) {
             return new NextResponse('No active playlists', { status: 404 });
         }
 
         const playlistIds = activePlaylists.map(p => p.id);
-        console.log('Searching in active playlists:', playlistIds);
-
-        // Build query efficiently
-        let query = supabase
-            .from('streams')
-            .select('*')
-            .in('playlist_id', playlistIds);
-
-        // Handle numeric vs string IDs to avoid "invalid input syntax for integer"
         const isNumeric = /^\d+$/.test(cleanStreamId);
+        let query = supabase.from('streams').select('*').in('playlist_id', playlistIds);
 
         if (isNumeric) {
             query = query.or(`id.eq.${cleanStreamId},stream_id.eq.${cleanStreamId}`);
@@ -108,162 +53,121 @@ export async function GET(request, context) {
             query = query.eq('stream_id', cleanStreamId);
         }
 
-        const { data: streams, error: streamError } = await query;
-
-        if (streamError || !streams || streams.length === 0) {
-            console.log('Stream not found in active playlists:', cleanStreamId);
-            return new NextResponse(`Stream not found: ${cleanStreamId}`, { status: 404 });
+        const { data: streams } = await query;
+        if (!streams || streams.length === 0) {
+            return new NextResponse('Stream not found', { status: 404 });
         }
 
-        // If multiple streams found (from different playlists), use the first one
         const stream = streams[0];
-        console.log(`Found ${streams.length} stream(s), using:`, stream.name, 'from playlist', stream.playlist_id);
+        let targetUrl = stream.url;
 
-        console.log('Redirecting to stream URL:', stream.url);
+        if (!targetUrl) return new NextResponse('Missing target URL', { status: 500 });
 
-        // Validate stream URL before redirecting
-        if (!stream.url || stream.url.trim() === '') {
-            console.error('Stream URL is empty for stream:', cleanStreamId);
-            return new NextResponse('Stream URL not configured', { status: 500 });
+        // 3. Prepare Headers for Fetch
+        const fetchHeaders = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+        };
+
+        if (stream.headers) {
+            const storedHeaders = typeof stream.headers === 'string' ? JSON.parse(stream.headers) : stream.headers;
+            const getStored = (k) => storedHeaders[k] || storedHeaders[k.toLowerCase()];
+
+            if (getStored('User-Agent')) fetchHeaders['User-Agent'] = getStored('User-Agent');
+            if (getStored('Referer')) fetchHeaders['Referer'] = getStored('Referer');
+            if (getStored('Origin')) fetchHeaders['Origin'] = getStored('Origin');
         }
 
-        // Track active stream (one stream per user - replace old streams)
-        try {
-            console.log('📊 Attempting to track stream:', { username, streamId: cleanStreamId });
+        console.log('Fetching source URL:', targetUrl);
 
-            const userAgent = request.headers.get('user-agent') || 'Unknown';
-            const ipAddress = request.headers.get('x-forwarded-for') ||
-                request.headers.get('x-real-ip') ||
-                'Unknown';
+        // 4. SMART PROXY: Instead of 302, we FETCH to bypass complex redirect/header issues
+        const response = await fetch(targetUrl, {
+            headers: fetchHeaders,
+            redirect: 'follow'
+        });
 
-            console.log('📍 Client info:', { userAgent, ipAddress });
+        if (!response.ok) {
+            console.error('Source fetch failed:', response.status, response.statusText);
+            // Fallback to direct 302 if fetch fails
+            return redirectWithHeaders(targetUrl, stream.headers);
+        }
 
-            // Check if this user-stream combination already exists
-            const { data: existingStream, error: checkError } = await supabase
-                .from('active_streams')
-                .select('id')
-                .eq('username', username)
-                .eq('stream_id', cleanStreamId)
-                .single();
+        const contentType = response.headers.get('content-type') || '';
+        const finalUrl = response.url;
 
-            if (checkError && checkError.code !== 'PGRST116') {
-                console.warn('⚠️  Error checking existing stream:', checkError);
-            }
+        // 5. If it's a Manifest (M3U8), rewrite it to fix relative paths and inject DRM headers
+        if (contentType.includes('mpegurl') || contentType.includes('application/vnd.apple.mpegurl') || targetUrl.includes('.m3u8')) {
+            let body = await response.text();
 
-            if (existingStream) {
-                // Update last_ping for existing stream (same channel)
-                console.log('🔄 Updating existing stream record:', existingStream.id);
-                const { error: updateError } = await supabase
-                    .from('active_streams')
-                    .update({
-                        last_ping: new Date().toISOString(),
-                        ip_address: ipAddress
-                    })
-                    .eq('id', existingStream.id);
+            // Rewrite relative URLs to absolute
+            const baseUrl = finalUrl.substring(0, finalUrl.lastIndexOf('/') + 1);
 
-                if (updateError) {
-                    console.error('❌ Failed to update stream:', updateError);
-                } else {
-                    console.log('✅ Stream updated successfully');
-                }
-            } else {
-                // User is switching to a different channel
-                // Delete ALL existing streams for this user first
-                console.log('🗑️  Deleting old streams for user:', username);
-                const { error: deleteError } = await supabase
-                    .from('active_streams')
-                    .delete()
-                    .eq('username', username);
+            if (stream.headers) {
+                const storedHeaders = typeof stream.headers === 'string' ? JSON.parse(stream.headers) : stream.headers;
+                const headerParts = [];
+                const getStored = (k) => storedHeaders[k] || storedHeaders[k.toLowerCase()];
+                const ua = getStored('User-Agent');
+                const ref = getStored('Referer') || getStored('Origin');
+                if (ua) headerParts.push(`User-Agent=${ua}`);
+                if (ref) headerParts.push(`Referer=${ref}`);
 
-                if (deleteError) {
-                    console.warn('⚠️  Error deleting old streams:', deleteError);
-                }
+                if (headerParts.length > 0) {
+                    const pipeStr = `|${headerParts.join('&')}`;
 
-                // Insert new active stream record
-                console.log('➕ Inserting new stream record');
-                const { data: insertData, error: insertError } = await supabase
-                    .from('active_streams')
-                    .insert({
-                        user_id: user.id,
-                        username: username,
-                        stream_id: cleanStreamId,
-                        stream_name: stream.name,
-                        user_agent: userAgent,
-                        ip_address: ipAddress,
-                        started_at: new Date().toISOString(),
-                        last_ping: new Date().toISOString()
-                    })
-                    .select();
+                    // Replace URI="license_url" with URI="license_url|Headers"
+                    body = body.replace(/(URI=")([^"]+)/g, (match, p1, p2) => {
+                        if (p2.includes('license') || p2.includes('key') || p2.includes('wv') || p2.includes('widevine') || p2.includes('clearkey')) {
+                            const fullP2 = p2.startsWith('http') ? p2 : new URL(p2, baseUrl).toString();
+                            return `${p1}${fullP2}${pipeStr}`;
+                        }
+                        return match;
+                    });
 
-                if (insertError) {
-                    console.error('❌ Failed to insert stream:', insertError);
-                } else {
-                    console.log('✅ Stream inserted successfully:', insertData);
+                    // Fix relative segments
+                    body = body.split('\n').map(line => {
+                        const t = line.trim();
+                        if (t && !t.startsWith('#') && !t.startsWith('http')) {
+                            try { return new URL(t, baseUrl).toString(); } catch (e) { return line; }
+                        }
+                        return line;
+                    }).join('\n');
                 }
             }
 
-            // Clean up old inactive streams (older than 10 minutes)
-            const { error: cleanupError } = await supabase
-                .from('active_streams')
-                .delete()
-                .lt('last_ping', new Date(Date.now() - 10 * 60 * 1000).toISOString());
-
-            if (cleanupError) {
-                console.warn('⚠️  Cleanup error:', cleanupError);
-            } else {
-                console.log('🧹 Cleanup completed');
-            }
-
-        } catch (trackError) {
-            // Don't fail the stream if tracking fails
-            console.error('❌ TRACKING ERROR:', trackError);
-            console.error('Error details:', {
-                message: trackError.message,
-                stack: trackError.stack
+            return new NextResponse(body, {
+                headers: {
+                    'Content-Type': 'application/vnd.apple.mpegurl',
+                    'Cache-Control': 'no-cache',
+                    'Access-Control-Allow-Origin': '*'
+                }
             });
         }
 
-        // Construct Final URL with Headers for Player Compatibility
-        // Many players (OTT Navigator, Tivimate) support appending headers via pipe (|)
-        // If we extracted headers during import, we should append them back here
-        // so the player knows what headers to use for the redirect.
+        // 6. Default: Redirect to final URL
+        return redirectWithHeaders(finalUrl, stream.headers);
 
-        let finalUrl = stream.url;
-
-        if (stream.headers) {
-            const headers = typeof stream.headers === 'string' ? JSON.parse(stream.headers) : stream.headers;
-            const headerParts = [];
-
-            // Helper to handle case-insensitive headers
-            const getHeader = (key) => headers[key] || headers[key.toLowerCase()];
-
-            const ua = getHeader('User-Agent');
-            if (ua) headerParts.push(`User-Agent=${ua}`);
-
-            const ref = getHeader('Referer') || getHeader('Origin');
-            if (ref) headerParts.push(`Referer=${ref}`);
-
-            if (headerParts.length > 0) {
-                finalUrl += `|${headerParts.join('&')}`;
-            }
-        }
-
-        // Redirect to the actual stream URL with headers appended
-        // Use manual 302 redirect to ensure the pipe character is preserved exactly as players expect
-        return new NextResponse(null, {
-            status: 302,
-            headers: {
-                'Location': finalUrl,
-                'Cache-Control': 'no-cache'
-            }
-        });
     } catch (error) {
-        console.error('Stream proxy error:', {
-            message: error.message,
-            stack: error.stack,
-            username,
-            streamId: cleanStreamId
-        });
+        console.error('Smart Proxy Error:', error);
         return new NextResponse(`Server error: ${error.message}`, { status: 500 });
     }
+}
+
+function redirectWithHeaders(url, headersJson) {
+    let finalUrl = url.trim();
+    if (finalUrl.endsWith('&') || finalUrl.endsWith('?')) finalUrl = finalUrl.slice(0, -1);
+
+    if (headersJson) {
+        const headers = typeof headersJson === 'string' ? JSON.parse(headersJson) : headersJson;
+        const headerParts = [];
+        const getHeader = (k) => headers[k] || headers[k.toLowerCase()];
+        const ua = getHeader('User-Agent');
+        if (ua) headerParts.push(`User-Agent=${ua}`);
+        const ref = getHeader('Referer') || getHeader('Origin');
+        if (ref) headerParts.push(`Referer=${ref}`);
+        if (headerParts.length > 0) finalUrl += `|${headerParts.join('&')}`;
+    }
+
+    return new NextResponse(null, {
+        status: 302,
+        headers: { 'Location': finalUrl, 'Cache-Control': 'no-cache' }
+    });
 }
