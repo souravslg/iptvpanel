@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
-import { JioTV } from '@/lib/jiotv';
 
 export async function GET(request, context) {
     const params = await Promise.resolve(context.params);
@@ -62,22 +61,7 @@ export async function GET(request, context) {
         const stream = streams[0];
         let targetUrl = stream.url;
 
-        // -------------------------------------------------------------
-        // JIO TV SPECIAL HANDLING
-        // -------------------------------------------------------------
-        if (cleanStreamId.startsWith('jiotv-')) {
-            const channelId = cleanStreamId.replace('jiotv-', '');
-            const jioUrl = await JioTV.getStreamUrl(channelId);
-            if (jioUrl) {
-                targetUrl = jioUrl;
-            } else {
-                // Try refreshing token once
-                await JioTV.refreshToken();
-                const retryUrl = await JioTV.getStreamUrl(channelId);
-                if (retryUrl) targetUrl = retryUrl;
-            }
-        }
-        // -------------------------------------------------------------
+
 
         if (!targetUrl) return new NextResponse('Missing target URL', { status: 500 });
 
