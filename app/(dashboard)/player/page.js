@@ -82,27 +82,61 @@ function PlayerContent() {
             console.log('Stream URL:', channel.url);
             console.log('Stream format:', channel.stream_format);
 
-            // Get the stream URL - use proxy to avoid CORS issues
             const streamUrl = channel.url;
-            const useProxy = !streamUrl.startsWith(window.location.origin);
-            const playbackUrl = useProxy
-                ? `/api/stream-proxy?url=${encodeURIComponent(streamUrl)}`
-                : streamUrl;
 
-            console.log('Playback URL:', playbackUrl);
-            console.log('Using proxy:', useProxy);
+            // For HLS streams, use native HTML5 video player (most reliable)
+            if (channel.stream_format === 'hls' || streamUrl.includes('.m3u8')) {
+                console.log('Using native HTML5 player for HLS');
 
-            // Check if Shaka Player is available and needed
-            const needsShaka = channel.drm_scheme && channel.drm_scheme !== 'none';
-            const isDash = channel.stream_format === 'mpd' || streamUrl.includes('.mpd');
+                // Set crossorigin for CORS
+                videoRef.current.crossOrigin = 'anonymous';
+                videoRef.current.src = streamUrl;
 
-            if (window.shaka && (needsShaka || isDash)) {
-                console.log('Using Shaka Player');
+                // Add error handler
+                videoRef.current.onerror = (e) => {
+                    console.error('Native player error:', e);
+                    console.error('Video error code:', videoRef.current.error?.code);
+                    console.error('Video error message:', videoRef.current.error?.message);
 
-                // Check if browser supports Shaka Player
+                    let errorMessage = 'Failed to load stream';
+                    if (videoRef.current.error) {
+                        switch (videoRef.current.error.code) {
+                            case 1:
+                                errorMessage = 'Stream loading aborted';
+                                break;
+                            case 2:
+                                errorMessage = 'Network error - Check if stream URL is accessible';
+                                break;
+                            case 3:
+                                errorMessage = 'Stream decoding failed - Format may not be supported';
+                                break;
+                            case 4:
+                                errorMessage = 'Stream format not supported by browser';
+                                break;
+                        }
+                    }
+                    setError(errorMessage + '. Stream URL: ' + streamUrl);
+                };
+
+                videoRef.current.onloadedmetadata = () => {
+                    console.log('Stream metadata loaded successfully');
+                };
+
+                videoRef.current.oncanplay = () => {
+                    console.log('Stream ready to play');
+                };
+
+                return;
+            }
+
+            // For DASH or DRM content, try Shaka Player
+            if (window.shaka && (channel.stream_format === 'mpd' || streamUrl.includes('.mpd') ||
+                (channel.drm_scheme && channel.drm_scheme !== 'none'))) {
+                console.log('Using Shaka Player for DASH/DRM');
+
                 if (!window.shaka.Player.isBrowserSupported()) {
-                    console.warn('Browser not supported for Shaka Player, falling back to native');
-                    videoRef.current.src = playbackUrl;
+                    console.warn('Browser not supported for Shaka Player');
+                    setError('Browser does not support advanced playback features');
                     return;
                 }
 
@@ -111,7 +145,6 @@ function PlayerContent() {
                     await player.destroy();
                 }
 
-                // Create new player
                 const newPlayer = new window.shaka.Player(videoRef.current);
 
                 // Configure DRM if needed
@@ -154,6 +187,7 @@ function PlayerContent() {
                             };
                         } catch (e) {
                             console.error('Error converting ClearKey hex to base64:', e);
+                            // Fallback to original if conversion fails
                             drmConfig['org.w3.clearkey'] = {
                                 'clearKeys': {
                                     [channel.drm_key_id]: channel.drm_key
@@ -173,47 +207,25 @@ function PlayerContent() {
                 newPlayer.addEventListener('error', (event) => {
                     console.error('Shaka Player error:', event.detail);
                     setError('Playback error: ' + event.detail.message);
-                    // Fallback to native player
-                    console.log('Falling back to native player');
-                    videoRef.current.src = playbackUrl;
                 });
 
                 setPlayer(newPlayer);
 
                 // Load the stream
-                await newPlayer.load(playbackUrl);
+                await newPlayer.load(streamUrl);
                 console.log('Shaka Player loaded successfully');
-            } else {
-                // Use native HTML5 video player
-                console.log('Using native HTML5 player');
-                videoRef.current.src = playbackUrl;
-
-                // Add error handler for native player
-                videoRef.current.onerror = (e) => {
-                    console.error('Native player error:', e);
-                    console.error('Video error code:', videoRef.current.error?.code);
-                    console.error('Video error message:', videoRef.current.error?.message);
-
-                    let errorMessage = 'Failed to load stream';
-                    if (videoRef.current.error) {
-                        switch (videoRef.current.error.code) {
-                            case 1:
-                                errorMessage = 'Stream loading aborted';
-                                break;
-                            case 2:
-                                errorMessage = 'Network error while loading stream';
-                                break;
-                            case 3:
-                                errorMessage = 'Stream decoding failed';
-                                break;
-                            case 4:
-                                errorMessage = 'Stream format not supported';
-                                break;
-                        }
-                    }
-                    setError(errorMessage + '. Check console for details.');
-                };
+                return;
             }
+
+            // Fallback: try direct playback for other formats
+            console.log('Using direct playback');
+            videoRef.current.crossOrigin = 'anonymous';
+            videoRef.current.src = streamUrl;
+
+            videoRef.current.onerror = (e) => {
+                console.error('Direct playback error:', e);
+                setError('Failed to play stream. Format may not be supported.');
+            };
 
             console.log('Player initialization complete');
         } catch (err) {
@@ -360,8 +372,9 @@ function PlayerContent() {
                         height: '100%',
                         objectFit: 'contain'
                     }}
-                    controls={false}
+                    controls={true}
                     autoPlay
+                    playsInline
                     onPlay={() => setPlaying(true)}
                     onPause={() => setPlaying(false)}
                 />
