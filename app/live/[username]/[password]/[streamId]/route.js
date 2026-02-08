@@ -30,7 +30,17 @@ export async function GET(request, { params }) {
         const isActive = user.status === 'Active' && !isExpired;
 
         if (!isActive) {
-            return new NextResponse('Account expired or inactive', { status: 401 });
+            // Fetch invalid subscription video URL from settings
+            const { data: settings } = await supabase
+                .from('settings')
+                .select('invalid_subscription_video')
+                .single();
+
+            const invalidSubVideo = settings?.invalid_subscription_video ||
+                'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
+
+            console.log('User inactive/expired, redirecting to invalid subscription video');
+            return NextResponse.redirect(invalidSubVideo);
         }
 
         // Get stream by ID or stream_id
