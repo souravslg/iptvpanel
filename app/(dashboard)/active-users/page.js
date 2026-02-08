@@ -147,8 +147,8 @@ export default function ActiveUsersPage() {
                                     <div className="flex items-center gap-3 mb-2">
                                         <h3 className="text-xl font-semibold">{user.username}</h3>
                                         <span className={`px-3 py-1 rounded-full text-xs font-medium ${user.current_connections > 0
-                                                ? 'bg-green-500 text-white'
-                                                : 'bg-gray-500 text-white'
+                                            ? 'bg-green-500 text-white'
+                                            : 'bg-gray-500 text-white'
                                             }`}>
                                             {user.current_connections > 0 ? '🔴 LIVE' : 'Idle'}
                                         </span>
@@ -178,14 +178,14 @@ export default function ActiveUsersPage() {
                                                     <img
                                                         src={stream.logo}
                                                         alt={stream.stream_name}
-                                                        className="w-16 h-16 rounded-lg object-cover"
+                                                        className="w-12 h-12 rounded-lg object-cover"
                                                         onError={(e) => {
                                                             e.target.style.display = 'none';
                                                         }}
                                                     />
                                                 ) : (
-                                                    <div className="w-16 h-16 rounded-lg bg-primary/10 flex items-center justify-center">
-                                                        <Tv size={32} className="text-primary" />
+                                                    <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                                                        <Tv size={24} className="text-primary" />
                                                     </div>
                                                 )}
                                             </div>
