@@ -105,7 +105,7 @@ export async function GET(request) {
 
             const formattedStreams = (allStreams || []).map(stream => {
                 const streamId = stream.stream_id || stream.id;
-                return {
+                const streamData = {
                     num: stream.id,
                     name: stream.name,
                     stream_type: stream.type || 'live',
@@ -120,6 +120,16 @@ export async function GET(request) {
                     // Add container extension for compatibility
                     container_extension: 'ts'
                 };
+
+                // Add DRM information if available
+                if (stream.drm_scheme) {
+                    streamData.drm_scheme = stream.drm_scheme;
+                    if (stream.drm_license_url) streamData.drm_license_url = stream.drm_license_url;
+                    if (stream.drm_key_id) streamData.drm_key_id = stream.drm_key_id;
+                    if (stream.drm_key) streamData.drm_key = stream.drm_key;
+                }
+
+                return streamData;
             });
 
             return NextResponse.json(formattedStreams);

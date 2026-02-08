@@ -97,6 +97,15 @@ export async function GET(request) {
             const tvgLogo = stream.logo || '';
             const groupTitle = stream.category || 'Uncategorized';
 
+            // Add DRM information if stream has ClearKey DRM
+            if (stream.drm_scheme === 'clearkey' && stream.drm_key_id && stream.drm_key) {
+                m3u += `#KODIPROP:inputstream.adaptive.license_type=clearkey\n`;
+                m3u += `#KODIPROP:inputstream.adaptive.license_key={"keys":[{"kty":"oct","k":"${stream.drm_key}","kid":"${stream.drm_key_id}"}],"type":"temporary"}\n`;
+            } else if (stream.drm_scheme === 'widevine' && stream.drm_license_url) {
+                m3u += `#KODIPROP:inputstream.adaptive.license_type=com.widevine.alpha\n`;
+                m3u += `#KODIPROP:inputstream.adaptive.license_key=${stream.drm_license_url}\n`;
+            }
+
             m3u += `#EXTINF:-1 tvg-id="${tvgId}" tvg-name="${tvgName}" tvg-logo="${tvgLogo}" group-title="${groupTitle}",${tvgName}\n`;
 
             // Always use proxy URL to enforce authentication and expiry checks
