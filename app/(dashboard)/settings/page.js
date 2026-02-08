@@ -55,132 +55,152 @@ export default function SettingsPage() {
     }
 
     return (
-        <div className=\"space-y-8 max-w-4xl\">
-            < div >
-            <h1 className=\"text-3xl font-bold\">Settings</h1>
-                < p className =\"text-muted-foreground mt-1\">Configure your panel preferences and server defaults.</p>
-            </div >
+        <div style={{ maxWidth: '1000px' }}>
+            <div style={{ marginBottom: '2rem' }}>
+                <h1 className="page-title">Settings</h1>
+                <p className="page-subtitle">Configure your panel preferences and server defaults.</p>
+            </div>
 
-        <div className=\"grid gap-8\">
-    {/* General Settings */ }
-    <div className=\"glass-panel p-6 rounded-xl border border-white/10\">
-        < h2 className =\"text-xl font-semibold mb-4 flex items-center gap-2\">
-            < Globe className =\"text-primary\" size={20} />
-    General
-                    </h2 >
-        <div className=\"space-y-4\">
-            < div >
-            <label className=\"block text-sm font-medium mb-1\">Panel Name</label>
-                < input
-    type =\"text\" 
-    value = { settings.server_name || '' }
-    onChange = {(e) => setSettings({ ...settings, server_name: e.target.value })
-}
-                            />
-                        </div >
+            <div style={{ display: 'grid', gap: '2rem' }}>
+                {/* General Settings */}
+                <div className="stat-card">
+                    <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <Globe style={{ color: 'var(--primary)' }} size={20} />
+                        General
+                    </h2>
+                    <div style={{ display: 'grid', gap: '1rem' }}>
                         <div>
-                            <label className=\"block text-sm font-medium mb-1\">Server URL</label>
-                            <input 
-                                type=\"text\" 
-value = { settings.server_url || '' }
-onChange = {(e) => setSettings({ ...settings, server_url: e.target.value })}
-placeholder =\"https://your-domain.com\"
-    />
-    <p className=\"text-xs text-muted-foreground mt-1\">Your panel's public URL</p>
-                        </div >
-                    </div >
-                </div >
+                            <label>Panel Name</label>
+                            <input
+                                type="text"
+                                value={settings.server_name || ''}
+                                onChange={(e) => setSettings({ ...settings, server_name: e.target.value })}
+                            />
+                        </div>
+                        <div>
+                            <label>Server URL</label>
+                            <input
+                                type="text"
+                                value={settings.server_url || ''}
+                                onChange={(e) => setSettings({ ...settings, server_url: e.target.value })}
+                                placeholder="https://your-domain.com"
+                            />
+                            <p style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)', marginTop: '0.25rem' }}>
+                                Your panel's public URL
+                            </p>
+                        </div>
+                    </div>
+                </div>
 
-    {/* Invalid Subscription Video */ }
-    < div className =\"glass-panel p-6 rounded-xl border border-white/10\">
-        < h2 className =\"text-xl font-semibold mb-4 flex items-center gap-2\">
-            < Video className =\"text-red-500\" size={20} />
+                {/* Invalid Subscription Video */}
+                <div className="stat-card">
+                    <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <Video style={{ color: '#ef4444' }} size={20} />
                         Invalid Subscription Video
-                    </h2 >
-    <div className=\"space-y-4\">
-        < div >
-        <label className=\"block text-sm font-medium mb-1\">Video URL</label>
-            < input
-type =\"text\" 
-value = { settings.invalid_subscription_video || '' }
-onChange = {(e) => setSettings({ ...settings, invalid_subscription_video: e.target.value })}
-placeholder =\"https://example.com/invalid-subscription.mp4\"
-    />
-    <p className=\"text-xs text-muted-foreground mt-1\">
+                    </h2>
+                    <div style={{ display: 'grid', gap: '1rem' }}>
+                        <div>
+                            <label>Video URL</label>
+                            <input
+                                type="text"
+                                value={settings.invalid_subscription_video || ''}
+                                onChange={(e) => setSettings({ ...settings, invalid_subscription_video: e.target.value })}
+                                placeholder="https://example.com/invalid-subscription.mp4"
+                            />
+                            <p style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)', marginTop: '0.25rem' }}>
                                 This video will be shown to users with expired or inactive subscriptions
-                            </p >
-                        </div >
-    <div className=\"p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg\">
-        < p className =\"text-sm text-blue-400\">
-            < strong > Tip:</strong > Upload your custom \"Invalid Subscription\" video to a CDN or hosting service, 
-                                then paste the direct video URL here.Supported formats: MP4, M3U8, TS
-                            </p >
-                        </div >
-                    </div >
-                </div >
+                            </p>
+                        </div>
+                        <div style={{ padding: '1rem', backgroundColor: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.2)', borderRadius: '0.5rem' }}>
+                            <p style={{ fontSize: '0.875rem', color: '#60a5fa' }}>
+                                <strong>Tip:</strong> Upload your custom "Invalid Subscription" video to a CDN or hosting service,
+                                then paste the direct video URL here. Supported formats: MP4, M3U8, TS
+                            </p>
+                        </div>
+                    </div>
+                </div>
 
-    {/* Streaming Settings */ }
-    < div className =\"glass-panel p-6 rounded-xl border border-white/10\">
-        < h2 className =\"text-xl font-semibold mb-4 flex items-center gap-2\">
-            < Server className =\"text-green-500\" size={20} />
+                {/* Streaming Settings */}
+                <div className="stat-card">
+                    <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <Server style={{ color: '#22c55e' }} size={20} />
                         Streaming Configuration
-                    </h2 >
-    <div className=\"grid grid-cols-1 md:grid-cols-2 gap-4\">
-        < div >
-        <label className=\"block text-sm font-medium mb-1\">Default Stream Format</label>
-            < select >
+                    </h2>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
+                        <div>
+                            <label>Default Stream Format</label>
+                            <select>
                                 <option>HLS (m3u8)</option>
                                 <option>MPEG-TS (ts)</option>
                                 <option>RTMP</option>
-                            </select >
-                        </div >
+                            </select>
+                        </div>
                         <div>
-                            <label className=\"block text-sm font-medium mb-1\">Max Connections Per User</label>
-                            <input type=\"number\" defaultValue=\"1\" />
-                        </div >
-    <div className=\"md:col-span-2\">
-        < label className =\"block text-sm font-medium mb-1\">Allowed User Agents</label>
-            < textarea rows =\"3\" defaultValue=\"VLC, Kodi, IPTVSmarters, *\" />
-                < p className =\"text-xs text-muted-foreground mt-1\">Separate with commas. Use * for all.</p>
-                        </div >
-                    </div >
-                </div >
+                            <label>Max Connections Per User</label>
+                            <input type="number" defaultValue="1" />
+                        </div>
+                        <div style={{ gridColumn: '1 / -1' }}>
+                            <label>Allowed User Agents</label>
+                            <textarea rows="3" defaultValue="VLC, Kodi, IPTVSmarters, *" />
+                            <p style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)', marginTop: '0.25rem' }}>
+                                Separate with commas. Use * for all.
+                            </p>
+                        </div>
+                    </div>
+                </div>
 
-    {/* Security */ }
-    < div className =\"glass-panel p-6 rounded-xl border border-white/10\">
-        < h2 className =\"text-xl font-semibold mb-4 flex items-center gap-2\">
-            < Shield className =\"text-red-400\" size={20} />
-Security & Access
-                    </h2 >
-    <div className=\"flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/5\">
-        < div >
-        <div className=\"font-medium\">Force HTTPS</div>
-            < div className =\"text-sm text-muted-foreground\">Redirect all HTTP traffic to HTTPS</div>
-                        </div >
-    <div className=\"w-12 h-6 bg-primary rounded-full relative cursor-pointer\">
-        < div className =\"absolute right-1 top-1 w-4 h-4 bg-white rounded-full\"></div>
-                        </div >
-                    </div >
-                </div >
+                {/* Security */}
+                <div className="stat-card">
+                    <h2 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <Shield style={{ color: '#f87171' }} size={20} />
+                        Security & Access
+                    </h2>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem', backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: '0.5rem', border: '1px solid rgba(255,255,255,0.05)' }}>
+                        <div>
+                            <div style={{ fontWeight: '500' }}>Force HTTPS</div>
+                            <div style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)' }}>Redirect all HTTP traffic to HTTPS</div>
+                        </div>
+                        <div style={{ width: '3rem', height: '1.5rem', backgroundColor: 'var(--primary)', borderRadius: '9999px', position: 'relative', cursor: 'pointer' }}>
+                            <div style={{ position: 'absolute', right: '0.25rem', top: '0.25rem', width: '1rem', height: '1rem', backgroundColor: 'white', borderRadius: '9999px' }}></div>
+                        </div>
+                    </div>
+                </div>
 
-    <div className=\"flex justify-end gap-4\">
-        < button
-onClick = {() => fetchSettings()}
-className =\"btn btn-secondary px-6 py-2 rounded-lg\"
-disabled = { saving }
-    >
-    Cancel
-                    </button >
-    <button
-        onClick={handleSave}
-        className=\"btn btn-primary px-6 py-2 rounded-lg flex items-center gap-2\"
-disabled = { saving }
-    >
-    <Save size={18} />
-{ saving ? 'Saving...' : 'Save Changes' }
-                    </button >
-                </div >
-            </div >
-        </div >
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
+                    <button
+                        onClick={() => fetchSettings()}
+                        style={{
+                            padding: '0.5rem 1.5rem',
+                            borderRadius: '0.5rem',
+                            backgroundColor: 'var(--secondary)',
+                            color: 'white',
+                            border: 'none',
+                            cursor: 'pointer'
+                        }}
+                        disabled={saving}
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        onClick={handleSave}
+                        style={{
+                            padding: '0.5rem 1.5rem',
+                            borderRadius: '0.5rem',
+                            backgroundColor: 'var(--primary)',
+                            color: 'white',
+                            border: 'none',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.5rem'
+                        }}
+                        disabled={saving}
+                    >
+                        <Save size={18} />
+                        {saving ? 'Saving...' : 'Save Changes'}
+                    </button>
+                </div>
+            </div>
+        </div>
     );
 }
