@@ -133,7 +133,7 @@ export async function GET() {
       .select('*')
       .in('playlist_id', playlistIds)
       .order('id', { ascending: true })
-      .limit(2000); // Increased limit slightly, but keeps it safe
+      .limit(10000); // Increased limit to ensure all channels (including JTV) are fetched
 
     if (streamsError) {
       console.error('Error fetching streams:', streamsError);

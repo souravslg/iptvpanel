@@ -37,17 +37,41 @@ export async function GET(request) {
         const isExpired = expireDate && expireDate < now;
         const isActive = user.status === 'Active' && !isExpired;
 
-        if (!isActive) {
-            return NextResponse.json({
-                user_info: {
-                    auth: 0,
-                    message: isExpired ? 'Account expired' : 'Account inactive'
-                }
-            }, { status: 401 });
+        // Fetch invalid subscription video URL
+        let invalidVideoUrl = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
+        try {
+            const { data: settingsData } = await supabase
+                .from('settings')
+                .select('value')
+                .eq('key', 'invalid_subscription_video')
+                .single();
+            if (settingsData?.value) invalidVideoUrl = settingsData.value;
+        } catch (e) {
+            console.error('Error fetching invalid video setting:', e);
         }
 
         // Handle different actions
         if (action === 'get_live_streams' || action === 'get_vod_streams' || action === 'get_series') {
+            if (!isActive) {
+                if (action === 'get_live_streams') {
+                    return NextResponse.json([{
+                        num: 1,
+                        name: 'Account Expired/Inactive',
+                        stream_type: 'live',
+                        stream_id: 1,
+                        stream_icon: '',
+                        category_id: 'System',
+                        added: new Date().toISOString(),
+                        custom_sid: '',
+                        tv_archive: 0,
+                        direct_source: invalidVideoUrl,
+                        tv_archive_duration: 0,
+                        container_extension: 'mp4'
+                    }]);
+                }
+                return NextResponse.json([]);
+            }
+
             // Get active playlists first
             const { data: activePlaylists, error: playlistError } = await supabase
                 .from('playlists')
@@ -169,7 +193,14 @@ export async function GET(request) {
             return NextResponse.json(formattedStreams);
         }
 
-        if (action === 'get_live_categories' || action === 'get_vod_categories' || action === 'get_series_categories') {
+        if (action === 'get_live_categories') {
+            if (!isActive) {
+                return NextResponse.json([{
+                    category_id: 'System',
+                    category_name: 'System',
+                    parent_id: 0
+                }]);
+            }
             // Get active playlists first
             const { data: activePlaylists, error: playlistError } = await supabase
                 .from('playlists')
@@ -231,8 +262,8 @@ export async function GET(request) {
             user_info: {
                 username: user.username,
                 password: user.password,
-                message: 'Welcome',
-                auth: 1,
+                message: isActive ? 'Welcome' : (isExpired ? 'Account Expired' : 'Account Inactive'),
+                auth: 1, // Always allow auth to show the invalid video
                 status: user.status,
                 exp_date: expireDate ? Math.floor(expireDate.getTime() / 1000).toString() : null,
                 is_trial: '0',

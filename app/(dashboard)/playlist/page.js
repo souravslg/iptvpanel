@@ -204,42 +204,49 @@ export default function PlaylistPage() {
     const startEditing = (channel) => {
         setEditingChannel(channel);
         setEditUrl(channel.url);
-        setEditStreamFormat(channel.streamFormat || 'hls');
-        setEditDrmScheme(channel.drm?.scheme || '');
-        setEditDrmLicenseUrl(channel.drm?.licenseUrl || '');
-        setEditDrmKeyId(channel.drm?.keyId || '');
-        setEditDrmKey(channel.drm?.key || '');
-        setEditChannelNumber(channel.number || '');
+        setEditStreamFormat(channel.streamFormat || channel.stream_format || 'hls');
+        setEditDrmScheme(channel.drm_scheme || channel.drm?.scheme || '');
+        setEditDrmLicenseUrl(channel.drm_license_url || channel.drm?.licenseUrl || '');
+        setEditDrmKeyId(channel.drm_key_id || channel.drm?.keyId || '');
+        setEditDrmKey(channel.drm_key || channel.drm?.key || '');
+        setEditChannelNumber(channel.number || channel.channel_number || '');
     };
 
     const saveEdit = async () => {
         if (!editingChannel) return;
         setSaving(true);
         try {
-            const updatedData = {
+            const payload = {
                 id: editingChannel.id,
                 url: editUrl,
                 streamFormat: editStreamFormat,
-                number: editChannelNumber,
-                drm: editDrmScheme ? {
-                    scheme: editDrmScheme,
-                    licenseUrl: editDrmLicenseUrl,
-                    keyId: editDrmKeyId,
-                    key: editDrmKey
-                } : null
+                channelNumber: editChannelNumber,
+                drmScheme: editDrmScheme,
+                drmLicenseUrl: editDrmLicenseUrl,
+                drmKeyId: editDrmKeyId,
+                drmKey: editDrmKey
             };
 
             const res = await fetch('/api/playlist/edit', {
-                method: 'PUT',
+                method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(updatedData)
+                body: JSON.stringify(payload)
             });
 
             if (res.ok) {
-                // Update local sample
+                // Update local sample with snake_case to match API GET format
                 setSample(prev => prev.map(ch =>
                     ch.id === editingChannel.id
-                        ? { ...ch, ...updatedData, drm: updatedData.drm }
+                        ? {
+                            ...ch,
+                            url: editUrl,
+                            stream_format: editStreamFormat,
+                            channel_number: editChannelNumber,
+                            drm_scheme: editDrmScheme,
+                            drm_license_url: editDrmLicenseUrl,
+                            drm_key_id: editDrmKeyId,
+                            drm_key: editDrmKey
+                        }
                         : ch
                 ));
                 setEditingChannel(null);
@@ -251,6 +258,65 @@ export default function PlaylistPage() {
             alert('Update failed');
         } finally {
             setSaving(false);
+        }
+    };
+
+    const togglePlaylistStatus = async (playlist, isActive) => {
+        setSwitchingPlaylist(playlist.id);
+        try {
+            const res = await fetch('/api/playlists', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: playlist.id, is_active: isActive })
+            });
+
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Failed to update playlist');
+
+            // Update local state
+            setPlaylists(prev => prev.map(p =>
+                p.id === playlist.id ? { ...p, is_active: isActive } : p
+            ));
+
+            // Refresh main data if we changed something that affects the view
+            fetchPlaylistData();
+
+        } catch (err) {
+            console.error('Error updating playlist:', err);
+            alert(err.message);
+        } finally {
+            setSwitchingPlaylist(null);
+        }
+    };
+
+    const deletePlaylist = async (playlist) => {
+        if (!confirm(`Delete playlist "${playlist.name}"? This cannot be undone.`)) return;
+
+        setDeletingPlaylist(playlist.id);
+        try {
+            const res = await fetch('/api/playlists', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: playlist.id })
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.error || 'Failed to delete playlist');
+            }
+
+            setPlaylists(prev => prev.filter(p => p.id !== playlist.id));
+
+            if (activePlaylists.some(p => p.id === playlist.id)) {
+                fetchPlaylistData();
+            }
+
+        } catch (err) {
+            console.error('Error deleting playlist:', err);
+            alert(err.message);
+        } finally {
+            setDeletingPlaylist(null);
         }
     };
 
@@ -456,11 +522,29 @@ export default function PlaylistPage() {
                                     </div>
                                     <div className="flex gap-2">
                                         {pl.is_active ? (
-                                            <span className="text-xs bg-green-900 text-green-300 px-2 py-1 rounded">Active</span>
+                                            <button
+                                                onClick={() => togglePlaylistStatus(pl, false)}
+                                                disabled={switchingPlaylist === pl.id}
+                                                className="text-xs bg-amber-600 text-white px-3 py-1 rounded hover:bg-amber-700"
+                                            >
+                                                {switchingPlaylist === pl.id ? 'Updating...' : 'Deactivate'}
+                                            </button>
                                         ) : (
-                                            <button className="text-xs bg-blue-600 text-white px-3 py-1 rounded">Activate</button>
+                                            <button
+                                                onClick={() => togglePlaylistStatus(pl, true)}
+                                                disabled={switchingPlaylist === pl.id}
+                                                className="text-xs bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-500"
+                                            >
+                                                {switchingPlaylist === pl.id ? 'Updating...' : 'Activate'}
+                                            </button>
                                         )}
-                                        <button className="text-slate-400 hover:text-red-400"><Trash2 size={16} /></button>
+                                        <button
+                                            onClick={() => deletePlaylist(pl)}
+                                            disabled={deletingPlaylist === pl.id}
+                                            className="text-slate-400 hover:text-red-400 disabled:opacity-50"
+                                        >
+                                            <Trash2 size={16} />
+                                        </button>
                                     </div>
                                 </div>
                             ))}

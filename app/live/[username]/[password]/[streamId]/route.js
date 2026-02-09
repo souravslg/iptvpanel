@@ -42,7 +42,7 @@ export async function GET(request, context) {
             .eq('is_active', true);
 
         if (!activePlaylists || activePlaylists.length === 0) {
-            return new NextResponse('No active playlists', { status: 404 });
+            return new NextResponse('No active playlists found in DB', { status: 404 });
         }
 
         const playlistIds = activePlaylists.map(p => p.id);
@@ -55,9 +55,12 @@ export async function GET(request, context) {
             query = query.eq('stream_id', cleanStreamId);
         }
 
-        const { data: streams } = await query;
+        const { data: streams, error: streamError } = await query;
+        if (streamError) {
+            return new NextResponse(`DB Error: ${streamError.message}`, { status: 500 });
+        }
         if (!streams || streams.length === 0) {
-            return new NextResponse('Stream not found', { status: 404 });
+            return new NextResponse(`Stream ${cleanStreamId} not found in active playlists [${playlistIds.join(',')}]`, { status: 404 });
         }
 
         const stream = streams[0];
@@ -102,6 +105,58 @@ export async function GET(request, context) {
         // -------------------------------------------------------------
 
         if (!targetUrl) return new NextResponse('Missing target URL', { status: 500 });
+
+
+        // --- Active Stream Logging ---
+        try {
+            const ip = request.headers.get('x-forwarded-for') || 'unknown';
+            const ua = request.headers.get('user-agent') || 'unknown';
+
+            // Updates or Inserts active stream record
+            // We use (username, stream_id) as unique key for simplicity if IP matches, 
+            // or we just upsert based on a composite key if the table supports it.
+            // Assuming active_streams has a unique constraint on (username, stream_id) or we just insert.
+            // To be safe and avoid "duplicate key" limit, let's try to update first, then insert.
+
+            const streamData = {
+                username,
+                stream_id: stream.stream_id || stream.id,
+                stream_name: stream.name,
+                server_id: 1, // Default
+                ip_address: ip,
+                user_agent: ua,
+                last_ping: new Date().toISOString()
+            };
+
+            // Use supabaseAdmin to bypass RLS
+            const { supabaseAdmin } = await import('@/lib/supabase-admin');
+
+            // Try to update existing session for this user/stream
+            const { data: existing } = await supabaseAdmin
+                .from('active_streams')
+                .select('id')
+                .eq('username', username)
+                .eq('stream_id', streamData.stream_id)
+                .single();
+
+            if (existing) {
+                await supabaseAdmin
+                    .from('active_streams')
+                    .update({ last_ping: new Date().toISOString(), ip_address: ip })
+                    .eq('id', existing.id);
+            } else {
+                await supabaseAdmin
+                    .from('active_streams')
+                    .insert({
+                        ...streamData,
+                        started_at: new Date().toISOString()
+                    });
+            }
+        } catch (logErr) {
+            console.error('Logging error:', logErr);
+            // Non-blocking
+        }
+        // -----------------------------
 
 
         console.log('Fetching source URL:', targetUrl);

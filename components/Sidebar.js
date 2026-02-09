@@ -15,9 +15,6 @@ const Sidebar = () => {
         { name: 'Users', href: '/users', icon: Users },
         { name: 'Xtream Panel', href: '/xtream', icon: Wifi },
         { name: 'Playlist', href: '/playlist', icon: FileVideo },
-        { name: 'Tata Play', href: '/tataplay', icon: Play },
-        { name: 'SonyLiv', href: '/sonyliv', icon: Tv },
-        { name: 'Zee5', href: '/zee5', icon: Tv },
         { name: 'JTV Manager', href: '/jtv', icon: FileVideo },
         { name: 'Settings', href: '/settings', icon: Settings },
     ];

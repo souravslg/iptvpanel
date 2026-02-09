@@ -95,3 +95,36 @@ export async function DELETE(request) {
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }
+
+// PUT - Update a playlist
+export async function PUT(request) {
+    try {
+        const { id, is_active } = await request.json();
+
+        if (!id) {
+            return NextResponse.json({ error: 'Playlist ID is required' }, { status: 400 });
+        }
+
+        const updates = {
+            updated_at: new Date().toISOString()
+        };
+
+        if (typeof is_active !== 'undefined') {
+            updates.is_active = is_active;
+        }
+
+        const { data, error } = await supabase
+            .from('playlists')
+            .update(updates)
+            .eq('id', id)
+            .select()
+            .single();
+
+        if (error) throw error;
+
+        return NextResponse.json({ success: true, playlist: data });
+    } catch (error) {
+        console.error('Error updating playlist:', error);
+        return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+}

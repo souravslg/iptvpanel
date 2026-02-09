@@ -59,6 +59,24 @@ export default function JTVPage() {
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     };
 
+    const handleSync = async () => {
+        setLoading(true);
+        try {
+            const res = await fetch('/api/jtv/sync', { method: 'POST' });
+            const data = await res.json();
+            if (res.ok) {
+                alert(data.message || 'Synced successfully!');
+            } else {
+                alert('Sync failed: ' + (data.error || 'Unknown error'));
+            }
+        } catch (error) {
+            console.error('Error syncing playlist:', error);
+            alert('An error occurred while syncing.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div className="space-y-6 animate-slide-up">
             <div className="page-header">
@@ -134,6 +152,15 @@ export default function JTVPage() {
                     </h3>
 
                     <div className="space-y-4">
+                        <button
+                            onClick={handleSync}
+                            disabled={loading}
+                            className="w-full btn-secondary py-4 flex items-center justify-center gap-3 text-lg mb-4"
+                        >
+                            <FileText />
+                            Sync to Playlist Manager
+                        </button>
+
                         <button
                             onClick={handleRefresh}
                             disabled={loading}

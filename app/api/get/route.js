@@ -30,7 +30,27 @@ export async function GET(request) {
         const isActive = user.status === 'Active' && !isExpired;
 
         if (!isActive) {
-            return new NextResponse('Account expired or inactive', { status: 401 });
+            // Fetch invalid subscription video URL
+            let invalidVideoUrl = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
+            try {
+                const { data: settingsData } = await supabase
+                    .from('settings')
+                    .select('value')
+                    .eq('key', 'invalid_subscription_video')
+                    .single();
+                if (settingsData?.value) invalidVideoUrl = settingsData.value;
+            } catch (e) {
+                console.error('Error fetching invalid video setting:', e);
+            }
+
+            const m3u = `#EXTM3U\n#EXTINF:-1 tvg-id="" tvg-name="Account Expired" tvg-logo="" group-title="System",Account Expired/Inactive\n${invalidVideoUrl}\n`;
+
+            return new NextResponse(m3u, {
+                headers: {
+                    'Content-Type': 'application/x-mpegURL',
+                    'Content-Disposition': `attachment; filename="${username}.m3u"`
+                }
+            });
         }
 
         // Get active playlists
