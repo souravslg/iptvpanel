@@ -83,6 +83,7 @@ export default function LoginPage() {
                                         className="w-full pl-12 pr-4 bg-black/20 border-white/5 focus:bg-black/40 focus:border-primary/50"
                                         placeholder="Enter administrator email"
                                         required
+                                        autoComplete="email"
                                     />
                                 </div>
                             </div>
@@ -103,6 +104,7 @@ export default function LoginPage() {
                                         className="w-full pl-12 pr-4 bg-black/20 border-white/5 focus:bg-black/40 focus:border-primary/50"
                                         placeholder="Enter access key"
                                         required
+                                        autoComplete="current-password"
                                     />
                                 </div>
                             </div>

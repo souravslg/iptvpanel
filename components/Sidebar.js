@@ -18,6 +18,7 @@ const Sidebar = () => {
         { name: 'Tata Play', href: '/tataplay', icon: Play },
         { name: 'SonyLiv', href: '/sonyliv', icon: Tv },
         { name: 'Zee5', href: '/zee5', icon: Tv },
+        { name: 'JTV Manager', href: '/jtv', icon: FileVideo },
         { name: 'Settings', href: '/settings', icon: Settings },
     ];
 
@@ -50,8 +51,8 @@ const Sidebar = () => {
                             key={item.name}
                             href={item.href}
                             className={`flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md transition-colors ${isActive
-                                    ? 'bg-blue-600 text-white'
-                                    : 'text-slate-300 hover:bg-slate-700 hover:text-white'
+                                ? 'bg-blue-600 text-white'
+                                : 'text-slate-300 hover:bg-slate-700 hover:text-white'
                                 }`}
                         >
                             <item.icon size={18} />

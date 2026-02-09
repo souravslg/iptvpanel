@@ -311,8 +311,8 @@ export default function UsersPage() {
                                         <button
                                             onClick={(e) => { e.stopPropagation(); toggleStatus(user); }}
                                             className={`w-11 h-11 flex items-center justify-center rounded-2xl transition-all shadow-lg border active:scale-90 ${user.status === 'Active'
-                                                    ? 'bg-amber-500/10 text-amber-400 border-amber-500/20 hover:bg-amber-500 hover:text-white'
-                                                    : 'bg-green-500/10 text-green-400 border-green-500/20 hover:bg-green-500 hover:text-white'
+                                                ? 'bg-amber-500/10 text-amber-400 border-amber-500/20 hover:bg-amber-500 hover:text-white'
+                                                : 'bg-green-500/10 text-green-400 border-green-500/20 hover:bg-green-500 hover:text-white'
                                                 }`}
                                         >
                                             {user.status === 'Active' ? <UserMinus size={20} /> : <UserCheck size={20} />}
@@ -524,7 +524,7 @@ export default function UsersPage() {
                         <Users size={32} />
                     </div>
                     <h3 className="text-2xl font-bold font-outfit text-white mb-2 tracking-tight">Zero Interferences Detected</h3>
-                    <p className="text-muted-foreground text-lg">No nodes match the current scanning criteria: "{search}"</p>
+                    <p className="text-muted-foreground text-lg">No nodes match the current scanning criteria: &quot;{search}&quot;</p>
                 </div>
             )}
         </div>
