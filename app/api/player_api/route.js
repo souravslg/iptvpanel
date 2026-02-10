@@ -193,12 +193,24 @@ export async function GET(request) {
 
 
 
-                // Determine extension
+
+                // Determine extension based on actual stream format
                 let extension = 'ts';
-                if (targetType === 'movie') extension = 'mp4';
+                if (targetType === 'movie') {
+                    extension = 'mp4';
+                } else if (stream.url) {
+                    // Detect format from source URL
+                    if (stream.url.includes('.m3u8') || stream.url.includes('/hls/')) {
+                        extension = 'm3u8';
+                    } else if (stream.url.includes('.mpd') || stream.url.includes('/dash/')) {
+                        extension = 'mpd';
+                    }
+                    // else defaults to 'ts'
+                }
 
                 // Use PROXY URL instead of raw stream URL for direct_source
                 let proxyUrl = `${protocol}://${host}/live/${username}/${password}/${streamId}.${extension}`;
+
 
                 // Map category name to ID
                 const catId = categoryMap[stream.category] || '0'; // 0 or Uncategorized
