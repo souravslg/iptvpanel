@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -8,6 +7,13 @@ export default function JTVPage() {
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState(null);
     const [statusLoading, setStatusLoading] = useState(true);
+    const [publicUrl, setPublicUrl] = useState('/jtv.m3u');
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            setPublicUrl(`${window.location.origin}/jtv.m3u`);
+        }
+    }, []);
 
     const fetchStatus = async () => {
         try {
@@ -196,7 +202,7 @@ export default function JTVPage() {
                         <div className="mt-4 p-4 bg-black/20 rounded-xl">
                             <p className="text-xs text-muted-foreground mb-2">Public URL:</p>
                             <code className="block w-full p-2 bg-black/40 rounded text-xs break-all font-mono select-all">
-                                {typeof window !== 'undefined' ? `${window.location.origin}/jtv.m3u` : '/jtv.m3u'}
+                                {publicUrl}
                             </code>
                         </div>
                     </div>
