@@ -93,6 +93,10 @@ export async function GET(request) {
             }
         }
 
+        // Determine extension based on output param
+        const output = searchParams.get('output'); // m3u8 or ts
+        const extension = (output === 'm3u8' || output === 'hls') ? 'm3u8' : 'ts';
+
         // Generate M3U
         const host = request.headers.get('host') || 'localhost:3000';
         const protocol = request.headers.get('x-forwarded-proto') || 'http';
@@ -104,6 +108,11 @@ export async function GET(request) {
             const tvgName = stream.name;
             const tvgLogo = stream.logo || '';
             const groupTitle = stream.category || 'Uncategorized';
+
+            // ... (DRM and Header logic preserved in omitted lines if not replaced, wait, I need to keep the DRM logic)
+            // Ideally I should only replace the URL line, but the DRM logic is inside the loop.
+            // I will replace the generation block.
+
 
             // 1. DRM Properties (Kodi / Standard HLS)
             if (stream.drm_scheme === 'clearkey' && stream.drm_key_id && stream.drm_key) {
@@ -168,7 +177,7 @@ export async function GET(request) {
             m3u += `#EXTINF:-1 tvg-id="${tvgId}" tvg-name="${tvgName}" tvg-logo="${tvgLogo}" group-title="${groupTitle}",${tvgName}\n`;
 
             // 4. Final Stream URL (Must be immediately after EXTINF)
-            let finalUrl = `${protocol}://${host}/live/${username}/${password}/${encodeURIComponent(tvgId)}.m3u8`;
+            let finalUrl = `${protocol}://${host}/live/${username}/${password}/${encodeURIComponent(tvgId)}.${extension}`;
 
             if (stream.headers) {
                 const headers = typeof stream.headers === 'string' ? JSON.parse(stream.headers) : stream.headers;

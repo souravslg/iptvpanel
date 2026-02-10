@@ -36,7 +36,7 @@ const Sidebar = () => {
                     <div className="bg-blue-600 p-1.5 rounded">
                         <Tv size={20} className="text-white" />
                     </div>
-                    <span className="text-lg font-bold text-white">SRV PANEL</span>
+                    <span className="text-lg font-bold text-white">SrV Creation IPTV Panel</span>
                 </div>
             </div>
 
