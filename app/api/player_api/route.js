@@ -50,9 +50,51 @@ export async function GET(request) {
             console.error('Error fetching invalid video setting:', e);
         }
 
+        // Helper to get consistent category mapping
+        // Added typeFilter to support VOD/Series categories
+        const getCategoryMapping = async (activePlaylistIds, typeFilter = 'live') => {
+            let allCategories = new Set();
+            let hasMore = true;
+            let offset = 0;
+            const batchSize = 1000;
+
+            while (hasMore) {
+                let query = supabase
+                    .from('streams')
+                    .select('category')
+                    .in('playlist_id', activePlaylistIds);
+
+                if (typeFilter) {
+                    query = query.eq('type', typeFilter);
+                }
+
+                const { data: batch, error } = await query.range(offset, offset + batchSize - 1);
+
+                if (error || !batch || batch.length === 0) {
+                    hasMore = false;
+                } else {
+                    batch.forEach(s => {
+                        if (s.category) allCategories.add(s.category);
+                    });
+                    offset += batchSize;
+                    hasMore = batch.length === batchSize;
+                }
+            }
+
+            // sort categories to ensure consistent ID assignment (alphabetical)
+            const sortedCategories = Array.from(allCategories).sort();
+            const categoryMap = {};
+            sortedCategories.forEach((cat, index) => {
+                categoryMap[cat] = (index + 1).toString(); // Xstream category IDs usually strings of numbers
+            });
+
+            return { categoryMap, sortedCategories };
+        };
+
         // Handle different actions
         if (action === 'get_live_streams' || action === 'get_vod_streams' || action === 'get_series') {
             if (!isActive) {
+                // Return empty/system stream message only for live
                 if (action === 'get_live_streams') {
                     return NextResponse.json([{
                         num: 1,
@@ -60,8 +102,8 @@ export async function GET(request) {
                         stream_type: 'live',
                         stream_id: 1,
                         stream_icon: '',
-                        category_id: 'System',
-                        added: new Date().toISOString(),
+                        category_id: '1', // System
+                        added: Math.floor(Date.now() / 1000).toString(),
                         custom_sid: '',
                         tv_archive: 0,
                         direct_source: invalidVideoUrl,
@@ -72,44 +114,44 @@ export async function GET(request) {
                 return NextResponse.json([]);
             }
 
-            // Get active playlists first
+            // Get active playlists
             const { data: activePlaylists, error: playlistError } = await supabase
                 .from('playlists')
                 .select('id')
                 .eq('is_active', true);
 
-            if (playlistError) {
-                console.error('Error fetching active playlists:', playlistError);
-                return NextResponse.json([], { status: 200 });
-            }
-
-            // If no active playlists, return empty array
-            if (!activePlaylists || activePlaylists.length === 0) {
-                console.log('No active playlists found');
+            if (playlistError || !activePlaylists || activePlaylists.length === 0) {
                 return NextResponse.json([]);
             }
 
             const playlistIds = activePlaylists.map(p => p.id);
-            console.log('Fetching streams from active playlists:', playlistIds);
 
-            // Get all streams from active playlists (fetch in batches to handle large datasets)
+            // Determine type based on action
+            let targetType = 'live';
+            if (action === 'get_vod_streams') targetType = 'movie'; // Assuming 'movie' for VOD
+            if (action === 'get_series') targetType = 'series';
+
+            // Get category mapping for this type
+            const { categoryMap } = await getCategoryMapping(playlistIds, targetType);
+
+            // Get all streams
             let allStreams = [];
             let hasMore = true;
             let offset = 0;
             const batchSize = 1000;
 
             while (hasMore) {
-                const { data: batch, error: batchError } = await supabase
+                let query = supabase
                     .from('streams')
                     .select('*')
                     .in('playlist_id', playlistIds)
+                    .eq('type', targetType) // Strict Type Filtering
                     .order('id', { ascending: true })
                     .range(offset, offset + batchSize - 1);
 
-                if (batchError) {
-                    console.error('Error fetching streams batch:', batchError);
-                    break;
-                }
+                const { data: batch, error: batchError } = await query;
+
+                if (batchError) break;
 
                 if (batch && batch.length > 0) {
                     allStreams = allStreams.concat(batch);
@@ -120,17 +162,14 @@ export async function GET(request) {
                 }
             }
 
-            console.log(`Fetched ${allStreams.length} streams from active playlists`);
-
             // Get server URL
             const protocol = request.headers.get('x-forwarded-proto') || 'http';
             const host = request.headers.get('host') || 'localhost:3000';
-            const serverUrl = `${protocol}://${host}`;
 
-            const formattedStreams = (allStreams || []).map(stream => {
+            const formattedStreams = allStreams.map(stream => {
                 const streamId = stream.stream_id || stream.id;
 
-                // Construct stream URL with headers for player compatibility
+                // URL Construction (same as before)
                 let streamUrl = stream.url;
                 let licenseUrl = stream.drm_license_url;
 
@@ -152,34 +191,43 @@ export async function GET(request) {
                     }
                 }
 
-                // Convert ClearKey Hex to Base64URL if needed
+                // Base64URL helper
                 const toBase64Url = (str) => {
                     try {
                         if (str && /^[0-9a-fA-F]+$/.test(str) && str.length % 2 === 0) {
                             return Buffer.from(str, 'hex').toString('base64url');
                         }
                         return str;
-                    } catch (e) {
-                        return str;
-                    }
+                    } catch (e) { return str; }
                 };
+
+                // Map category name to ID
+                const catId = categoryMap[stream.category] || '0'; // 0 or Uncategorized
 
                 const streamData = {
                     num: stream.id,
                     name: stream.name,
+                    title: stream.name, // Many players verify 'title'
                     stream_type: stream.type || 'live',
-                    stream_id: streamId,
+                    stream_id: stream.id, // Use Internal Integer ID (PK) for v2 compatibility
                     stream_icon: stream.logo || '',
-                    category_id: stream.category || 'Uncategorized',
-                    added: stream.created_at,
+                    epg_channel_id: null, // Critical for some players
+                    added: stream.created_at ? Math.floor(new Date(stream.created_at).getTime() / 1000).toString() : '0',
+                    category_id: catId,
                     custom_sid: '',
                     tv_archive: 0,
-                    direct_source: streamUrl, // Use URL with headers if available
+                    direct_source: streamUrl,
                     tv_archive_duration: 0,
-                    container_extension: 'ts'
+                    container_extension: 'ts' // Default for live
                 };
 
-                // Add DRM information if available
+                // Adjust extension for VOD
+                if (targetType === 'movie') {
+                    streamData.container_extension = 'mp4';
+                    // VOD specific fields could be added here
+                }
+
+                // DRM
                 if (stream.drm_scheme) {
                     streamData.drm_scheme = stream.drm_scheme;
                     if (licenseUrl) streamData.drm_license_url = licenseUrl;
@@ -193,63 +241,41 @@ export async function GET(request) {
             return NextResponse.json(formattedStreams);
         }
 
-        if (action === 'get_live_categories') {
+        if (action === 'get_live_categories' || action === 'get_vod_categories' || action === 'get_series_categories') {
             if (!isActive) {
-                return NextResponse.json([{
-                    category_id: 'System',
-                    category_name: 'System',
-                    parent_id: 0
-                }]);
+                // Return empty system category only for live? Or just return valid empty list.
+                if (action === 'get_live_categories') {
+                    return NextResponse.json([{
+                        category_id: '1',
+                        category_name: 'System',
+                        parent_id: 0
+                    }]);
+                }
+                return NextResponse.json([]);
             }
-            // Get active playlists first
+
+            // Get active playlists
             const { data: activePlaylists, error: playlistError } = await supabase
                 .from('playlists')
                 .select('id')
                 .eq('is_active', true);
 
-            if (playlistError) {
-                console.error('Error fetching active playlists:', playlistError);
-                return NextResponse.json([], { status: 200 });
-            }
-
-            // If no active playlists, return empty array
-            if (!activePlaylists || activePlaylists.length === 0) {
-                console.log('No active playlists found');
+            if (playlistError || !activePlaylists || activePlaylists.length === 0) {
                 return NextResponse.json([]);
             }
 
             const playlistIds = activePlaylists.map(p => p.id);
 
-            // Get categories from active playlists only
-            let allStreams = [];
-            let hasMore = true;
-            let offset = 0;
-            const batchSize = 1000;
+            // Determine type
+            let targetType = 'live';
+            if (action === 'get_vod_categories') targetType = 'movie';
+            if (action === 'get_series_categories') targetType = 'series';
 
-            while (hasMore) {
-                const { data: batch, error: batchError } = await supabase
-                    .from('streams')
-                    .select('category')
-                    .in('playlist_id', playlistIds)
-                    .range(offset, offset + batchSize - 1);
+            // Get consistent mapping
+            const { sortedCategories, categoryMap } = await getCategoryMapping(playlistIds, targetType);
 
-                if (batchError) {
-                    console.error('Error fetching streams batch:', batchError);
-                    break;
-                }
-
-                if (batch && batch.length > 0) {
-                    allStreams = allStreams.concat(batch);
-                    offset += batchSize;
-                    hasMore = batch.length === batchSize;
-                } else {
-                    hasMore = false;
-                }
-            }
-
-            const categories = [...new Set((allStreams || []).map(s => s.category).filter(Boolean))];
-            const formattedCategories = categories.map((cat, idx) => ({
-                category_id: idx + 1,
+            const formattedCategories = sortedCategories.map(cat => ({
+                category_id: categoryMap[cat],
                 category_name: cat,
                 parent_id: 0
             }));
@@ -258,29 +284,40 @@ export async function GET(request) {
         }
 
         // Default: return user info
+        // Date format: YYYY-MM-DD HH:mm:ss
+        const nowFormatted = now.toISOString().replace('T', ' ').split('.')[0];
+
+        const host = request.headers.get('host') || 'localhost:3000';
+        const protocol = request.headers.get('x-forwarded-proto') || 'http';
+        const port = host.includes(':') ? host.split(':')[1] : (protocol === 'https' ? '443' : '80');
+        const urlWithoutPort = host.split(':')[0];
+
         return NextResponse.json({
             user_info: {
                 username: user.username,
                 password: user.password,
                 message: isActive ? 'Welcome' : (isExpired ? 'Account Expired' : 'Account Inactive'),
-                auth: 1, // Always allow auth to show the invalid video
+                auth: 1,
                 status: user.status,
                 exp_date: expireDate ? Math.floor(expireDate.getTime() / 1000).toString() : null,
                 is_trial: '0',
                 active_cons: '0',
-                created_at: user.created_at,
+                created_at: Math.floor(new Date(user.created_at).getTime() / 1000).toString(),
                 max_connections: user.max_connections.toString(),
                 allowed_output_formats: ['m3u8', 'ts', 'rtmp']
             },
             server_info: {
-                url: request.headers.get('host') || 'localhost:3000',
-                port: '80',
+                url: urlWithoutPort,
+                port: port,
                 https_port: '443',
-                server_protocol: 'http',
+                server_protocol: protocol,
                 rtmp_port: '1935',
                 timezone: 'Asia/Kolkata',
                 timestamp_now: Math.floor(Date.now() / 1000),
-                time_now: new Date().toISOString()
+                time_now: nowFormatted,
+                version: '2.9.0', // Report as XUI 2.9.0 (v2 compatible)
+                revision: 5,
+                xui: true // Signal XUI compatibility
             }
         });
     } catch (error) {
