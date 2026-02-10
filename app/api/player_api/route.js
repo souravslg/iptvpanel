@@ -169,7 +169,7 @@ export async function GET(request) {
             const formattedStreams = allStreams.map(stream => {
                 const streamId = stream.stream_id || stream.id;
 
-                // URL Construction (same as before)
+                // URL Construction
                 let streamUrl = stream.url;
                 let licenseUrl = stream.drm_license_url;
 
@@ -191,15 +191,14 @@ export async function GET(request) {
                     }
                 }
 
-                // Base64URL helper
-                const toBase64Url = (str) => {
-                    try {
-                        if (str && /^[0-9a-fA-F]+$/.test(str) && str.length % 2 === 0) {
-                            return Buffer.from(str, 'hex').toString('base64url');
-                        }
-                        return str;
-                    } catch (e) { return str; }
-                };
+
+
+                // Determine extension
+                let extension = 'ts';
+                if (targetType === 'movie') extension = 'mp4';
+
+                // Use PROXY URL instead of raw stream URL for direct_source
+                let proxyUrl = `${protocol}://${host}/live/${username}/${password}/${streamId}.${extension}`;
 
                 // Map category name to ID
                 const catId = categoryMap[stream.category] || '0'; // 0 or Uncategorized
@@ -216,23 +215,37 @@ export async function GET(request) {
                     category_id: catId,
                     custom_sid: '',
                     tv_archive: 0,
-                    direct_source: streamUrl,
+                    direct_source: proxyUrl,
                     tv_archive_duration: 0,
-                    container_extension: 'ts' // Default for live
+                    container_extension: extension
                 };
-
-                // Adjust extension for VOD
-                if (targetType === 'movie') {
-                    streamData.container_extension = 'mp4';
-                    // VOD specific fields could be added here
-                }
 
                 // DRM
                 if (stream.drm_scheme) {
                     streamData.drm_scheme = stream.drm_scheme;
                     if (licenseUrl) streamData.drm_license_url = licenseUrl;
-                    if (stream.drm_key_id) streamData.drm_key_id = toBase64Url(stream.drm_key_id);
-                    if (stream.drm_key) streamData.drm_key = toBase64Url(stream.drm_key);
+
+                    // For clearkey, convert Hex keys to Base64URL (same as M3U implementation)
+                    if (stream.drm_scheme === 'clearkey' && stream.drm_key_id && stream.drm_key) {
+                        // Helper to convert Hex to Base64URL
+                        const toBase64Url = (hexString) => {
+                            try {
+                                if (hexString && /^[0-9a-fA-F]+$/.test(hexString) && hexString.length % 2 === 0) {
+                                    return Buffer.from(hexString, 'hex').toString('base64url');
+                                }
+                                return hexString; // Return as-is if not valid Hex
+                            } catch (e) {
+                                return hexString;
+                            }
+                        };
+
+                        streamData.drm_key_id = toBase64Url(stream.drm_key_id);
+                        streamData.drm_key = toBase64Url(stream.drm_key);
+                    } else {
+                        // For other DRM schemes (Widevine), return keys as-is
+                        if (stream.drm_key_id) streamData.drm_key_id = stream.drm_key_id;
+                        if (stream.drm_key) streamData.drm_key = stream.drm_key;
+                    }
                 }
 
                 return streamData;
