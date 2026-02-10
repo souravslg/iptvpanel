@@ -208,7 +208,7 @@ export async function GET(request) {
                     name: stream.name,
                     title: stream.name, // Many players verify 'title'
                     stream_type: stream.type || 'live',
-                    stream_id: stream.id, // Use Internal Integer ID (PK) for v2 compatibility
+                    stream_id: streamId, // Use same ID as proxy URL for consistency
                     stream_icon: stream.logo || '',
                     epg_channel_id: null, // Critical for some players
                     added: stream.created_at ? Math.floor(new Date(stream.created_at).getTime() / 1000).toString() : '0',
