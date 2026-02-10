@@ -90,7 +90,7 @@ export default function UsersPage() {
     const handleDelete = async (id) => {
         if (!confirm('Are you sure you want to delete this subscriber?')) return;
         try {
-            const res = await fetch(`/api/users/${id}`, { method: 'DELETE' });
+            const res = await fetch(`/api/users?id=${id}`, { method: 'DELETE' });
             if (res.ok) fetchUsers();
         } catch (error) {
             console.error(error);
@@ -203,7 +203,7 @@ export default function UsersPage() {
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                 <div>
                     <h1 className="text-4xl font-extrabold font-outfit text-white tracking-tight leading-none mb-3">
-                        Subscription Matrix
+                        User Management List
                     </h1>
                     <p className="text-muted-foreground font-medium text-lg">
                         Manage active identities and access protocols.

@@ -374,7 +374,14 @@ export default function PlaylistPage() {
                                 <div className="text-sm text-slate-400 font-medium uppercase">Last Updated</div>
                                 <div className="text-sm font-medium text-white mt-1">{new Date(stats.lastUpdated).toLocaleDateString()}</div>
                             </div>
-                            <RefreshCw size={20} className="text-slate-500" />
+                            <button
+                                onClick={fetchPlaylistData}
+                                disabled={loading}
+                                className="p-2 hover:bg-slate-700 rounded-full transition-colors"
+                                title="Sync Playlist"
+                            >
+                                <RefreshCw size={20} className={`text-slate-500 ${loading ? 'animate-spin' : ''}`} />
+                            </button>
                         </div>
                     </div>
 

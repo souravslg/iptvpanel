@@ -1,10 +1,10 @@
 'use client';
 
 import { useState, useEffect, useRef, Suspense } from 'react';
-import { Play, ArrowLeft, Settings, Volume2, VolumeX, Maximize, Minimize } from 'lucide-react';
+import { ArrowLeft, Play, Pause, Volume2, VolumeX, Maximize, Minimize, Settings } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-// Force dynamic rendering for this page
+// Force dynamic rendering
 export const dynamic = 'force-dynamic';
 
 function PlayerContent() {
@@ -12,15 +12,18 @@ function PlayerContent() {
     const searchParams = useSearchParams();
     const videoRef = useRef(null);
     const playerContainerRef = useRef(null);
+    const playerInstance = useRef(null); // Stores hls or dash instance
+    const artRef = useRef(null);
+    const artInstance = useRef(null);
 
     const [channel, setChannel] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [playing, setPlaying] = useState(false);
+    const [playing, setPlaying] = useState(true);
     const [muted, setMuted] = useState(false);
     const [volume, setVolume] = useState(1);
     const [isFullscreen, setIsFullscreen] = useState(false);
-    const [player, setPlayer] = useState(null);
+    const [engine, setEngine] = useState(null); // 'hls', 'dash', 'native'
 
     const channelId = searchParams.get('id');
 
@@ -30,31 +33,23 @@ function PlayerContent() {
         }
     }, [channelId]);
 
+    // Cleanup on unmount
     useEffect(() => {
-        // Load Shaka Player script
-        const script = document.createElement('script');
-        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.0/shaka-player.compiled.js';
-        script.async = true;
-        script.onload = () => {
-            console.log('Shaka Player loaded');
-            if (channel) {
-                initializePlayer();
-            }
-        };
-        document.body.appendChild(script);
-
         return () => {
-            if (player) {
-                player.destroy();
-            }
+            destroyPlayer();
         };
     }, []);
 
-    useEffect(() => {
-        if (channel) {
-            initializePlayer();
+    const destroyPlayer = () => {
+        if (playerInstance.current) {
+            if (playerInstance.current.destroy) {
+                playerInstance.current.destroy();
+            } else if (playerInstance.current.reset) {
+                playerInstance.current.reset();
+            }
+            playerInstance.current = null;
         }
-    }, [channel]);
+    };
 
     const fetchChannel = async () => {
         try {
@@ -74,423 +69,219 @@ function PlayerContent() {
         }
     };
 
-    const initializePlayer = async () => {
-        if (!videoRef.current || !channel) return;
-
-        try {
-            console.log('Initializing player for channel:', channel.name);
-            console.log('Stream URL:', channel.url);
-            console.log('Stream format:', channel.stream_format);
-
-            const streamUrl = channel.url;
-
-            // For HLS streams, use native HTML5 video player (most reliable)
-            if (channel.stream_format === 'hls' || streamUrl.includes('.m3u8')) {
-                console.log('Using native HTML5 player for HLS');
-
-                // Set crossorigin for CORS
-                videoRef.current.crossOrigin = 'anonymous';
-                videoRef.current.src = streamUrl;
-
-                // Add error handler
-                videoRef.current.onerror = (e) => {
-                    const videoError = videoRef.current.error;
-                    console.error('Native player error event:', {
-                        type: e.type,
-                        target: 'video element'
-                    });
-                    console.error('Video error details:', {
-                        code: videoError?.code,
-                        message: videoError?.message,
-                        MEDIA_ERR_ABORTED: videoError?.code === 1,
-                        MEDIA_ERR_NETWORK: videoError?.code === 2,
-                        MEDIA_ERR_DECODE: videoError?.code === 3,
-                        MEDIA_ERR_SRC_NOT_SUPPORTED: videoError?.code === 4
-                    });
-
-                    let errorMessage = 'Failed to load stream';
-                    if (videoError) {
-                        switch (videoError.code) {
-                            case 1:
-                                errorMessage = 'Stream loading aborted';
-                                break;
-                            case 2:
-                                errorMessage = 'Network error - Check if stream URL is accessible';
-                                break;
-                            case 3:
-                                errorMessage = 'Stream decoding failed - Format may not be supported';
-                                break;
-                            case 4:
-                                errorMessage = 'Stream format not supported by browser';
-                                break;
-                        }
-                    }
-                    setError(errorMessage + '. Stream URL: ' + streamUrl);
-                };
-
-                videoRef.current.onloadedmetadata = () => {
-                    console.log('Stream metadata loaded successfully');
-                };
-
-                videoRef.current.oncanplay = () => {
-                    console.log('Stream ready to play');
-                };
-
+    // Load scripts helper
+    const loadScript = (src) => {
+        return new Promise((resolve, reject) => {
+            if (document.querySelector(`script[src="${src}"]`)) {
+                resolve();
                 return;
             }
+            const script = document.createElement('script');
+            script.src = src;
+            script.async = true;
+            script.onload = resolve;
+            script.onerror = reject;
+            document.body.appendChild(script);
+        });
+    };
 
-            // For DASH or DRM content, try Shaka Player
-            if (window.shaka && (channel.stream_format === 'mpd' || streamUrl.includes('.mpd') ||
-                (channel.drm_scheme && channel.drm_scheme !== 'none'))) {
-                console.log('Using Shaka Player for DASH/DRM');
+    useEffect(() => {
+        if (!channel || !artRef.current) return;
 
-                if (!window.shaka.Player.isBrowserSupported()) {
-                    console.warn('Browser not supported for Shaka Player');
-                    setError('Browser does not support advanced playback features');
+        const initPlayer = async () => {
+            try {
+                // Load dependencies
+                await Promise.all([
+                    loadScript('https://cdn.jsdelivr.net/npm/artplayer/dist/artplayer.js'),
+                    loadScript('https://cdn.jsdelivr.net/npm/hls.js@latest'),
+                    loadScript('https://cdn.dashjs.org/latest/dash.all.min.js')
+                ]);
+
+                if (artInstance.current) {
+                    artInstance.current.destroy();
+                }
+
+                const streamUrl = channel.url;
+
+                // Construct Path-Based Proxy URL
+                let proxyUrl = '';
+                try {
+                    const urlObj = new URL(streamUrl);
+                    const pathSegments = urlObj.pathname.split('/');
+                    const fileName = pathSegments.pop();
+                    const directory = pathSegments.join('/') + '/';
+                    const baseUrl = urlObj.origin + directory;
+                    const encodedBase = btoa(baseUrl).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+                    const query = urlObj.search;
+                    proxyUrl = `/api/stream-proxy/${encodedBase}/${fileName}${query}`;
+                } catch (e) {
+                    console.error('Error constructing proxy URL:', e);
+                    setError('Invalid Stream URL');
                     return;
                 }
 
-                // Destroy existing player if any
-                if (player) {
-                    await player.destroy();
-                }
+                const isDash = channel.stream_format === 'mpd' || streamUrl.includes('.mpd');
+                const isHls = channel.stream_format === 'hls' || streamUrl.includes('.m3u8');
+                const drmScheme = channel.drm_scheme?.toLowerCase();
+                const hasDrm = drmScheme && drmScheme !== 'none';
 
-                const newPlayer = new window.shaka.Player(videoRef.current);
+                console.log(`Artplayer Init. Proxy: ${proxyUrl}`);
 
-                // Configure DRM if needed
-                if (channel.drm_scheme && channel.drm_scheme !== 'none') {
-                    const drmConfig = {};
+                const art = new window.Artplayer({
+                    container: artRef.current,
+                    url: proxyUrl,
+                    type: isDash ? 'mpd' : 'm3u8',
+                    volume: 0.5,
+                    isLive: true,
+                    muted: false,
+                    autoplay: true,
+                    pip: true,
+                    autoSize: true,
+                    autoMini: true,
+                    screenshot: true,
+                    setting: true,
+                    loop: true,
+                    flip: true,
+                    playbackRate: true,
+                    aspectRatio: true,
+                    fullscreen: true,
+                    fullscreenWeb: true,
+                    subtitleOffset: true,
+                    miniProgressBar: true,
+                    mutex: true,
+                    backdrop: true,
+                    playsInline: true,
+                    autoPlayback: true,
+                    airplay: true,
+                    theme: '#23ade5',
+                    lang: 'en',
+                    moreVideoAttr: {
+                        crossOrigin: 'anonymous',
+                    },
+                    customType: {
+                        m3u8: function (video, url) {
+                            if (window.Hls.isSupported()) {
+                                const hls = new window.Hls();
+                                hls.loadSource(url);
+                                hls.attachMedia(video);
+                                return hls;
+                            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                                video.src = url;
+                            } else {
+                                art.notice.show = 'Unsupported playback format: m3u8';
+                            }
+                        },
+                        mpd: function (video, url) {
+                            const player = window.dashjs.MediaPlayer().create();
+                            player.initialize(video, url, true);
 
-                    if (channel.drm_scheme === 'widevine' && channel.drm_license_url) {
-                        drmConfig['com.widevine.alpha'] = {
-                            'serverURL': channel.drm_license_url
-                        };
-                    } else if (channel.drm_scheme === 'playready' && channel.drm_license_url) {
-                        drmConfig['com.microsoft.playready'] = {
-                            'serverURL': channel.drm_license_url
-                        };
-                    } else if (channel.drm_scheme === 'clearkey' && channel.drm_key_id && channel.drm_key) {
-                        // Convert hex keys to base64 for ClearKey
-                        const hexToBase64 = (hexString) => {
-                            const cleanHex = hexString.replace(/[\s-]/g, '');
-                            const bytes = new Uint8Array(cleanHex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
-                            let binary = '';
-                            bytes.forEach(byte => binary += String.fromCharCode(byte));
-                            return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-                        };
+                            // DRM Configuration (Proxy handles traffic, but we tell player about license server)
+                            if (drmScheme && drmScheme !== 'none') {
+                                const protectionData = {};
+                                // Use original DRMLicense URL if available, or assume handled by proxy?
+                                // Usually license server URLs are absolute and external, so they bypass our stream proxy unless rewritten.
+                                // But since we are using dash.js, relative paths in MPD are resolved against MPD URL (our proxy).
+                                // License URLs in Protection Header (PSSH) might be absolute.
+                                // If they are absolute, browser fetches them directly (CORS issues possible).
+                                // If we have an explicit license URL in DB, use it.
 
-                        try {
-                            const keyId = hexToBase64(channel.drm_key_id);
-                            const key = hexToBase64(channel.drm_key);
-
-                            console.log('ClearKey configuration:', {
-                                originalKeyId: channel.drm_key_id,
-                                originalKey: channel.drm_key,
-                                base64KeyId: keyId,
-                                base64Key: key
-                            });
-
-                            drmConfig['org.w3.clearkey'] = {
-                                'clearKeys': {
-                                    [keyId]: key
+                                if (channel.drm_license_url) {
+                                    if (drmScheme === 'widevine') {
+                                        protectionData['com.widevine.alpha'] = {
+                                            serverURL: channel.drm_license_url, // Direct fetch (might need CORS proxy if fails)
+                                            httpRequestHeaders: { 'Content-Type': 'application/octet-stream' }
+                                        };
+                                    } else if (drmScheme === 'playready') {
+                                        protectionData['com.microsoft.playready'] = {
+                                            serverURL: channel.drm_license_url
+                                        };
+                                    }
                                 }
-                            };
-                        } catch (e) {
-                            console.error('Error converting ClearKey hex to base64:', e);
-                            // Fallback to original if conversion fails
-                            drmConfig['org.w3.clearkey'] = {
-                                'clearKeys': {
-                                    [channel.drm_key_id]: channel.drm_key
-                                }
-                            };
+                                player.setProtectionData(protectionData);
+                            }
+                            return player;
                         }
-                    }
-
-                    newPlayer.configure({
-                        drm: {
-                            servers: drmConfig
-                        }
-                    });
-                }
-
-                // Error handling
-                newPlayer.addEventListener('error', (event) => {
-                    console.error('Shaka Player error:', event.detail);
-                    setError('Playback error: ' + event.detail.message);
+                    },
                 });
 
-                setPlayer(newPlayer);
+                art.on('ready', () => {
+                    console.info('Artplayer is ready');
+                });
 
-                // Load the stream
-                await newPlayer.load(streamUrl);
-                console.log('Shaka Player loaded successfully');
-                return;
+                artInstance.current = art;
+
+            } catch (err) {
+                console.error('Artplayer init error:', err);
+                setError('Failed to initialize player');
             }
+        };
 
-            // Fallback: try direct playback for other formats
-            console.log('Using direct playback');
-            videoRef.current.crossOrigin = 'anonymous';
-            videoRef.current.src = streamUrl;
+        initPlayer();
+    }, [channel]);
 
-            videoRef.current.onerror = (e) => {
-                console.error('Direct playback error:', e);
-                setError('Failed to play stream. Format may not be supported.');
-            };
+    // External Player Intents
+    const openExternal = (pkg) => {
+        if (!artInstance.current) return;
+        const url = artInstance.current.url;
 
-            console.log('Player initialization complete');
-        } catch (err) {
-            console.error('Error initializing player:', err);
-            setError('Failed to initialize player: ' + err.message);
+        let intent = '';
+        if (pkg === 'vlc') {
+            intent = `vlc://${url}`;
+        } else if (pkg === 'mx') {
+            intent = `intent:${url}#Intent;package=com.mxtech.videoplayer.ad;type=video/*;end`;
+        } else if (pkg === 'ott') {
+            intent = `intent:${url}#Intent;package=studio.scillarium.ottnavigator;type=video/*;end`;
         }
+
+        // Check if mobile/android, otherwise just warn or try anyway
+        window.location.href = intent;
     };
 
-    const togglePlay = () => {
-        if (videoRef.current) {
-            if (playing) {
-                videoRef.current.pause();
-            } else {
-                videoRef.current.play();
-            }
-            setPlaying(!playing);
-        }
-    };
-
-    const toggleMute = () => {
-        if (videoRef.current) {
-            videoRef.current.muted = !muted;
-            setMuted(!muted);
-        }
-    };
-
-    const handleVolumeChange = (e) => {
-        const newVolume = parseFloat(e.target.value);
-        setVolume(newVolume);
-        if (videoRef.current) {
-            videoRef.current.volume = newVolume;
-            setMuted(newVolume === 0);
-        }
-    };
-
-    const toggleFullscreen = () => {
-        if (!document.fullscreenElement) {
-            playerContainerRef.current?.requestFullscreen();
-            setIsFullscreen(true);
-        } else {
-            document.exitFullscreen();
-            setIsFullscreen(false);
-        }
-    };
-
-    if (loading) {
-        return (
-            <div style={{ padding: '2rem', textAlign: 'center' }}>
-                <p>Loading channel...</p>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div style={{ padding: '2rem' }}>
-                <button
-                    onClick={() => router.back()}
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        padding: '0.5rem 1rem',
-                        backgroundColor: 'var(--primary)',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '0.5rem',
-                        cursor: 'pointer',
-                        marginBottom: '1rem'
-                    }}
-                >
-                    <ArrowLeft size={18} />
-                    Back
-                </button>
-                <div style={{
-                    padding: '2rem',
-                    backgroundColor: '#fee',
-                    borderRadius: '0.5rem',
-                    color: '#c00'
-                }}>
-                    <p>{error}</p>
-                </div>
-            </div>
-        );
-    }
-
-    if (!channel) {
-        return (
-            <div style={{ padding: '2rem', textAlign: 'center' }}>
-                <p>Channel not found</p>
-            </div>
-        );
-    }
+    if (loading) return <div className="p-8 text-center text-white">Loading...</div>;
+    if (error) return (
+        <div className="p-8 text-center">
+            <div className="text-red-500 mb-4">{error}</div>
+            <button onClick={() => router.back()} className="px-4 py-2 bg-slate-700 text-white rounded">Back</button>
+        </div>
+    );
+    if (!channel) return <div className="p-8 text-center text-white">Channel not found</div>;
 
     return (
-        <div style={{ padding: '1rem', maxWidth: '1400px', margin: '0 auto' }}>
-            {/* Header */}
-            <div style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <button
-                    onClick={() => router.back()}
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        padding: '0.5rem 1rem',
-                        backgroundColor: 'var(--primary)',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '0.5rem',
-                        cursor: 'pointer'
-                    }}
-                >
-                    <ArrowLeft size={18} />
-                    Back to Playlist
+        <div className="p-6 max-w-6xl mx-auto">
+            <div className="mb-4 flex items-center justify-between">
+                <button onClick={() => router.back()} className="flex items-center gap-2 px-3 py-2 bg-slate-800 text-white rounded hover:bg-slate-700">
+                    <ArrowLeft size={16} /> Back
                 </button>
-
-                <div>
-                    <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', margin: 0 }}>{channel.name}</h1>
-                    {channel.category && (
-                        <p style={{ color: 'var(--muted-foreground)', fontSize: '0.875rem', margin: '0.25rem 0 0 0' }}>
-                            {channel.category}
-                        </p>
-                    )}
-                </div>
-
-                <div style={{ width: '120px' }} /> {/* Spacer for alignment */}
-            </div>
-
-            {/* Player Container */}
-            <div
-                ref={playerContainerRef}
-                style={{
-                    position: 'relative',
-                    backgroundColor: '#000',
-                    borderRadius: '0.75rem',
-                    overflow: 'hidden',
-                    aspectRatio: '16/9'
-                }}
-            >
-                <video
-                    ref={videoRef}
-                    style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'contain'
-                    }}
-                    controls={true}
-                    autoPlay
-                    playsInline
-                    onPlay={() => setPlaying(true)}
-                    onPause={() => setPlaying(false)}
-                />
-
-                {/* Custom Controls Overlay */}
-                <div style={{
-                    position: 'absolute',
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)',
-                    padding: '1rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '1rem'
-                }}>
-                    {/* Play/Pause */}
-                    <button
-                        onClick={togglePlay}
-                        style={{
-                            background: 'none',
-                            border: 'none',
-                            color: 'white',
-                            cursor: 'pointer',
-                            padding: '0.5rem'
-                        }}
-                    >
-                        <Play size={24} fill={playing ? 'white' : 'none'} />
+                <div className="flex gap-2">
+                    <button onClick={() => openExternal('ott')} className="text-xs px-3 py-1 bg-green-700 text-white rounded hover:bg-green-600">
+                        Open in OTT Navigator
                     </button>
-
-                    {/* Volume */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <button
-                            onClick={toggleMute}
-                            style={{
-                                background: 'none',
-                                border: 'none',
-                                color: 'white',
-                                cursor: 'pointer',
-                                padding: '0.5rem'
-                            }}
-                        >
-                            {muted || volume === 0 ? <VolumeX size={20} /> : <Volume2 size={20} />}
-                        </button>
-                        <input
-                            type="range"
-                            min="0"
-                            max="1"
-                            step="0.1"
-                            value={volume}
-                            onChange={handleVolumeChange}
-                            style={{ width: '80px' }}
-                        />
-                    </div>
-
-                    <div style={{ flex: 1 }} />
-
-                    {/* Fullscreen */}
-                    <button
-                        onClick={toggleFullscreen}
-                        style={{
-                            background: 'none',
-                            border: 'none',
-                            color: 'white',
-                            cursor: 'pointer',
-                            padding: '0.5rem'
-                        }}
-                    >
-                        {isFullscreen ? <Minimize size={20} /> : <Maximize size={20} />}
+                    <button onClick={() => openExternal('vlc')} className="text-xs px-3 py-1 bg-orange-700 text-white rounded hover:bg-orange-600">
+                        Open in VLC
                     </button>
                 </div>
             </div>
 
-            {/* Channel Info */}
-            <div style={{
-                marginTop: '1.5rem',
-                padding: '1.5rem',
-                backgroundColor: 'var(--card)',
-                borderRadius: '0.75rem',
-                border: '1px solid var(--border)'
-            }}>
-                <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1rem' }}>Channel Information</h2>
+            <div className="aspect-video bg-black rounded-lg overflow-hidden shadow-2xl relative">
+                <div ref={artRef} className="w-full h-full" />
+            </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
+            <div className="mt-6 bg-slate-800 p-6 rounded-lg border border-slate-700">
+                <h2 className="text-lg font-bold text-white mb-4">Stream Details</h2>
+                <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
-                        <p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)', marginBottom: '0.25rem' }}>Stream Format</p>
-                        <p style={{ fontWeight: 500 }}>{channel.stream_format?.toUpperCase() || 'HLS'}</p>
+                        <span className="text-slate-400">Format:</span>
+                        <span className="ml-2 text-white font-medium">{channel.stream_format?.toUpperCase()}</span>
                     </div>
-
-                    {channel.channel_number && (
-                        <div>
-                            <p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)', marginBottom: '0.25rem' }}>Channel Number</p>
-                            <p style={{ fontWeight: 500 }}>{channel.channel_number}</p>
-                        </div>
-                    )}
-
-                    {channel.drm_scheme && channel.drm_scheme !== 'none' && (
-                        <div>
-                            <p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)', marginBottom: '0.25rem' }}>DRM Protection</p>
-                            <p style={{ fontWeight: 500 }}>{channel.drm_scheme.charAt(0).toUpperCase() + channel.drm_scheme.slice(1)}</p>
-                        </div>
-                    )}
-
                     <div>
-                        <p style={{ fontSize: '0.875rem', color: 'var(--muted-foreground)', marginBottom: '0.25rem' }}>Stream URL</p>
-                        <p style={{ fontWeight: 500, fontSize: '0.75rem', wordBreak: 'break-all' }}>{channel.url}</p>
+                        <span className="text-slate-400">DRM:</span>
+                        <span className="ml-2 text-white font-medium">{channel.drm_scheme || 'None'}</span>
+                    </div>
+                    <div className="col-span-2">
+                        <span className="text-slate-400 block mb-1">Source URL:</span>
+                        <code className="bg-slate-900 p-2 rounded block text-slate-300 break-all">
+                            {channel.url}
+                        </code>
                     </div>
                 </div>
             </div>
@@ -500,11 +291,7 @@ function PlayerContent() {
 
 export default function PlayerPage() {
     return (
-        <Suspense fallback={
-            <div style={{ padding: '2rem', textAlign: 'center' }}>
-                <p>Loading player...</p>
-            </div>
-        }>
+        <Suspense fallback={<div>Loading...</div>}>
             <PlayerContent />
         </Suspense>
     );

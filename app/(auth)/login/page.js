@@ -84,6 +84,7 @@ export default function LoginPage() {
                                         placeholder="Enter administrator email"
                                         required
                                         autoComplete="email"
+                                        suppressHydrationWarning
                                     />
                                 </div>
                             </div>
@@ -105,6 +106,7 @@ export default function LoginPage() {
                                         placeholder="Enter access key"
                                         required
                                         autoComplete="current-password"
+                                        suppressHydrationWarning
                                     />
                                 </div>
                             </div>
