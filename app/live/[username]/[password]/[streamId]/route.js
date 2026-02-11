@@ -13,7 +13,7 @@ export async function GET(request, context) {
         return new NextResponse('Invalid request parameters', { status: 400 });
     }
 
-    const cleanStreamId = decodeURIComponent(streamId.replace(/(\.(ts|m3u8|mp4))?(\|.*|%7c.*)?$/i, ''));
+    const cleanStreamId = decodeURIComponent(streamId.replace(/(\.(ts|m3u8|mp4|mpd|mkv|avi))?(\|.*|%7c.*)?$/i, ''));
 
     try {
         console.log('--- Smart Stream Proxy Start ---');

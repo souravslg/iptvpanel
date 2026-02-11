@@ -230,15 +230,14 @@ async function handleRequest(request) {
                 let extension = 'ts';
                 if (targetType === 'movie') {
                     extension = 'mp4';
-                } else if (stream.url) {
-                    // Detect format from source URL
-                    if (stream.url.includes('.m3u8') || stream.url.includes('/hls/')) {
-                        extension = 'm3u8';
-                    } else if (stream.url.includes('.mpd') || stream.url.includes('/dash/')) {
-                        extension = 'mpd';
-                    }
-                    // else defaults to 'ts'
                 }
+                // For live streams, we default to 'ts' for Xtream compatibility.
+                // The proxy will handle the redirect to the actual source (m3u8/mpd/etc).
+                // Returning 'mpd' explicitly causes some players to fail if they don't support DASH via Xtream correctly.
+                // Exception: if it's strictly m3u8, we can keep m3u8 if preferred, but TS is safest.
+                // if (stream.url && (stream.url.includes('.m3u8') || stream.url.includes('/hls/'))) {
+                //    extension = 'm3u8';
+                // }
 
                 // Use PROXY URL instead of raw stream URL for direct_source
                 let proxyUrl = `${protocol}://${host}/live/${username}/${password}/${streamId}.${extension}`;
