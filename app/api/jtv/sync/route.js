@@ -1,18 +1,21 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
-import fs from 'fs';
-import path from 'path';
 import { parseM3U } from '@/lib/m3u';
 
 export async function POST() {
     try {
-        const filePath = path.join(process.cwd(), 'public', 'jtv.m3u');
+        // 1. Get content from DB (Vercel/Serverless compatible)
+        const { data: setting, error: settingError } = await supabase
+            .from('settings')
+            .select('value')
+            .eq('key', 'jtv_playlist_content')
+            .single();
 
-        if (!fs.existsSync(filePath)) {
-            return NextResponse.json({ error: 'JTV playlist file not found. Please refresh it first.' }, { status: 404 });
+        if (settingError || !setting?.value) {
+            return NextResponse.json({ error: 'JTV playlist not found in database. Please refresh it first.' }, { status: 404 });
         }
 
-        const content = fs.readFileSync(filePath, 'utf8');
+        const content = setting.value;
         const streams = parseM3U(content);
 
         if (streams.length === 0) {

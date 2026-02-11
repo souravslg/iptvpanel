@@ -230,73 +230,12 @@ export async function GET(request, context) {
 
         console.log('Fetching source URL:', targetUrl);
 
-        // 4. SMART PROXY: Instead of 302, we FETCH to bypass complex redirect/header issues
-        const response = await fetch(targetUrl, {
-            headers: fetchHeaders,
-            redirect: 'follow'
-        });
+        // 4. IP MISMATCH FIX: Redirect to source instead of proxying
+        // This ensures the client connects directly to the stream server with their own IP,
+        // bypassing Vercel's IP which might be blocked or geo-restricted.
 
-        if (!response.ok) {
-            console.error('Source fetch failed:', response.status, response.statusText);
-            return redirectWithHeaders(targetUrl, stream.headers);
-        }
-
-        const contentType = response.headers.get('content-type') || '';
-        const finalUrl = response.url;
-
-        // 5. If it's a Manifest (M3U8), rewrite it to fix relative paths and inject DRM headers
-        if (contentType.includes('mpegurl') || contentType.includes('application/vnd.apple.mpegurl') || targetUrl.includes('.m3u8')) {
-            let body = await response.text();
-
-            // 1. Inject License Info if present (Widevine Support)
-            if (licenseUrl) {
-                body = body.replace('#EXTM3U', `#EXTM3U\n#KODIPROP:inputstream.adaptive.license_type=widevine\n#KODIPROP:inputstream.adaptive.license_key=${licenseUrl}`);
-            }
-
-            // 2. Rewrite relative URLs to absolute
-            const baseUrl = finalUrl.substring(0, finalUrl.lastIndexOf('/') + 1);
-
-            // Standard cleanup before header injection
-            body = body.split('\n').map(line => {
-                const t = line.trim();
-                if (t && !t.startsWith('#') && !t.startsWith('http')) {
-                    try { return new URL(t, baseUrl).toString(); } catch (e) { return line; }
-                }
-                return line;
-            }).join('\n');
-
-            if (stream.headers) {
-                const storedHeaders = typeof stream.headers === 'string' ? JSON.parse(stream.headers) : stream.headers;
-                const headerParts = [];
-                const getStored = (k) => storedHeaders[k] || storedHeaders[k.toLowerCase()];
-                const ua = getStored('User-Agent');
-                const ref = getStored('Referer') || getStored('Origin');
-                if (ua) headerParts.push(`User-Agent=${ua}`);
-                if (ref) headerParts.push(`Referer=${ref}`);
-
-                if (headerParts.length > 0) {
-                    const pipeStr = `|${headerParts.join('&')}`;
-
-                    body = body.replace(/(URI=")([^"]+)/g, (match, p1, p2) => {
-                        if (p2.includes('license') || p2.includes('key') || p2.includes('wv') || p2.includes('widevine') || p2.includes('clearkey')) {
-                            const fullP2 = p2.startsWith('http') ? p2 : new URL(p2, baseUrl).toString();
-                            return `${p1}${fullP2}${pipeStr}`;
-                        }
-                        return match;
-                    });
-                }
-            }
-
-            return new NextResponse(body, {
-                headers: {
-                    'Content-Type': 'application/vnd.apple.mpegurl',
-                    'Cache-Control': 'no-cache',
-                    'Access-Control-Allow-Origin': '*'
-                }
-            });
-        }
-
-        return redirectWithHeaders(finalUrl, stream.headers);
+        console.log('Redirecting to source:', targetUrl);
+        return redirectWithHeaders(targetUrl, stream.headers);
 
     } catch (error) {
         console.error('Smart Proxy Error:', error);
