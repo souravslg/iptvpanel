@@ -1,7 +1,7 @@
 
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
-import { parseM3U } from '@/lib/m3u';
+import { parseM3U } from '@/lib/m3u_v2';
 
 export async function POST(request) {
   try {

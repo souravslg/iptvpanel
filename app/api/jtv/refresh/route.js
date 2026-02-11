@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import { fetchJTVPlaylist } from '@/lib/jtv-scraper';
 import { supabase } from '@/lib/supabase';
 import { supabaseAdmin } from '@/lib/supabase-admin';
-import { parseM3U } from '@/lib/m3u';
+import { parseM3U } from '@/lib/m3u_v2';
 // Removed fs and path imports as they are not used for filesystem writing anymore
 
 export async function POST() {

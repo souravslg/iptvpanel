@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
-import { parseM3U } from '@/lib/m3u';
+import { parseM3U } from '@/lib/m3u_v2';
 
 // POST - Import M3U content to a specific playlist
 export async function POST(request) {
