@@ -1,1 +1,1 @@
-export { GET } from '../api/player_api/route';
+export { GET, POST, OPTIONS } from '../api/player_api/route';

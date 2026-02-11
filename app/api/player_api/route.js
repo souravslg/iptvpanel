@@ -1,17 +1,49 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 
-export async function GET(request) {
-    try {
-        const { searchParams } = new URL(request.url);
-        const username = searchParams.get('username');
-        const password = searchParams.get('password');
-        const action = searchParams.get('action');
+// Helper for CORS headers
+const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
+};
 
-        console.log('Xtream API request:', { username, password, action });
+// Helper for consistent JSON responses with CORS
+function jsonResponse(data, init = {}) {
+    const status = init.status || 200;
+    const headers = { ...corsHeaders, ...(init.headers || {}) };
+    return NextResponse.json(data, { status, headers });
+}
+
+async function handleRequest(request) {
+    try {
+        let username, password, action;
+
+        // Handle both GET (query params) and POST (body or query params)
+        const { searchParams } = new URL(request.url);
+
+        if (request.method === 'POST') {
+            try {
+                // Try parsing body for params first (x-www-form-urlencoded usually used by Xtream players)
+                const formData = await request.formData();
+                username = formData.get('username');
+                password = formData.get('password');
+                action = formData.get('action');
+            } catch (e) {
+                // If body parsing fails or it's not form data, fallback to searchParams
+                // (Some players might send POST with query params)
+            }
+        }
+
+        // Fallback or override with searchParams if not found in body (or if it's GET)
+        if (!username) username = searchParams.get('username');
+        if (!password) password = searchParams.get('password');
+        if (!action) action = searchParams.get('action');
+
+        console.log('Xtream API request:', { username, password, action, method: request.method });
 
         if (!username || !password) {
-            return NextResponse.json({
+            return jsonResponse({
                 user_info: { auth: 0, message: 'Invalid credentials' }
             }, { status: 401 });
         }
@@ -26,7 +58,7 @@ export async function GET(request) {
 
         if (error || !user) {
             console.log('Authentication failed:', error);
-            return NextResponse.json({
+            return jsonResponse({
                 user_info: { auth: 0, message: 'Invalid credentials' }
             }, { status: 401 });
         }
@@ -96,7 +128,7 @@ export async function GET(request) {
             if (!isActive) {
                 // Return empty/system stream message only for live
                 if (action === 'get_live_streams') {
-                    return NextResponse.json([{
+                    return jsonResponse([{
                         num: 1,
                         name: 'Account Expired/Inactive',
                         stream_type: 'live',
@@ -111,7 +143,7 @@ export async function GET(request) {
                         container_extension: 'mp4'
                     }]);
                 }
-                return NextResponse.json([]);
+                return jsonResponse([]);
             }
 
             // Get active playlists
@@ -121,7 +153,7 @@ export async function GET(request) {
                 .eq('is_active', true);
 
             if (playlistError || !activePlaylists || activePlaylists.length === 0) {
-                return NextResponse.json([]);
+                return jsonResponse([]);
             }
 
             const playlistIds = activePlaylists.map(p => p.id);
@@ -251,20 +283,20 @@ export async function GET(request) {
                 return streamData;
             });
 
-            return NextResponse.json(formattedStreams);
+            return jsonResponse(formattedStreams);
         }
 
         if (action === 'get_live_categories' || action === 'get_vod_categories' || action === 'get_series_categories') {
             if (!isActive) {
                 // Return empty system category only for live? Or just return valid empty list.
                 if (action === 'get_live_categories') {
-                    return NextResponse.json([{
+                    return jsonResponse([{
                         category_id: '1',
                         category_name: 'System',
                         parent_id: 0
                     }]);
                 }
-                return NextResponse.json([]);
+                return jsonResponse([]);
             }
 
             // Get active playlists
@@ -274,7 +306,7 @@ export async function GET(request) {
                 .eq('is_active', true);
 
             if (playlistError || !activePlaylists || activePlaylists.length === 0) {
-                return NextResponse.json([]);
+                return jsonResponse([]);
             }
 
             const playlistIds = activePlaylists.map(p => p.id);
@@ -293,7 +325,7 @@ export async function GET(request) {
                 parent_id: 0
             }));
 
-            return NextResponse.json(formattedCategories);
+            return jsonResponse(formattedCategories);
         }
 
         // Default: return user info
@@ -305,7 +337,7 @@ export async function GET(request) {
         const port = host.includes(':') ? host.split(':')[1] : (protocol === 'https' ? '443' : '80');
         const urlWithoutPort = host.split(':')[0];
 
-        return NextResponse.json({
+        return jsonResponse({
             user_info: {
                 username: user.username,
                 password: user.password,
@@ -335,8 +367,20 @@ export async function GET(request) {
         });
     } catch (error) {
         console.error('Xtream API error:', error);
-        return NextResponse.json({
+        return jsonResponse({
             user_info: { auth: 0, message: 'Server error' }
         }, { status: 500 });
     }
+}
+
+export async function GET(request) {
+    return handleRequest(request);
+}
+
+export async function POST(request) {
+    return handleRequest(request);
+}
+
+export async function OPTIONS() {
+    return NextResponse.json({}, { headers: corsHeaders });
 }
