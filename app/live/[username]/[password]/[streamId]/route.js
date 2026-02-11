@@ -89,7 +89,7 @@ export async function GET(request, context) {
         const stream = streams[0];
         // Clean URL to remove newlines/spaces that might have been pasted in
         let targetUrl = stream.url ? stream.url.replace(/\s/g, '').trim() : '';
-        let licenseUrl = null;
+        // let licenseUrl = null; // Unused in redirect mode
 
         // 3. Prepare Headers for Fetch
         const fetchHeaders = {
@@ -112,7 +112,7 @@ export async function GET(request, context) {
             const tpData = await TataPlay.getStreamUrl(channelId);
             if (tpData) {
                 targetUrl = tpData.url;
-                licenseUrl = tpData.licenseUrl;
+                // licenseUrl = tpData.licenseUrl;
                 if (tpData.headers) Object.assign(fetchHeaders, tpData.headers);
             }
         }
@@ -122,7 +122,7 @@ export async function GET(request, context) {
             const slData = await SonyLiv.getStreamUrl(channelId);
             if (slData) {
                 targetUrl = slData.url;
-                licenseUrl = slData.licenseUrl;
+                // licenseUrl = slData.licenseUrl;
                 if (slData.headers) Object.assign(fetchHeaders, slData.headers);
             }
         }
@@ -235,7 +235,9 @@ export async function GET(request, context) {
         // bypassing Vercel's IP which might be blocked or geo-restricted.
 
         console.log('Redirecting to source:', targetUrl);
-        return redirectWithHeaders(targetUrl, stream.headers);
+        // Use fetchHeaders (which includes dynamic headers from TataPlay/SonyLiv) 
+        // instead of just static stream.headers
+        return redirectWithHeaders(targetUrl, fetchHeaders);
 
     } catch (error) {
         console.error('Smart Proxy Error:', error);

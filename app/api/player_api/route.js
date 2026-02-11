@@ -237,22 +237,10 @@ export async function GET(request) {
                     streamData.drm_scheme = stream.drm_scheme;
                     if (licenseUrl) streamData.drm_license_url = licenseUrl;
 
-                    // For clearkey, convert Hex keys to Base64URL (same as M3U implementation)
+                    // For clearkey, return keys as Hex (standard for Xtream Codes & TiviMate)
                     if (stream.drm_scheme === 'clearkey' && stream.drm_key_id && stream.drm_key) {
-                        // Helper to convert Hex to Base64URL
-                        const toBase64Url = (hexString) => {
-                            try {
-                                if (hexString && /^[0-9a-fA-F]+$/.test(hexString) && hexString.length % 2 === 0) {
-                                    return Buffer.from(hexString, 'hex').toString('base64url');
-                                }
-                                return hexString; // Return as-is if not valid Hex
-                            } catch (e) {
-                                return hexString;
-                            }
-                        };
-
-                        streamData.drm_key_id = toBase64Url(stream.drm_key_id);
-                        streamData.drm_key = toBase64Url(stream.drm_key);
+                        streamData.drm_key_id = stream.drm_key_id;
+                        streamData.drm_key = stream.drm_key;
                     } else {
                         // For other DRM schemes (Widevine), return keys as-is
                         if (stream.drm_key_id) streamData.drm_key_id = stream.drm_key_id;
