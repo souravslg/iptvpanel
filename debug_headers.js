@@ -1,6 +1,6 @@
 
 async function checkUrl() {
-    const url = 'https://j-plus.free.nf/jtv/jtv.m3u.php?i=1';
+    const url = 'https://raw.githubusercontent.com/souravslg/iptvpanel/main/jtv.m3u';
     console.log(`Fetching ${url}...`);
     try {
         const response = await fetch(url, {

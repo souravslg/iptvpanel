@@ -19,7 +19,7 @@ const path = require('path');
 
         console.log('Navigating to target URL...');
         // Target URL provided by user
-        await page.goto('https://j-plus.free.nf/jtv/jtv.m3u.php', {
+        await page.goto('https://raw.githubusercontent.com/souravslg/iptvpanel/main/jtv.m3u', {
             waitUntil: 'networkidle',
             timeout: 120000
         });

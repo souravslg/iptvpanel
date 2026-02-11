@@ -328,6 +328,100 @@ async function handleRequest(request) {
             return jsonResponse(formattedCategories);
         }
 
+        // Match get_simple_data_table (EPG/Stream data)
+        if (action === 'get_simple_data_table') {
+            const streamId = searchParams.get('stream_id');
+            if (streamId) {
+                const { data: stream } = await supabase
+                    .from('streams')
+                    .select('*')
+                    .eq('stream_id', streamId) // OR id
+                    .single();
+
+                if (stream) {
+                    return jsonResponse({
+                        epg_listings: [] // Mock EPG for now
+                    });
+                }
+            }
+            return jsonResponse({ epg_listings: [] });
+        }
+
+        // Match get_vod_info
+        if (action === 'get_vod_info') {
+            const vodId = searchParams.get('vod_id');
+            if (!vodId) return jsonResponse({}, { status: 400 });
+
+            const { data: stream } = await supabase
+                .from('streams')
+                .select('*')
+                .eq('id', vodId) // Assuming ID matches
+                .eq('type', 'movie')
+                .single();
+
+            if (!stream) return jsonResponse({});
+
+            return jsonResponse({
+                info: {
+                    name: stream.name,
+                    o_name: stream.name,
+                    cover_big: stream.logo,
+                    movie_image: stream.logo,
+                    plot: 'No description',
+                    cast: '',
+                    director: '',
+                    genre: stream.category,
+                    release_date: '',
+                    duration: '',
+                    rating: '',
+                    youtube_trailer: '',
+                    tmdb_id: ''
+                },
+                movie_data: {
+                    stream_id: stream.id,
+                    name: stream.name,
+                    container_extension: 'mp4',
+                    custom_sid: '',
+                    direct_source: stream.url
+                }
+            });
+        }
+
+        // Match get_series_info
+        if (action === 'get_series_info') {
+            const seriesId = searchParams.get('series_id');
+            if (!seriesId) return jsonResponse({}, { status: 400 });
+
+            // Check if stream exists as series
+            const { data: stream } = await supabase
+                .from('streams')
+                .select('*')
+                .eq('id', seriesId)
+                .eq('type', 'series')
+                .single();
+
+            if (!stream) return jsonResponse({});
+
+            return jsonResponse({
+                info: {
+                    name: stream.name,
+                    cover: stream.logo,
+                    plot: 'No description',
+                    cast: '',
+                    director: '',
+                    genre: stream.category,
+                    releaseDate: '',
+                    last_modified: '',
+                    rating: '',
+                    youtube_trailer: '',
+                    episode_run_time: '0',
+                    backdrop_path: []
+                },
+                episodes: {}, // Populate if we have episodes table
+                seasons: []
+            });
+        }
+
         // Default: return user info
         // Date format: YYYY-MM-DD HH:mm:ss
         const nowFormatted = now.toISOString().replace('T', ' ').split('.')[0];
@@ -360,7 +454,7 @@ async function handleRequest(request) {
                 timezone: 'Asia/Kolkata',
                 timestamp_now: Math.floor(Date.now() / 1000),
                 time_now: nowFormatted,
-                version: '2.9.0', // Report as XUI 2.9.0 (v2 compatible)
+                version: '2.9.1', // Bumped to 2.9.1 for V2 upgrade
                 revision: 5,
                 xui: true // Signal XUI compatibility
             }
