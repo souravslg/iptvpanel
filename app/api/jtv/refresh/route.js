@@ -4,8 +4,7 @@ import { fetchJTVPlaylist } from '@/lib/jtv-scraper';
 import { supabase } from '@/lib/supabase';
 import { supabaseAdmin } from '@/lib/supabase-admin';
 import { parseM3U } from '@/lib/m3u';
-import fs from 'fs';
-import path from 'path';
+// Removed fs and path imports as they are not used for filesystem writing anymore
 
 export async function POST() {
     try {
@@ -21,13 +20,8 @@ export async function POST() {
 
         if (contentError) throw new Error('Failed to save playlist content: ' + contentError.message);
 
-        // 1.5 Write to public/jtv.m3u for Sync and Download
-        const publicDir = path.join(process.cwd(), 'public');
-        if (!fs.existsSync(publicDir)) {
-            fs.mkdirSync(publicDir, { recursive: true });
-        }
-        const filePath = path.join(publicDir, 'jtv.m3u');
-        fs.writeFileSync(filePath, content, 'utf8');
+        // 1.5 File writing removed for Vercel/Serverless compatibility.
+        // Content is served dynamically via app/jtv.m3u/route.js
 
         // 2. Store Metadata (last updated, status, etc.)
         const { error: metaError } = await supabase
@@ -36,7 +30,7 @@ export async function POST() {
                 key: 'jtv_metadata',
                 value: JSON.stringify({
                     ...metadata,
-                    size: fs.statSync(filePath).size // Update size from actual file
+                    size: content.length
                 })
             }, { onConflict: 'key' });
 
@@ -119,7 +113,7 @@ export async function POST() {
 
         return NextResponse.json({
             success: true,
-            message: `Playlist updated, saved to DB, written to file, and synced ${streams.length} streams successfully`
+            message: `Playlist updated, saved to DB, and synced ${streams.length} streams successfully`
         });
     } catch (error) {
         console.error('JTV Refresh Error:', error);
