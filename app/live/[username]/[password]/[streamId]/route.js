@@ -5,6 +5,8 @@ import { supabaseAdmin } from '@/lib/supabase-admin';
 import { TataPlay } from '@/lib/tataplay';
 import { SonyLiv } from '@/lib/sonyliv';
 
+export const dynamic = 'force-dynamic'; // Prevent Vercel caching
+
 export async function GET(request, context) {
     const params = await Promise.resolve(context.params);
     const { username, password, streamId } = params;
