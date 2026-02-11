@@ -177,20 +177,16 @@ export async function GET(request) {
             m3u += `#EXTINF:-1 tvg-id="${tvgId}" tvg-name="${tvgName}" tvg-logo="${tvgLogo}" group-title="${groupTitle}",${tvgName}\n`;
 
             // 4. Final Stream URL (Must be immediately after EXTINF)
-            // BYPASS PROXY: Use direct source URL for Vercel compatibility
-            // Clean URL to remove newlines/spaces
-            let finalUrl = stream.url ? stream.url.replace(/\s/g, '').trim() : '';
-
-            if (stream.headers) {
-                const headers = typeof stream.headers === 'string' ? JSON.parse(stream.headers) : stream.headers;
-                const headerParts = [];
-                const getHeader = (key) => headers[key] || headers[key.toLowerCase()];
-                const ua = getHeader('User-Agent');
-                if (ua) headerParts.push(`User-Agent=${ua}`);
-                const ref = getHeader('Referer') || getHeader('Origin');
-                if (ref) headerParts.push(`Referer=${ref}`);
-                if (headerParts.length > 0) finalUrl += `|${headerParts.join('&')}`;
+            // 4. Final Stream URL (Must be immediately after EXTINF)
+            // USE PROXY: To enforce user status checks (Active/Suspended)
+            let extension = 'ts';
+            if (stream.type === 'movie') {
+                extension = 'mp4';
             }
+            // Use stream_id (if available) or id for the proxy path
+            const sId = stream.stream_id || stream.id;
+
+            let finalUrl = `${protocol}://${host}/live/${username}/${password}/${sId}.${extension}`;
 
             m3u += `${finalUrl}\n`;
         });

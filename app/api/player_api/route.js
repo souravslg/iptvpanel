@@ -258,7 +258,7 @@ async function handleRequest(request) {
                     category_id: catId,
                     custom_sid: '',
                     tv_archive: 0,
-                    direct_source: streamUrl, // BYPASS PROXY: Use direct source URL for Vercel compatibility
+                    direct_source: proxyUrl, // USE PROXY: Enforce status check
                     tv_archive_duration: 0,
                     container_extension: extension
                 };

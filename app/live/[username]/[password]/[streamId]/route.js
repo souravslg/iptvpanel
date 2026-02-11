@@ -55,7 +55,16 @@ export async function GET(request, context) {
             const videoUrl = settingsRows?.value || defaultVideo;
 
             console.log('Redirecting blocked user to:', videoUrl);
-            return NextResponse.redirect(videoUrl);
+            console.log('Redirecting blocked user to:', videoUrl);
+            return new NextResponse(null, {
+                status: 302,
+                headers: {
+                    'Location': videoUrl,
+                    'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+                    'Pragma': 'no-cache',
+                    'Expires': '0'
+                }
+            });
         }
 
         // 2. Fetch Stream Data
@@ -262,6 +271,11 @@ function redirectWithHeaders(url, headersJson) {
 
     return new NextResponse(null, {
         status: 302,
-        headers: { 'Location': finalUrl, 'Cache-Control': 'no-cache' }
+        headers: {
+            'Location': finalUrl,
+            'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
+        }
     });
 }
