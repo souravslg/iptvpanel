@@ -202,16 +202,16 @@ export default function UsersPage() {
             {/* Elegant Header */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                 <div>
-                    <h1 className="text-4xl font-extrabold font-outfit text-white tracking-tight leading-none mb-3">
+                    <h1 className="text-3xl md:text-4xl font-extrabold font-outfit text-white tracking-tight leading-none mb-2 md:mb-3">
                         User Management List
                     </h1>
-                    <p className="text-muted-foreground font-medium text-lg">
+                    <p className="text-muted-foreground font-medium text-base md:text-lg">
                         Manage active identities and access protocols.
                     </p>
                 </div>
                 <button
                     onClick={() => setShowAddModal(true)}
-                    className="btn-primary"
+                    className="btn-primary w-full md:w-auto"
                 >
                     <Plus size={20} />
                     Onboard Subscriber
@@ -237,98 +237,100 @@ export default function UsersPage() {
             </div>
 
             {/* Main Table */}
-            <div className="table-container shadow-2xl overflow-hidden">
-                <table className="w-full">
-                    <thead>
-                        <tr>
-                            <th>Identity Profile</th>
-                            <th>Operational State</th>
-                            <th>Service Tier</th>
-                            <th>Termination Date</th>
-                            <th className="text-right">Command Center</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {loading ? (
-                            <tr><td colSpan="5" className="text-center py-32 text-muted-foreground">
-                                <RefreshCw className="w-10 h-10 animate-spin mx-auto mb-4 text-primary" />
-                                <span className="font-bold tracking-widest uppercase text-xs">Syncing Database...</span>
-                            </td></tr>
-                        ) : filteredUsers.map((user) => (
-                            <tr key={user.id} className="group">
-                                <td>
-                                    <div className="flex items-center gap-5">
-                                        <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-grad-primary p-[2px] shadow-lg shadow-primary/20">
-                                            <div className="w-full h-full rounded-[14px] bg-secondary flex items-center justify-center font-black text-primary font-outfit text-xl leading-none">
-                                                {user.username.charAt(0).toUpperCase()}
-                                            </div>
-                                        </div>
-                                        <div className="space-y-1">
-                                            <div className="font-extrabold text-white text-lg tracking-tight group-hover:text-primary transition-colors cursor-default">
-                                                {user.username}
-                                            </div>
-                                            <div className="flex items-center gap-2">
-                                                <Key size={12} className="text-muted-foreground" />
-                                                <span className="text-xs font-mono text-muted-foreground bg-white/5 py-0.5 px-2 rounded-md">{user.password}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span className={`status-badge ${user.status === 'Active' ? 'status-active' : 'status-suspended'}`}>
-                                        <div className={`w-1.5 h-1.5 rounded-full ${user.status === 'Active' ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`} />
-                                        {user.status}
-                                    </span>
-                                </td>
-                                <td>
-                                    <div className="flex items-center gap-2 text-slate-300 font-bold">
-                                        <Shield size={14} className="text-indigo-400" />
-                                        {user.package || 'Full Access'}
-                                    </div>
-                                </td>
-                                <td>
-                                    <div className="inline-flex items-center gap-2 text-slate-400 font-medium bg-black/30 px-3 py-1.5 rounded-xl border border-white/5">
-                                        <Calendar size={13} className="opacity-50" />
-                                        {user.expire_date ? new Date(user.expire_date).toLocaleDateString() : 'Infinite'}
-                                    </div>
-                                </td>
-                                <td className="text-right">
-                                    <div className="flex justify-end items-center gap-3">
-                                        <button
-                                            onClick={(e) => { e.stopPropagation(); setSelectedUser(user); setShowLinkModal(true); }}
-                                            className="w-11 h-11 flex items-center justify-center rounded-2xl bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500 hover:text-white transition-all shadow-lg hover:shadow-indigo-500/20 border border-indigo-500/20 active:scale-90"
-                                            title="Protocols"
-                                        >
-                                            <Link2 size={20} />
-                                        </button>
-                                        <button
-                                            onClick={(e) => { e.stopPropagation(); startEditing(user); }}
-                                            className="w-11 h-11 flex items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500 hover:text-white transition-all shadow-lg hover:shadow-emerald-500/20 border border-emerald-500/20 active:scale-90"
-                                            title="Configure"
-                                        >
-                                            <Edit size={20} />
-                                        </button>
-                                        <button
-                                            onClick={(e) => { e.stopPropagation(); toggleStatus(user); }}
-                                            className={`w-11 h-11 flex items-center justify-center rounded-2xl transition-all shadow-lg border active:scale-90 ${user.status === 'Active'
-                                                ? 'bg-amber-500/10 text-amber-400 border-amber-500/20 hover:bg-amber-500 hover:text-white'
-                                                : 'bg-green-500/10 text-green-400 border-green-500/20 hover:bg-green-500 hover:text-white'
-                                                }`}
-                                        >
-                                            {user.status === 'Active' ? <UserMinus size={20} /> : <UserCheck size={20} />}
-                                        </button>
-                                        <button
-                                            onClick={(e) => { e.stopPropagation(); handleDelete(user.id); }}
-                                            className="w-11 h-11 flex items-center justify-center rounded-2xl bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white transition-all shadow-lg hover:shadow-rose-500/20 border border-rose-500/20 active:scale-90"
-                                        >
-                                            <Trash2 size={20} />
-                                        </button>
-                                    </div>
-                                </td>
+            <div className="table-container shadow-2xl rounded-2xl overflow-hidden border border-white/5 bg-black/20 backdrop-blur-sm">
+                <div className="overflow-x-auto">
+                    <table className="w-full min-w-[1000px]">
+                        <thead>
+                            <tr>
+                                <th>Identity Profile</th>
+                                <th>Operational State</th>
+                                <th>Service Tier</th>
+                                <th>Termination Date</th>
+                                <th className="text-right">Command Center</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {loading ? (
+                                <tr><td colSpan="5" className="text-center py-32 text-muted-foreground">
+                                    <RefreshCw className="w-10 h-10 animate-spin mx-auto mb-4 text-primary" />
+                                    <span className="font-bold tracking-widest uppercase text-xs">Syncing Database...</span>
+                                </td></tr>
+                            ) : filteredUsers.map((user) => (
+                                <tr key={user.id} className="group">
+                                    <td>
+                                        <div className="flex items-center gap-5">
+                                            <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-grad-primary p-[2px] shadow-lg shadow-primary/20">
+                                                <div className="w-full h-full rounded-[14px] bg-secondary flex items-center justify-center font-black text-primary font-outfit text-xl leading-none">
+                                                    {user.username.charAt(0).toUpperCase()}
+                                                </div>
+                                            </div>
+                                            <div className="space-y-1">
+                                                <div className="font-extrabold text-white text-lg tracking-tight group-hover:text-primary transition-colors cursor-default">
+                                                    {user.username}
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    <Key size={12} className="text-muted-foreground" />
+                                                    <span className="text-xs font-mono text-muted-foreground bg-white/5 py-0.5 px-2 rounded-md">{user.password}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span className={`status-badge ${user.status === 'Active' ? 'status-active' : 'status-suspended'}`}>
+                                            <div className={`w-1.5 h-1.5 rounded-full ${user.status === 'Active' ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`} />
+                                            {user.status}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div className="flex items-center gap-2 text-slate-300 font-bold">
+                                            <Shield size={14} className="text-indigo-400" />
+                                            {user.package || 'Full Access'}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div className="inline-flex items-center gap-2 text-slate-400 font-medium bg-black/30 px-3 py-1.5 rounded-xl border border-white/5">
+                                            <Calendar size={13} className="opacity-50" />
+                                            {user.expire_date ? new Date(user.expire_date).toLocaleDateString() : 'Infinite'}
+                                        </div>
+                                    </td>
+                                    <td className="text-right">
+                                        <div className="flex justify-end items-center gap-3">
+                                            <button
+                                                onClick={(e) => { e.stopPropagation(); setSelectedUser(user); setShowLinkModal(true); }}
+                                                className="w-11 h-11 flex items-center justify-center rounded-2xl bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500 hover:text-white transition-all shadow-lg hover:shadow-indigo-500/20 border border-indigo-500/20 active:scale-90"
+                                                title="Protocols"
+                                            >
+                                                <Link2 size={20} />
+                                            </button>
+                                            <button
+                                                onClick={(e) => { e.stopPropagation(); startEditing(user); }}
+                                                className="w-11 h-11 flex items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500 hover:text-white transition-all shadow-lg hover:shadow-emerald-500/20 border border-emerald-500/20 active:scale-90"
+                                                title="Configure"
+                                            >
+                                                <Edit size={20} />
+                                            </button>
+                                            <button
+                                                onClick={(e) => { e.stopPropagation(); toggleStatus(user); }}
+                                                className={`w-11 h-11 flex items-center justify-center rounded-2xl transition-all shadow-lg border active:scale-90 ${user.status === 'Active'
+                                                    ? 'bg-amber-500/10 text-amber-400 border-amber-500/20 hover:bg-amber-500 hover:text-white'
+                                                    : 'bg-green-500/10 text-green-400 border-green-500/20 hover:bg-green-500 hover:text-white'
+                                                    }`}
+                                            >
+                                                {user.status === 'Active' ? <UserMinus size={20} /> : <UserCheck size={20} />}
+                                            </button>
+                                            <button
+                                                onClick={(e) => { e.stopPropagation(); handleDelete(user.id); }}
+                                                className="w-11 h-11 flex items-center justify-center rounded-2xl bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white transition-all shadow-lg hover:shadow-rose-500/20 border border-rose-500/20 active:scale-90"
+                                            >
+                                                <Trash2 size={20} />
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             {/* --- Modals with Correct Layering --- */}

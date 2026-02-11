@@ -57,7 +57,6 @@ export async function GET(request, context) {
             const videoUrl = settingsRows?.value || defaultVideo;
 
             console.log('Redirecting blocked user to:', videoUrl);
-            console.log('Redirecting blocked user to:', videoUrl);
             return new NextResponse(null, {
                 status: 302,
                 headers: {
@@ -113,6 +112,7 @@ export async function GET(request, context) {
             if (getStored('User-Agent')) fetchHeaders['User-Agent'] = getStored('User-Agent');
             if (getStored('Referer')) fetchHeaders['Referer'] = getStored('Referer');
             if (getStored('Origin')) fetchHeaders['Origin'] = getStored('Origin');
+            if (getStored('Cookie')) fetchHeaders['Cookie'] = getStored('Cookie');
         }
 
         // -------------------------------------------------------------
@@ -241,43 +241,46 @@ export async function GET(request, context) {
 
         console.log('Fetching source URL:', targetUrl);
 
-        // 4. IP MISMATCH FIX: Redirect to source instead of proxying
-        // This ensures the client connects directly to the stream server with their own IP,
-        // bypassing Vercel's IP which might be blocked or geo-restricted.
+        // 4. PROXY MODE: Fetch and stream back to client
+        // This hides the source URL and handles headers server-side.
+        // It consumes server bandwidth but ensures compatibility (headers don't break players)
+        // and enforces strict access control (user stays connected to proxy).
 
-        console.log('Redirecting to source:', targetUrl);
-        // Use fetchHeaders (which includes dynamic headers from TataPlay/SonyLiv) 
-        // instead of just static stream.headers
-        return redirectWithHeaders(targetUrl, fetchHeaders);
+        console.log('Proxying stream from:', targetUrl);
 
+        try {
+            const response = await fetch(targetUrl, {
+                headers: fetchHeaders,
+                method: 'GET'
+            });
+
+            if (!response.ok) {
+                console.error(`Upstream error: ${response.status} ${response.statusText}`);
+                return new NextResponse(`Upstream Error: ${response.status}`, { status: response.status });
+            }
+
+            // Forward relevant headers
+            const responseHeaders = new Headers(response.headers);
+            // Ensure we don't cache locally if we want real-time control (already handled by route headers, but be safe)
+            responseHeaders.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+            responseHeaders.set('Pragma', 'no-cache');
+            responseHeaders.set('Expires', '0');
+
+            // Allow CORS
+            responseHeaders.set('Access-Control-Allow-Origin', '*');
+
+            return new NextResponse(response.body, {
+                status: response.status,
+                headers: responseHeaders
+            });
+
+        } catch (fetchErr) {
+            console.error('Proxy fetch failed:', fetchErr);
+            return new NextResponse(`Proxy Error: ${fetchErr.message}`, { status: 502 });
+        }
     } catch (error) {
         console.error('Smart Proxy Error:', error);
         return new NextResponse(`Server error: ${error.message}`, { status: 500 });
     }
 }
 
-function redirectWithHeaders(url, headersJson) {
-    let finalUrl = url.trim();
-    if (finalUrl.endsWith('&') || finalUrl.endsWith('?')) finalUrl = finalUrl.slice(0, -1);
-
-    if (headersJson) {
-        const headers = typeof headersJson === 'string' ? JSON.parse(headersJson) : headersJson;
-        const headerParts = [];
-        const getHeader = (k) => headers[k] || headers[k.toLowerCase()];
-        const ua = getHeader('User-Agent');
-        if (ua) headerParts.push(`User-Agent=${ua}`);
-        const ref = getHeader('Referer') || getHeader('Origin');
-        if (ref) headerParts.push(`Referer=${ref}`);
-        if (headerParts.length > 0) finalUrl += `|${headerParts.join('&')}`;
-    }
-
-    return new NextResponse(null, {
-        status: 302,
-        headers: {
-            'Location': finalUrl,
-            'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-            'Pragma': 'no-cache',
-            'Expires': '0'
-        }
-    });
-}

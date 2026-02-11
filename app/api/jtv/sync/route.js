@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
-import { parseM3U } from '@/lib/m3u';
+import { parseM3U } from '@/lib/m3u_v2';
 
 export async function POST() {
     try {
-        // 1. Get content from DB (Vercel/Serverless compatible)
+        // 1. Get content from DB
         const { data: setting, error: settingError } = await supabase
             .from('settings')
             .select('value')
@@ -79,7 +79,8 @@ export async function POST() {
                 drm_key_id: stream.drmKeyId || null,
                 drm_key: stream.drmKey || null,
                 stream_format: stream.streamFormat || 'hls',
-                channel_number: stream.channelNumber || null
+                channel_number: stream.channelNumber || null,
+                headers: stream.headers ? JSON.stringify(stream.headers) : null
             }));
 
             const { error: insertError } = await supabase

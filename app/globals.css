@@ -75,7 +75,7 @@
   }
 
   .main-content-wrapper {
-    @apply flex-1 overflow-y-auto p-6 scroll-smooth;
+    @apply flex-1 overflow-y-auto p-6 pt-20 md:p-6 scroll-smooth;
   }
 
   /* Utilities */
