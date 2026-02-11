@@ -227,7 +227,7 @@ export async function GET(request) {
                     category_id: catId,
                     custom_sid: '',
                     tv_archive: 0,
-                    direct_source: proxyUrl,
+                    direct_source: streamUrl, // BYPASS PROXY: Use direct source URL for Vercel compatibility
                     tv_archive_duration: 0,
                     container_extension: extension
                 };

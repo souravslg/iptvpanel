@@ -177,7 +177,9 @@ export async function GET(request) {
             m3u += `#EXTINF:-1 tvg-id="${tvgId}" tvg-name="${tvgName}" tvg-logo="${tvgLogo}" group-title="${groupTitle}",${tvgName}\n`;
 
             // 4. Final Stream URL (Must be immediately after EXTINF)
-            let finalUrl = `${protocol}://${host}/live/${username}/${password}/${encodeURIComponent(tvgId)}.${extension}`;
+            // BYPASS PROXY: Use direct source URL for Vercel compatibility
+            // Clean URL to remove newlines/spaces
+            let finalUrl = stream.url ? stream.url.replace(/\s/g, '').trim() : '';
 
             if (stream.headers) {
                 const headers = typeof stream.headers === 'string' ? JSON.parse(stream.headers) : stream.headers;
