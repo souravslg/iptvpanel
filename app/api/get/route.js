@@ -81,6 +81,7 @@ export async function GET(request) {
                 .from('streams')
                 .select('*')
                 .in('playlist_id', playlistIds)
+                .eq('enabled', true) // Only include enabled channels
                 .order('id', { ascending: true })
                 .range(offset, offset + batchSize - 1);
 
