@@ -433,15 +433,26 @@ export default function PlaylistPage() {
                                 </button>
                             ))}
                         </div>
-                        <div className="relative w-full md:w-64">
-                            <Search className="absolute left-3 top-2.5 text-slate-400" size={16} />
-                            <input
-                                type="text"
-                                placeholder="Search..."
-                                value={searchTerm}
-                                onChange={e => setSearchTerm(e.target.value)}
-                                className="pl-10 w-full bg-slate-900 border-slate-600 rounded-md text-sm py-2 text-white focus:ring-blue-500 focus:border-blue-500"
-                            />
+                        <div className="flex gap-2 w-full md:w-auto">
+                            <select
+                                value={statusFilter}
+                                onChange={e => setStatusFilter(e.target.value)}
+                                className="px-3 py-2 bg-slate-900 border border-slate-600 rounded-md text-sm text-white focus:ring-blue-500 focus:border-blue-500"
+                            >
+                                <option value="all">All Status</option>
+                                <option value="enabled">Enabled Only</option>
+                                <option value="disabled">Disabled Only</option>
+                            </select>
+                            <div className="relative w-full md:w-64">
+                                <Search className="absolute left-3 top-2.5 text-slate-400" size={16} />
+                                <input
+                                    type="text"
+                                    placeholder="Search..."
+                                    value={searchTerm}
+                                    onChange={e => setSearchTerm(e.target.value)}
+                                    className="pl-10 w-full bg-slate-900 border-slate-600 rounded-md text-sm py-2 text-white focus:ring-blue-500 focus:border-blue-500"
+                                />
+                            </div>
                         </div>
                     </div>
 
@@ -459,6 +470,11 @@ export default function PlaylistPage() {
                                 {sample
                                     .filter(ch => selectedCategory === "All" || ch.category === selectedCategory)
                                     .filter(ch => ch.name.toLowerCase().includes(searchTerm.toLowerCase()))
+                                    .filter(ch => {
+                                        if (statusFilter === 'enabled') return ch.enabled !== false;
+                                        if (statusFilter === 'disabled') return ch.enabled === false;
+                                        return true; // 'all'
+                                    })
                                     .map(ch => (
                                         <tr key={ch.id} className={`hover:bg-slate-700/50 ${ch.enabled === false ? 'opacity-50' : ''}`}>
                                             <td className="px-6 py-4 whitespace-nowrap">
