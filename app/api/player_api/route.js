@@ -82,6 +82,19 @@ async function handleRequest(request) {
             console.error('Error fetching invalid video setting:', e);
         }
 
+        // Fetch stream mode setting
+        let streamMode = 'proxy';
+        try {
+            const { data: modeData } = await supabase
+                .from('settings')
+                .select('value')
+                .eq('key', 'stream_mode')
+                .single();
+            if (modeData?.value) streamMode = modeData.value;
+        } catch (e) {
+            console.error('Error fetching stream_mode:', e);
+        }
+
         // Helper to get consistent category mapping
         // Added typeFilter to support VOD/Series categories
         const getCategoryMapping = async (activePlaylistIds, typeFilter = 'live') => {
@@ -239,9 +252,20 @@ async function handleRequest(request) {
                 //    extension = 'm3u8';
                 // }
 
-                // Use PROXY URL instead of raw stream URL for direct_source
-                let proxyUrl = `${protocol}://${host}/live/${username}/${password}/${streamId}.${extension}`;
+                // Get stream mode preference
+                // optimization: could fetch once outside loop, but for now safe inside or passed in
+                // let's fetch it outside loop for performance
 
+                // Use PROXY URL instead of raw stream URL for direct_source
+                let directSourceUrl = `${protocol}://${host}/live/${username}/${password}/${streamId}.${extension}`;
+
+                if (streamMode === 'direct') {
+                    // Direct mode: expose raw URL
+                    directSourceUrl = streamUrl;
+                    if (stream.headers) {
+                        // We already constructed streamUrl with pipe headers above if needed
+                    }
+                }
 
                 // Map category name to ID
                 const catId = categoryMap[stream.category] || '0'; // 0 or Uncategorized
@@ -258,7 +282,7 @@ async function handleRequest(request) {
                     category_id: catId,
                     custom_sid: '',
                     tv_archive: 0,
-                    direct_source: proxyUrl, // USE PROXY: Enforce status check
+                    direct_source: directSourceUrl,
                     tv_archive_duration: 0,
                     container_extension: extension
                 };
