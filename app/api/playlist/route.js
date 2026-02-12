@@ -65,8 +65,11 @@ export async function POST(request) {
         drm_license_url: stream.drmLicenseUrl || null,
         drm_key_id: stream.drmKeyId || null,
         drm_key: stream.drmKey || null,
+        drm_key_id: stream.drmKeyId || null,
+        drm_key: stream.drmKey || null,
         stream_format: stream.streamFormat || 'hls',
-        channel_number: stream.channelNumber || null
+        channel_number: stream.channelNumber || null,
+        headers: stream.headers ? JSON.stringify(stream.headers) : null
       }));
 
       const { error: insertError } = await supabase
