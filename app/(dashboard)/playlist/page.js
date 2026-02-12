@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import {
     Upload, FileText, CheckCircle, AlertCircle, Play, List, RefreshCw,
     Edit, X, Save, Trash2, Plus, Link, Layers, Search,
-    Activity, Signal, Globe, Lock, Tv, MoreHorizontal
+    Activity, Signal, Globe, Lock, Tv, MoreHorizontal, Power
 } from 'lucide-react';
 
 export default function PlaylistPage() {
@@ -33,6 +33,9 @@ export default function PlaylistPage() {
 
     // Delete State
     const [deleting, setDeleting] = useState(null);
+
+    // Toggle Status State
+    const [toggling, setToggling] = useState(null);
 
     // Add Channel State
     const [showAddModal, setShowAddModal] = useState(false);
@@ -198,6 +201,32 @@ export default function PlaylistPage() {
             setSample([]);
         } finally {
             setClearing(false);
+        }
+    };
+
+    const toggleChannelStatus = async (channel) => {
+        setToggling(channel.id);
+        try {
+            const newStatus = !channel.enabled;
+            const res = await fetch('/api/playlist/toggle-status', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: channel.id, enabled: newStatus })
+            });
+
+            if (res.ok) {
+                // Update local state
+                setSample(prev => prev.map(ch =>
+                    ch.id === channel.id ? { ...ch, enabled: newStatus } : ch
+                ));
+            } else {
+                alert('Failed to update channel status');
+            }
+        } catch (err) {
+            console.error(err);
+            alert('Failed to update channel status');
+        } finally {
+            setToggling(null);
         }
     };
 
@@ -431,11 +460,11 @@ export default function PlaylistPage() {
                                     .filter(ch => selectedCategory === "All" || ch.category === selectedCategory)
                                     .filter(ch => ch.name.toLowerCase().includes(searchTerm.toLowerCase()))
                                     .map(ch => (
-                                        <tr key={ch.id} className="hover:bg-slate-700/50">
+                                        <tr key={ch.id} className={`hover:bg-slate-700/50 ${ch.enabled === false ? 'opacity-50' : ''}`}>
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <div className="flex items-center">
                                                     {ch.logo && <img src={ch.logo} className="h-8 w-8 rounded mr-3 object-cover bg-slate-900" alt="" onError={e => e.target.style.display = 'none'} />}
-                                                    <div className="text-sm font-medium text-white">{ch.name}</div>
+                                                    <div className={`text-sm font-medium text-white ${ch.enabled === false ? 'line-through' : ''}`}>{ch.name}</div>
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
@@ -445,6 +474,14 @@ export default function PlaylistPage() {
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                                 <div className="flex justify-end gap-2">
+                                                    <button
+                                                        onClick={() => toggleChannelStatus(ch)}
+                                                        disabled={toggling === ch.id}
+                                                        className={`${ch.enabled === false ? 'text-slate-500 hover:text-slate-400' : 'text-green-400 hover:text-green-300'}`}
+                                                        title={ch.enabled === false ? 'Enable channel' : 'Disable channel'}
+                                                    >
+                                                        <Power size={16} />
+                                                    </button>
                                                     <button onClick={() => router.push(`/player?id=${ch.id}`)} className="text-blue-400 hover:text-blue-300"><Play size={16} /></button>
                                                     <button onClick={() => startEditing(ch)} className="text-slate-400 hover:text-white"><Edit size={16} /></button>
                                                     <button onClick={() => deleteChannel(ch)} className="text-red-400 hover:text-red-300"><Trash2 size={16} /></button>

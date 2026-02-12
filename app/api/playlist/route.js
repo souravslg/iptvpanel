@@ -120,7 +120,8 @@ export async function GET() {
     const { count, error: countError } = await supabase
       .from('streams')
       .select('*', { count: 'exact', head: true })
-      .in('playlist_id', playlistIds);
+      .in('playlist_id', playlistIds)
+      .eq('enabled', true); // Only count enabled channels
 
     if (countError) {
       console.error('Error counting streams:', countError);
@@ -132,6 +133,7 @@ export async function GET() {
       .from('streams')
       .select('*')
       .in('playlist_id', playlistIds)
+      .eq('enabled', true) // Only fetch enabled channels
       .order('id', { ascending: true })
       .limit(10000); // Increased limit to ensure all channels (including JTV) are fetched
 

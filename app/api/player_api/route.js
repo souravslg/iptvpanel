@@ -107,7 +107,8 @@ async function handleRequest(request) {
                 let query = supabase
                     .from('streams')
                     .select('category')
-                    .in('playlist_id', activePlaylistIds);
+                    .in('playlist_id', activePlaylistIds)
+                    .eq('enabled', true); // Only enabled channels
 
                 if (typeFilter) {
                     query = query.eq('type', typeFilter);
@@ -190,6 +191,7 @@ async function handleRequest(request) {
                     .from('streams')
                     .select('*')
                     .in('playlist_id', playlistIds)
+                    .eq('enabled', true) // Only enabled channels
                     .eq('type', targetType) // Strict Type Filtering
                     .order('id', { ascending: true })
                     .range(offset, offset + batchSize - 1);
