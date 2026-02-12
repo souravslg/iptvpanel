@@ -10,6 +10,7 @@ import {
 
 export default function PlaylistPage() {
     const router = useRouter();
+    console.log('PlaylistPage rendering');
     const [loading, setLoading] = useState(true);
     const [stats, setStats] = useState(null);
     const [sample, setSample] = useState([]);

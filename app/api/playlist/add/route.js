@@ -50,13 +50,11 @@ export async function POST(request) {
             logo: logo || null,
             category: category || 'Uncategorized',
             playlist_id: playlistId,
-            type: 'live',
             stream_format: streamFormat || 'hls',
             drm_scheme: drmScheme || null,
             drm_license_url: drmLicenseUrl || null,
             drm_key_id: drmKeyId || null,
             drm_key: drmKey || null,
-            headers: headers ? JSON.stringify(headers) : null,
             channel_number: channelNumber ? parseInt(channelNumber) : null,
             enabled: true
         };
