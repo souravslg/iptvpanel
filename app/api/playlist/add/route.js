@@ -26,15 +26,30 @@ export async function POST(request) {
             return NextResponse.json({ error: 'Name and URL are required' }, { status: 400 });
         }
 
-        // Generate a unique stream_id
-        const stream_id = `manual_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        // Get active playlist
+        let { data: activePlaylists } = await supabase
+            .from('playlists')
+            .select('id')
+            .eq('is_active', true)
+            .limit(1);
+
+        let playlistId = activePlaylists?.[0]?.id;
+
+        // Fallback if no active playlist
+        if (!playlistId) {
+            const { data: anyPlaylist } = await supabase.from('playlists').select('id').limit(1).single();
+            if (anyPlaylist) {
+                playlistId = anyPlaylist.id;
+            }
+        }
 
         const channelData = {
-            stream_id,
+            stream_id: `manual_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
             name,
             url,
             logo: logo || null,
             category: category || 'Uncategorized',
+            playlist_id: playlistId,
             type: 'live',
             stream_format: streamFormat || 'hls',
             drm_scheme: drmScheme || null,
@@ -42,7 +57,8 @@ export async function POST(request) {
             drm_key_id: drmKeyId || null,
             drm_key: drmKey || null,
             headers: headers ? JSON.stringify(headers) : null,
-            channel_number: channelNumber ? parseInt(channelNumber) : null
+            channel_number: channelNumber ? parseInt(channelNumber) : null,
+            enabled: true
         };
 
         const { data, error } = await supabase

@@ -178,6 +178,38 @@ export default function PlaylistPage() {
     };
 
     // ... (CRUD handlers simplified for brevity, logic remains same)
+    const handleAddChannel = async () => {
+        if (!newChannel.name || !newChannel.url) {
+            alert('Name and URL are required');
+            return;
+        }
+        setAdding(true);
+        try {
+            const res = await fetch('/api/playlist/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newChannel)
+            });
+            const data = await res.json();
+
+            if (res.ok) {
+                if (data.data) {
+                    setSample(prev => [data.data, ...prev]);
+                    setStats(prev => prev ? ({ ...prev, totalChannels: prev.totalChannels + 1 }) : null);
+                }
+                setShowAddModal(false);
+                setNewChannel({ name: '', url: '', category: '', logo: '', channelNumber: '', streamFormat: 'hls', drmScheme: '', drmLicenseUrl: '', drmKeyId: '', drmKey: '' });
+            } else {
+                alert(data.error || 'Failed to add channel');
+            }
+        } catch (err) {
+            console.error(err);
+            alert('Failed to add channel');
+        } finally {
+            setAdding(false);
+        }
+    };
+
     const deleteChannel = async (channel) => {
         if (!confirm('Delete this channel?')) return;
         setDeleting(channel.id);
@@ -560,7 +592,9 @@ export default function PlaylistPage() {
                             </div>
                             <div className="flex justify-end gap-3 pt-4">
                                 <button onClick={() => setShowAddModal(false)} className="btn-secondary">Cancel</button>
-                                <button className="btn-primary">Add Channel</button>
+                                <button onClick={handleAddChannel} disabled={adding} className="btn-primary">
+                                    {adding ? 'Adding...' : 'Add Channel'}
+                                </button>
                             </div>
                         </div>
                     </div>
