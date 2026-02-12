@@ -116,12 +116,11 @@ export async function GET() {
     // Get all streams from all active playlists
     const playlistIds = activePlaylists.map(p => p.id);
 
-    // 1. Get total count efficiently
+    // 1. Get total count efficiently (admins see all channels)
     const { count, error: countError } = await supabase
       .from('streams')
       .select('*', { count: 'exact', head: true })
-      .in('playlist_id', playlistIds)
-      .eq('enabled', true); // Only count enabled channels
+      .in('playlist_id', playlistIds);
 
     if (countError) {
       console.error('Error counting streams:', countError);
@@ -129,11 +128,11 @@ export async function GET() {
 
     // 2. Fetch streams with a limit to prevent timeouts/memory issues
     // TODO: Implement proper server-side pagination for full access
+    // NOTE: Admins see ALL channels (enabled and disabled) for management
     const { data: allStreams, error: streamsError } = await supabase
       .from('streams')
       .select('*')
       .in('playlist_id', playlistIds)
-      .eq('enabled', true) // Only fetch enabled channels
       .order('id', { ascending: true })
       .limit(10000); // Increased limit to ensure all channels (including JTV) are fetched
 
