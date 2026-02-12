@@ -254,7 +254,6 @@ async function handleRequest(request) {
 
                 // Get stream mode preference
                 // optimization: could fetch once outside loop, but for now safe inside or passed in
-                // let's fetch it outside loop for performance
 
                 // Use PROXY URL instead of raw stream URL for direct_source
                 let directSourceUrl = `${protocol}://${host}/live/${username}/${password}/${streamId}.${extension}`;
@@ -262,6 +261,17 @@ async function handleRequest(request) {
                 if (streamMode === 'direct') {
                     // Direct mode: expose raw URL
                     directSourceUrl = streamUrl;
+
+                    // Attempt to detect real extension from URL (ignoring query params)
+                    try {
+                        // Extract base URL before query params or pipe headers
+                        const cleanUrl = streamUrl.split('|')[0].split('?')[0];
+                        if (cleanUrl.endsWith('.mpd')) extension = 'mpd';
+                        else if (cleanUrl.endsWith('.m3u8')) extension = 'm3u8';
+                        else if (cleanUrl.endsWith('.mkv')) extension = 'mkv';
+                        else if (cleanUrl.endsWith('.mp4')) extension = 'mp4';
+                    } catch (e) { }
+
                     if (stream.headers) {
                         // We already constructed streamUrl with pipe headers above if needed
                     }

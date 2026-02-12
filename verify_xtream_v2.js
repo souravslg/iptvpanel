@@ -48,13 +48,15 @@ async function verifyXtream() {
         console.log(`   Fetched ${streams.length} streams.`);
 
         if (streams.length > 0) {
-            const s = streams[0];
-            console.log('   Sample Stream:', JSON.stringify(s, null, 2));
+            console.log('   First stream sample:');
+            console.log(JSON.stringify(streams[0], null, 2));
+
+            // Validation logic...log('   Sample Stream:', JSON.stringify(s, null, 2));
 
             // Validation
             const errors = [];
-            if (!s.stream_id) errors.push('Missing stream_id');
-            if (!s.container_extension) errors.push('Missing container_extension');
+            if (!streams[0].stream_id) errors.push('Missing stream_id');
+            if (!streams[0].container_extension) errors.push('Missing container_extension');
             // TiviMate often expects stream_id to be int, but string usually works.
 
             if (errors.length > 0) console.error('   Validation Errors:', errors);
