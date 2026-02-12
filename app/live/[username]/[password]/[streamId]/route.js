@@ -239,7 +239,30 @@ export async function GET(request, context) {
         // -----------------------------
 
 
+
+        // --- Stream Mode Check ---
+        let streamMode = 'proxy';
+        try {
+            const { data: modeData } = await supabase
+                .from('settings')
+                .select('value')
+                .eq('key', 'stream_mode')
+                .single();
+            if (modeData?.value) streamMode = modeData.value;
+        } catch (e) {
+            console.error('Error fetching stream_mode:', e);
+        }
+        console.log('Stream Mode:', streamMode);
+
         console.log('Fetching source URL:', targetUrl);
+
+        // If Direct/Redirect mode, we redirect user to source
+        // This handles cases where players construct the /live/ URL manually
+        if (streamMode === 'direct' || streamMode === 'redirect') {
+            console.log('Redirecting to direct source:', targetUrl);
+            // We still logged the active stream above, which is good.
+            return NextResponse.redirect(targetUrl, { status: 307 }); // 307 preserves method, though usually GET
+        }
 
         // 4. PROXY MODE: Fetch and stream back to client
         // This hides the source URL and handles headers server-side.
