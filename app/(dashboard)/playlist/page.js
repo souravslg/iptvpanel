@@ -459,55 +459,57 @@ export default function PlaylistPage() {
 
                     {/* Table */}
                     <div className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
-                        <table className="min-w-full divide-y divide-slate-700">
-                            <thead className="bg-slate-900">
-                                <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Name</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Group</th>
-                                    <th className="px-6 py-3 text-right text-xs font-medium text-slate-400 uppercase tracking-wider">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-slate-700 bg-slate-800">
-                                {sample
-                                    .filter(ch => selectedCategory === "All" || ch.category === selectedCategory)
-                                    .filter(ch => ch.name.toLowerCase().includes(searchTerm.toLowerCase()))
-                                    .filter(ch => {
-                                        if (statusFilter === 'enabled') return ch.enabled !== false;
-                                        if (statusFilter === 'disabled') return ch.enabled === false;
-                                        return true; // 'all'
-                                    })
-                                    .map(ch => (
-                                        <tr key={ch.id} className={`hover:bg-slate-700/50 ${ch.enabled === false ? 'opacity-50' : ''}`}>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="flex items-center">
-                                                    {ch.logo && <img src={ch.logo} className="h-8 w-8 rounded mr-3 object-cover bg-slate-900" alt="" onError={e => e.target.style.display = 'none'} />}
-                                                    <div className={`text-sm font-medium text-white ${ch.enabled === false ? 'line-through' : ''}`}>{ch.name}</div>
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <span className="px-2 py-1 text-xs font-semibold rounded-full bg-slate-700 text-slate-300">
-                                                    {ch.category}
-                                                </span>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                <div className="flex justify-end gap-2">
-                                                    <button
-                                                        onClick={() => toggleChannelStatus(ch)}
-                                                        disabled={toggling === ch.id}
-                                                        className={`${ch.enabled === false ? 'text-slate-500 hover:text-slate-400' : 'text-green-400 hover:text-green-300'}`}
-                                                        title={ch.enabled === false ? 'Enable channel' : 'Disable channel'}
-                                                    >
-                                                        <Power size={16} />
-                                                    </button>
-                                                    <button onClick={() => router.push(`/player?id=${ch.id}`)} className="text-blue-400 hover:text-blue-300"><Play size={16} /></button>
-                                                    <button onClick={() => startEditing(ch)} className="text-slate-400 hover:text-white"><Edit size={16} /></button>
-                                                    <button onClick={() => deleteChannel(ch)} className="text-red-400 hover:text-red-300"><Trash2 size={16} /></button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))}
-                            </tbody>
-                        </table>
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full divide-y divide-slate-700">
+                                <thead className="bg-slate-900">
+                                    <tr>
+                                        <th className="px-4 md:px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Name</th>
+                                        <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Group</th>
+                                        <th className="px-4 md:px-6 py-3 text-right text-xs font-medium text-slate-400 uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-slate-700 bg-slate-800">
+                                    {sample
+                                        .filter(ch => selectedCategory === "All" || ch.category === selectedCategory)
+                                        .filter(ch => ch.name.toLowerCase().includes(searchTerm.toLowerCase()))
+                                        .filter(ch => {
+                                            if (statusFilter === 'enabled') return ch.enabled !== false;
+                                            if (statusFilter === 'disabled') return ch.enabled === false;
+                                            return true; // 'all'
+                                        })
+                                        .map(ch => (
+                                            <tr key={ch.id} className={`hover:bg-slate-700/50 ${ch.enabled === false ? 'opacity-50' : ''}`}>
+                                                <td className="px-4 md:px-6 py-4 whitespace-nowrap">
+                                                    <div className="flex items-center">
+                                                        {ch.logo && <img src={ch.logo} className="h-8 w-8 rounded mr-3 object-cover bg-slate-900" alt="" onError={e => e.target.style.display = 'none'} />}
+                                                        <div className={`text-sm font-medium text-white max-w-[150px] md:max-w-none truncate ${ch.enabled === false ? 'line-through' : ''}`}>{ch.name}</div>
+                                                    </div>
+                                                </td>
+                                                <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap">
+                                                    <span className="px-2 py-1 text-xs font-semibold rounded-full bg-slate-700 text-slate-300">
+                                                        {ch.category}
+                                                    </span>
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                    <div className="flex justify-end gap-2">
+                                                        <button
+                                                            onClick={() => toggleChannelStatus(ch)}
+                                                            disabled={toggling === ch.id}
+                                                            className={`${ch.enabled === false ? 'text-slate-500 hover:text-slate-400' : 'text-green-400 hover:text-green-300'}`}
+                                                            title={ch.enabled === false ? 'Enable channel' : 'Disable channel'}
+                                                        >
+                                                            <Power size={16} />
+                                                        </button>
+                                                        <button onClick={() => router.push(`/player?id=${ch.id}`)} className="text-blue-400 hover:text-blue-300"><Play size={16} /></button>
+                                                        <button onClick={() => startEditing(ch)} className="text-slate-400 hover:text-white"><Edit size={16} /></button>
+                                                        <button onClick={() => deleteChannel(ch)} className="text-red-400 hover:text-red-300"><Trash2 size={16} /></button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                </tbody>
+                            </table>
+                        </div>
                         {sample.length === 0 && <div className="p-8 text-center text-slate-500">No channels found</div>}
                     </div>
                 </>
