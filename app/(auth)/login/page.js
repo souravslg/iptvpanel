@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Mail, Lock, Box } from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
 
 export default function LoginPage() {
-    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -17,10 +17,11 @@ export default function LoginPage() {
         setLoading(true);
 
         try {
+            // Using 'email' field for username to match API expectation if needed, or adjust API
             const res = await fetch('/api/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ email: username, password }),
             });
 
             const data = await res.json();
@@ -39,104 +40,93 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="flex min-h-screen items-center justify-center p-6 bg-[radial-gradient(circle_at_top_left,var(--primary-glow),transparent_50%),radial-gradient(circle_at_bottom_right,rgba(99,102,241,0.05),transparent_50%)]">
-            <div className="w-full max-w-[480px] animate-slide-up">
-                <div className="glass-panel p-10 md:p-12 relative overflow-hidden">
-                    {/* Decorative element */}
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl" />
+        <div className="min-h-screen flex w-full bg-[#1a1b1e]">
+            {/* Left Side - Image Placeholder */}
+            <div className="hidden lg:flex w-1/2 relative bg-black items-center justify-center overflow-hidden">
+                <div className="absolute inset-0 bg-[url('https://img.freepik.com/free-photo/sci-fi-metal-door-texture-background-3d-rendering_118047-9774.jpg')] bg-cover bg-center opacity-60"></div>
+                {/* Fallback/Overlay if image fails or to darken */}
+                <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
 
-                    {/* Branding */}
-                    <div className="flex flex-col items-center text-center mb-12">
-                        <div className="w-16 h-16 bg-grad-primary rounded-[1.25rem] flex items-center justify-center mb-6 shadow-2xl shadow-primary/20">
-                            <Box size={32} className="text-white" strokeWidth={2.5} />
+                {/* Optional: CSS Sci-Fi Door Shape if image missing */}
+                <div className="relative z-10 p-10">
+                    <div className="w-64 h-64 border-4 border-blue-500/30 rounded-full flex items-center justify-center animate-pulse">
+                        <div className="w-48 h-48 border-4 border-blue-500/50 rounded-full"></div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Right Side - Login Form */}
+            <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-[#232429]">
+                <div className="w-full max-w-md space-y-8">
+                    {/* Logo Section */}
+                    <div className="flex flex-col items-center justify-center text-center">
+                        <div className="w-20 h-20 mb-6 relative">
+                            {/* X Logo Construction */}
+                            <svg viewBox="0 0 100 100" className="w-full h-full text-white" fill="currentColor">
+                                <path d="M20,20 L40,20 L80,80 L60,80 Z" />
+                                <path d="M60,20 L80,20 L40,80 L20,80 Z" />
+                            </svg>
                         </div>
-                        <h1 className="text-4xl font-bold font-outfit tracking-tighter text-white mb-2">
-                            SRV <span className="text-primary">CORE</span>
-                        </h1>
-                        <p className="text-muted-foreground font-medium">Elevate your streaming ecosystem.</p>
+                        <h2 className="text-2xl font-light text-white tracking-wide">Admin Panel</h2>
+                        <p className="mt-2 text-sm text-gray-400">Login to access your admin dashboard</p>
                     </div>
 
                     {/* Error Message */}
                     {error && (
-                        <div className="mb-8 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-200 text-sm flex items-center gap-3 animate-pulse">
-                            <div className="w-2 h-2 rounded-full bg-red-500" />
+                        <div className="p-4 bg-red-500/10 border-l-4 border-red-500 text-red-200 text-sm">
                             {error}
                         </div>
                     )}
 
-                    {/* Login Form */}
-                    <form onSubmit={handleSubmit} className="space-y-8">
-                        <div className="space-y-6">
-                            {/* Email Field */}
-                            <div className="space-y-2">
-                                <label className="text-[10px] uppercase font-black text-muted-foreground tracking-[0.2em] ml-1">
-                                    Identity Profile
-                                </label>
-                                <div className="relative group">
-                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-muted-foreground group-focus-within:text-primary transition-colors">
-                                        <Mail size={18} />
-                                    </div>
-                                    <input
-                                        type="email"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        className="w-full pl-12 pr-4 bg-black/20 border-white/5 focus:bg-black/40 focus:border-primary/50"
-                                        placeholder="Enter administrator email"
-                                        required
-                                        autoComplete="email"
-                                        suppressHydrationWarning
-                                    />
-                                </div>
+                    {/* Form */}
+                    <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+                        <div className="space-y-5">
+                            <div>
+                                <input
+                                    type="text"
+                                    required
+                                    value={username}
+                                    onChange={(e) => setUsername(e.target.value)}
+                                    className="appearance-none rounded-md relative block w-full px-4 py-3 bg-[#2b2c31] border border-[#36373c] placeholder-gray-500 text-white focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500 focus:z-10 sm:text-sm transition-colors"
+                                    placeholder="Username"
+                                    autoComplete="username"
+                                    suppressHydrationWarning
+                                />
                             </div>
-
-                            {/* Password Field */}
-                            <div className="space-y-2">
-                                <label className="text-[10px] uppercase font-black text-muted-foreground tracking-[0.2em] ml-1">
-                                    Security Protocol
-                                </label>
-                                <div className="relative group">
-                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-muted-foreground group-focus-within:text-primary transition-colors">
-                                        <Lock size={18} />
-                                    </div>
-                                    <input
-                                        type="password"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        className="w-full pl-12 pr-4 bg-black/20 border-white/5 focus:bg-black/40 focus:border-primary/50"
-                                        placeholder="Enter access key"
-                                        required
-                                        autoComplete="current-password"
-                                        suppressHydrationWarning
-                                    />
-                                </div>
+                            <div>
+                                <input
+                                    type="password"
+                                    required
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    className="appearance-none rounded-md relative block w-full px-4 py-3 bg-[#2b2c31] border border-[#36373c] placeholder-gray-500 text-white focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500 focus:z-10 sm:text-sm transition-colors"
+                                    placeholder="Password"
+                                    autoComplete="current-password"
+                                    suppressHydrationWarning
+                                />
                             </div>
                         </div>
 
-                        {/* Submit Button */}
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="btn-primary w-full py-4 text-sm font-bold tracking-widest uppercase flex items-center justify-center gap-3 group"
-                        >
-                            {loading ? (
-                                <>
-                                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                    <span>Syncing...</span>
-                                </>
-                            ) : (
-                                <>
-                                    <span>Initialize Portal</span>
-                                    <div className="w-1.5 h-1.5 rounded-full bg-white opacity-40 group-hover:scale-150 transition-all" />
-                                </>
-                            )}
-                        </button>
-                    </form>
+                        {/* Click to Verify Widget Mockup */}
+                        <div className="flex items-center justify-between p-3 bg-[#2b2c31] rounded border border-[#36373c] cursor-pointer hover:bg-[#323338] transition-colors group">
+                            <div className="flex items-center space-x-3">
+                                <div className="w-6 h-6 rounded-sm border-2 border-gray-500 group-hover:border-gray-400"></div>
+                                <span className="text-sm text-gray-300 group-hover:text-white">Click to verify</span>
+                            </div>
+                            <ShieldCheck className="w-5 h-5 text-gray-500" />
+                        </div>
 
-                    <div className="mt-12 text-center">
-                        <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.3em]">
-                            Enterprise Grade Security • 2026 SRV CORE
-                        </p>
-                    </div>
+                        <div>
+                            <button
+                                type="submit"
+                                disabled={loading}
+                                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-bold rounded hover:rounded-md text-white bg-[#f97316] hover:bg-[#ea580c] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#f97316] disabled:opacity-50 disabled:cursor-not-allowed transition-all uppercase tracking-wider"
+                            >
+                                {loading ? 'Signing in...' : 'Sign In'}
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
