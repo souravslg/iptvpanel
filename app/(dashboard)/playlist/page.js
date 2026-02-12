@@ -19,6 +19,7 @@ export default function PlaylistPage() {
     // Filter State
     const [selectedCategory, setSelectedCategory] = useState("All");
     const [searchTerm, setSearchTerm] = useState('');
+    const [statusFilter, setStatusFilter] = useState('all'); // 'all', 'enabled', 'disabled'
 
     // Edit State
     const [editingChannel, setEditingChannel] = useState(null);
