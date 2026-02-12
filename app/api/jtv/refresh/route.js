@@ -8,7 +8,19 @@ import { parseM3U } from '@/lib/m3u_v2';
 
 export async function POST() {
     try {
-        const { content, metadata } = await fetchJTVPlaylist();
+        // 0. Get URL from settings
+        let targetUrl = null;
+        const { data: urlSetting } = await supabase
+            .from('settings')
+            .select('value')
+            .eq('key', 'jtv_playlist_url')
+            .single();
+
+        if (urlSetting?.value) {
+            targetUrl = urlSetting.value;
+        }
+
+        const { content, metadata } = await fetchJTVPlaylist(targetUrl);
 
         // 1. Store M3U Content
         const { error: contentError } = await supabase
