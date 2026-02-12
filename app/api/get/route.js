@@ -177,16 +177,19 @@ export async function GET(request) {
             m3u += `#EXTINF:-1 tvg-id="${tvgId}" tvg-name="${tvgName}" tvg-logo="${tvgLogo}" group-title="${groupTitle}",${tvgName}\n`;
 
             // 4. Final Stream URL (Must be immediately after EXTINF)
-            // USE PROXY: Enforces real-time user status checks (Active/Suspended/Expired)
-            // This prevents expired users from watching even if they have old playlist URLs
-            let extension = 'ts';
-            if (stream.type === 'movie') {
-                extension = 'mp4';
-            }
-            // Use stream_id (if available) or id for the proxy path
-            const sId = stream.stream_id || stream.id;
+            // Use DIRECT stream URL from database
+            let finalUrl = stream.url || '';
 
-            let finalUrl = `${protocol}://${host}/live/${username}/${password}/${sId}.${extension}`;
+            // Fallback to proxy URL if no direct URL is available
+            if (!finalUrl) {
+                console.warn(`Stream ${stream.id} has no URL, using proxy fallback`);
+                let extension = 'ts';
+                if (stream.type === 'movie') {
+                    extension = 'mp4';
+                }
+                const sId = stream.stream_id || stream.id;
+                finalUrl = `${protocol}://${host}/live/${username}/${password}/${sId}.${extension}`;
+            }
 
             m3u += `${finalUrl}\n`;
         });
