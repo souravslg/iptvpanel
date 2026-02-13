@@ -62,24 +62,7 @@ for (let i = 0; i < lines.length; i++) {
 
     // Check if it's a URL line
     if (line && !line.startsWith('#')) {
-        let url = line;
-
-        // 1. Handle DRM Params (Standard URL Query Params)
-        // usage: url.mpd?drmScheme=clearkey&drmLicense=...
-        const queryParams = [];
-        if (pendingDrm) {
-            queryParams.push(`drmScheme=clearkey`);
-            queryParams.push(`drmLicense=${pendingDrm.keyId}:${pendingDrm.key}`);
-            pendingDrm = null;
-        }
-
-        if (queryParams.length > 0) {
-            const separator = url.includes('?') ? '&' : '?';
-            url = url + separator + queryParams.join('&');
-        }
-
-        // 2. Handle Headers (Pipe Separator)
-        // usage: url.mpd?params|Cookie=...&User-Agent=...
+        let url = line.split('|')[0]; // Strip existing pipe params if any to avoid duplication
 
         // Smart encode function: Encodes spaces and special chars but keeps structure chars like = / : ,
         const smartEncode = (str) => {
@@ -92,22 +75,29 @@ for (let i = 0; i < lines.length; i++) {
                 .replace(/%7E/g, '~'); // Keep ~ (common in tokens)
         };
 
-        const headerParams = [];
+        const params = [];
+
+        // 1. DRM Params (TiviMate often expects these in the | block if they are player-specific)
+        if (pendingDrm) {
+            params.push(`drmScheme=clearkey`);
+            params.push(`drmLicense=${pendingDrm.keyId}:${pendingDrm.key}`);
+            pendingDrm = null;
+        }
+
+        // 2. HTTP Headers
         if (pendingCookie) {
             // Decode first to ensure raw assumption, then smart encode
-            headerParams.push(`Cookie=${smartEncode(decodeURIComponent(pendingCookie))}`);
+            params.push(`Cookie=${smartEncode(decodeURIComponent(pendingCookie))}`);
             pendingCookie = null;
         }
         if (pendingUserAgent) {
-            headerParams.push(`User-Agent=${smartEncode(decodeURIComponent(pendingUserAgent))}`);
+            params.push(`User-Agent=${smartEncode(decodeURIComponent(pendingUserAgent))}`);
             pendingUserAgent = null;
         }
 
-        if (headerParams.length > 0) {
-            // Check if there is already a pipe
-            // If yes, we append with &, if no, we start with |
-            const separator = url.includes('|') ? '&' : '|';
-            url = url + separator + headerParams.join('&');
+        // Append all parameters after a single pipe '|'
+        if (params.length > 0) {
+            url = url + '|' + params.join('&');
         }
 
         fixedLines.push(url);
