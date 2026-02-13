@@ -62,17 +62,12 @@ for (let i = 0; i < lines.length; i++) {
 
     // Check if it's a URL line
     if (line && !line.startsWith('#')) {
-        let url = line;
+        let url = line.split('|')[0]; // Strip existing pipe
 
-        // Extract existing params from the URL if present
+        // Extract existing params from the URL if present (to handle re-runs or pre-existing pipes)
         let existingParams = {};
-        if (url.includes('|')) {
-            const parts = url.split('|');
-            url = parts[0]; // Base URL
-            const paramStr = parts[1];
-
-            // Parse key=value pairs from the pipe block
-            // They might be separated by & (standard) or just appended
+        if (line.includes('|')) {
+            const paramStr = line.split('|')[1];
             const pairs = paramStr.split('&');
             pairs.forEach(pair => {
                 const [key, val] = pair.split('=');
@@ -82,67 +77,77 @@ for (let i = 0; i < lines.length; i++) {
             });
         }
 
-        // Smart encode function: Encodes spaces and special chars but keeps structure chars like = / : ,
-        // Also must preserve * (for cookies) and () (for UA) to avoid signature mismatch
+        // Smart encode function V2 (Preserve * and ())
         const smartEncode = (str) => {
             return encodeURIComponent(str)
-                .replace(/%3D/g, '=')  // Keep =
-                .replace(/%2F/g, '/')  // Keep /
-                .replace(/%3A/g, ':')  // Keep :
-                .replace(/%2C/g, ',')  // Keep ,
-                .replace(/%3B/g, ';')  // Keep ;
-                .replace(/%7E/g, '~')  // Keep ~
-                .replace(/%2A/g, '*')  // Keep * (Vital for Cookie acl=/*)
-                .replace(/%28/g, '(')  // Keep ( (Vital for UA)
-                .replace(/%29/g, ')'); // Keep ) (Vital for UA)
+                .replace(/%3D/g, '=')
+                .replace(/%2F/g, '/')
+                .replace(/%3A/g, ':')
+                .replace(/%2C/g, ',')
+                .replace(/%3B/g, ';')
+                .replace(/%7E/g, '~')
+                .replace(/%2A/g, '*')
+                .replace(/%28/g, '(')
+                .replace(/%29/g, ')');
         };
 
-        const params = [];
+        const queryParams = [];
+        const headerParams = [];
 
-        // 1. DRM Params (TiviMate often expects these in the | block if they are player-specific)
+        // 1. DRM Params -> URL Query (?/&)
         if (pendingDrm) {
-            params.push(`drmScheme=clearkey`);
-            params.push(`drmLicense=${pendingDrm.keyId}:${pendingDrm.key}`);
+            queryParams.push(`drmScheme=clearkey`);
+            queryParams.push(`drmLicense=${pendingDrm.keyId}:${pendingDrm.key}`);
             pendingDrm = null;
         }
 
-        // 2. HTTP Headers & Other Params
-        // Prioritize pending headers (from tags), fallback to existing URL params
+        // 2. Headers -> Pipe (|)
 
         // Cookie
         let cookieVal = pendingCookie || existingParams['Cookie'];
         if (cookieVal) {
-            params.push(`Cookie=${smartEncode(cookieVal)}`);
+            headerParams.push(`Cookie=${smartEncode(cookieVal)}`);
             pendingCookie = null;
         }
 
-        // User-Agent
-        let uaVal = pendingUserAgent || existingParams['User-Agent'] || existingParams['User-agent'];
+        // User-agent (Match Hotstar casing)
+        let uaVal = pendingUserAgent || existingParams['User-Agent'] || existingParams['User-agent'] || existingParams['user-agent'];
         if (uaVal) {
-            params.push(`User-Agent=${smartEncode(uaVal)}`);
+            headerParams.push(`User-agent=${smartEncode(uaVal)}`);
             pendingUserAgent = null;
         }
 
-        // Preserve other existing params (like Referer, Origin) if found
-        Object.keys(existingParams).forEach(key => {
-            if (key !== 'Cookie' && key !== 'User-Agent' && key !== 'User-agent' && key !== 'drmScheme' && key !== 'drmLicense') {
-                params.push(`${key}=${smartEncode(existingParams[key])}`);
-            }
-        });
-
-        // 3. Inject Missing Defaults for JioTV
+        // Inject Missing Defaults for JioTV (Referer/Origin)
         if (url.includes('jio.com') || url.includes('jiotv')) {
-            if (!existingParams['Referer']) {
-                params.push(`Referer=${smartEncode('https://jiotv.com/')}`);
+            let hasReferer = existingParams['Referer'] || existingParams['referer'];
+            if (!hasReferer) {
+                headerParams.push(`Referer=${smartEncode('https://jiotv.com/')}`);
             }
-            if (!existingParams['Origin']) {
-                params.push(`Origin=${smartEncode('https://jiotv.com')}`);
+
+            let hasOrigin = existingParams['Origin'] || existingParams['origin'];
+            if (!hasOrigin) {
+                headerParams.push(`Origin=${smartEncode('https://jiotv.com')}`);
             }
         }
 
-        // Append all parameters after a single pipe '|'
-        if (params.length > 0) {
-            url = url + '|' + params.join('&');
+        // Preserve other existing params (map to headers or query?)
+        // Assume existing pipe params were headers
+        Object.keys(existingParams).forEach(key => {
+            if (!['Cookie', 'User-Agent', 'User-agent', 'user-agent', 'Referer', 'Origin', 'drmScheme', 'drmLicense'].includes(key)) {
+                headerParams.push(`${key}=${smartEncode(existingParams[key])}`);
+            }
+        });
+
+        // Construct Final URL
+        // Append Query Params
+        if (queryParams.length > 0) {
+            const separator = url.includes('?') ? '&' : '?';
+            url = url + separator + queryParams.join('&');
+        }
+
+        // Append Header Params
+        if (headerParams.length > 0) {
+            url = url + '|' + headerParams.join('&');
         }
 
         fixedLines.push(url);
