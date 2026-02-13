@@ -67,15 +67,13 @@ for (let i = 0; i < lines.length; i++) {
 
         // Pending Cookie
         if (pendingCookie) {
-            // Decode first to ensure we don't double encode if source was already encoded
-            // Then encode safely
-            params.push(`Cookie=${encodeURIComponent(decodeURIComponent(pendingCookie))}`);
+            params.push(`Cookie=${decodeURIComponent(pendingCookie)}`);
             pendingCookie = null;
         }
 
         // Pending User-Agent
         if (pendingUserAgent) {
-            params.push(`User-Agent=${encodeURIComponent(decodeURIComponent(pendingUserAgent))}`);
+            params.push(`User-Agent=${decodeURIComponent(pendingUserAgent)}`);
             pendingUserAgent = null;
         }
 
@@ -88,13 +86,6 @@ for (let i = 0; i < lines.length; i++) {
 
         // Append parameters to URL
         if (params.length > 0) {
-            // Check if URL already has query params (contains ?)
-            // If it ends with '?', logic might need care, but generally:
-            // URL format in TiviMate usually supports headers appended with |
-            // BUT for drmScheme/drmLicense, they are often expected as standard query params OR | params.
-            // Based on the Hotstar example: url?|Cookie...&drmLicense...
-            // We will follow the | separator logic.
-
             const separator = url.includes('|') ? '&' : '|';
             url = url + separator + params.join('&');
         }
