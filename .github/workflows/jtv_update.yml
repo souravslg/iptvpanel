@@ -1,37 +1,92 @@
-name: Update JTV Playlist
+name: Merge IPTV
 
 on:
+  workflow_dispatch:
   schedule:
-    - cron: '*/30 * * * *' # Run every 30 minutes
-  workflow_dispatch: # Allow manual trigger
+    - cron: "*/10 * * * *"
 
 permissions:
   contents: write
 
 jobs:
-  scrape-and-update:
+  build:
     runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
 
-      - name: Setup Node.js
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: 18
 
-      - name: Install Dependencies
+      # -------- ZTV generate --------
+      - name: Generate ztv.m3u
         run: |
-          npm install playwright
-          npx playwright install chromium --with-deps
+          node <<'EOF'
+          const fs = require("fs");
+          const https = require("https");
 
-      - name: Run Scraper
-        run: node scripts/scrape_jtv.js
+          https.get("https://ztv.pfy.workers.dev", res => {
+            let data = "";
+            res.on("data", c => data += c);
+            res.on("end", () => {
+              let json;
+              try { json = JSON.parse(data); }
+              catch { process.exit(1); }
 
-      - name: Commit and Push if changed
+              const list = Array.isArray(json)
+                ? json
+                : json.channels || json.data || json.list || Object.values(json);
+
+              let out = "#EXTM3U\n";
+
+              for (const ch of list) {
+                const name = ch.name || "Unknown";
+                const logo = ch.logo || "";
+                const url  = ch.link || ch.url || ch.mpd || "";
+                const lic  = ch.drmLicense || "";
+                const cookie = ch.cookie || "";
+
+                if (!url) continue;
+
+                out += `#EXTINF:-1${logo ? ` tvg-logo="${logo}"` : ""},${name}\n`;
+
+                if (lic.includes(":")) {
+                  out += "#KODIPROP:inputstream.adaptive.license_type=clearkey\n";
+                  out += `#KODIPROP:inputstream.adaptive.license_key=${lic}\n`;
+                }
+
+                if (cookie) {
+                  out += `#EXTHTTP:{"cookie":"${cookie}"}\n`;
+                }
+
+                out += url + "\n";
+              }
+
+              fs.writeFileSync("ztv.m3u", out);
+            });
+          }).on("error", () => process.exit(1));
+          EOF
+
+      # -------- Download Sony playlist --------
+      - name: Download sony.m3u
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add jtv.m3u
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Update jtv.m3u playlist" && git push)
+          curl -L "https://raw.githubusercontent.com/cloudplay97/m3u/refs/heads/main/sony.m3u" -o sony.m3u
+
+      # -------- Merge both --------
+      - name: Merge playlists
+        run: |
+          echo "#EXTM3U" > merged.m3u
+          tail -n +2 ztv.m3u >> merged.m3u
+          tail -n +2 sony.m3u >> merged.m3u
+
+      # -------- Commit --------
+      - name: Commit merged.m3u
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add merged.m3u
+          git diff --cached --quiet && exit 0
+          git commit -m "Auto update merged IPTV"
+          git push
