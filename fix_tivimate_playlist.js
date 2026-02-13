@@ -63,31 +63,38 @@ for (let i = 0; i < lines.length; i++) {
     // Check if it's a URL line
     if (line && !line.startsWith('#')) {
         let url = line;
-        const params = [];
 
-        // Pending Cookie
-        if (pendingCookie) {
-            params.push(`Cookie=${decodeURIComponent(pendingCookie)}`);
-            pendingCookie = null;
-        }
-
-        // Pending User-Agent
-        if (pendingUserAgent) {
-            params.push(`User-Agent=${decodeURIComponent(pendingUserAgent)}`);
-            pendingUserAgent = null;
-        }
-
-        // Pending DRM (ClearKey)
+        // 1. Handle DRM Params (Standard URL Query Params)
+        // usage: url.mpd?drmScheme=clearkey&drmLicense=...
+        const queryParams = [];
         if (pendingDrm) {
-            params.push(`drmScheme=clearkey`);
-            params.push(`drmLicense=${pendingDrm.keyId}:${pendingDrm.key}`);
+            queryParams.push(`drmScheme=clearkey`);
+            queryParams.push(`drmLicense=${pendingDrm.keyId}:${pendingDrm.key}`);
             pendingDrm = null;
         }
 
-        // Append parameters to URL
-        if (params.length > 0) {
+        if (queryParams.length > 0) {
+            const separator = url.includes('?') ? '&' : '?';
+            url = url + separator + queryParams.join('&');
+        }
+
+        // 2. Handle Headers (Pipe Separator)
+        // usage: url.mpd?params|Cookie=...&User-Agent=...
+        const headerParams = [];
+        if (pendingCookie) {
+            headerParams.push(`Cookie=${decodeURIComponent(pendingCookie)}`);
+            pendingCookie = null;
+        }
+        if (pendingUserAgent) {
+            headerParams.push(`User-Agent=${decodeURIComponent(pendingUserAgent)}`);
+            pendingUserAgent = null;
+        }
+
+        if (headerParams.length > 0) {
+            // Check if there is already a pipe
+            // If yes, we append with &, if no, we start with |
             const separator = url.includes('|') ? '&' : '|';
-            url = url + separator + params.join('&');
+            url = url + separator + headerParams.join('&');
         }
 
         fixedLines.push(url);
