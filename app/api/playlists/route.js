@@ -99,7 +99,7 @@ export async function DELETE(request) {
 // PUT - Update a playlist
 export async function PUT(request) {
     try {
-        const { id, is_active } = await request.json();
+        const { id, is_active, name, description, source_url } = await request.json();
 
         if (!id) {
             return NextResponse.json({ error: 'Playlist ID is required' }, { status: 400 });
@@ -111,6 +111,21 @@ export async function PUT(request) {
 
         if (typeof is_active !== 'undefined') {
             updates.is_active = is_active;
+        }
+
+        if (name !== undefined) {
+            if (!name.trim()) {
+                return NextResponse.json({ error: 'Playlist name cannot be empty' }, { status: 400 });
+            }
+            updates.name = name.trim();
+        }
+
+        if (description !== undefined) {
+            updates.description = description?.trim() || null;
+        }
+
+        if (source_url !== undefined) {
+            updates.source_url = source_url?.trim() || null;
         }
 
         const { data, error } = await supabase

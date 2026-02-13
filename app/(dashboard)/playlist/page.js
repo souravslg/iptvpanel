@@ -75,6 +75,11 @@ export default function PlaylistPage() {
     const [switchingPlaylist, setSwitchingPlaylist] = useState(null);
     const [deletingPlaylist, setDeletingPlaylist] = useState(null);
     const [refreshingPlaylist, setRefreshingPlaylist] = useState(null);
+    const [editingPlaylist, setEditingPlaylist] = useState(null);
+    const [editPlaylistName, setEditPlaylistName] = useState('');
+    const [editPlaylistDesc, setEditPlaylistDesc] = useState('');
+    const [editPlaylistUrl, setEditPlaylistUrl] = useState('');
+    const [updatingPlaylist, setUpdatingPlaylist] = useState(false);
 
     const fileInputRef = useRef(null);
 
@@ -383,6 +388,161 @@ export default function PlaylistPage() {
         }
     };
 
+    const createPlaylist = async () => {
+        if (!newPlaylistName.trim()) {
+            alert('Playlist name is required');
+            return;
+        }
+
+        setCreatingPlaylist(true);
+        try {
+            const res = await fetch('/api/playlists', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: newPlaylistName,
+                    description: newPlaylistDesc,
+                    sourceUrl: newPlaylistUrl
+                })
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.error || 'Failed to create playlist');
+            }
+
+            // Add new playlist to the list
+            setPlaylists(prev => [data.playlist, ...prev]);
+
+            // If source URL provided, automatically refresh to import channels
+            if (newPlaylistUrl.trim()) {
+                const refreshRes = await fetch('/api/playlists/refresh', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: data.playlist.id })
+                });
+
+                const refreshData = await refreshRes.json();
+
+                if (refreshRes.ok) {
+                    alert(`Playlist created with ${refreshData.count} channels!`);
+                    // Update the playlist in state with new count
+                    setPlaylists(prev => prev.map(p =>
+                        p.id === data.playlist.id ? { ...p, total_channels: refreshData.count } : p
+                    ));
+                } else {
+                    alert(`Playlist created but failed to import: ${refreshData.error}`);
+                }
+            } else {
+                alert('Playlist created successfully!');
+            }
+
+            // Reset form and close modal
+            setNewPlaylistName('');
+            setNewPlaylistDesc('');
+            setNewPlaylistUrl('');
+            setShowCreatePlaylist(false);
+
+            // Refresh playlist data if this was activated
+            fetchPlaylists();
+
+        } catch (err) {
+            console.error('Error creating playlist:', err);
+            alert(err.message);
+        } finally {
+            setCreatingPlaylist(false);
+        }
+    };
+
+    const refreshPlaylist = async (playlist) => {
+        if (!playlist.source_url) {
+            alert('This playlist has no source URL to refresh from');
+            return;
+        }
+
+        setRefreshingPlaylist(playlist.id);
+        try {
+            const res = await fetch('/api/playlists/refresh', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: playlist.id })
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.error || 'Failed to refresh playlist');
+            }
+
+            // Update the playlist in state with new count
+            setPlaylists(prev => prev.map(p =>
+                p.id === playlist.id ? { ...p, total_channels: data.count } : p
+            ));
+
+            alert(data.message || `Refreshed ${data.count} channels`);
+
+            // If this is an active playlist, refresh the main view
+            if (playlist.is_active) {
+                fetchPlaylistData();
+            }
+
+        } catch (err) {
+            console.error('Error refreshing playlist:', err);
+            alert(err.message);
+        } finally {
+            setRefreshingPlaylist(null);
+        }
+    };
+
+    const startEditingPlaylist = (playlist) => {
+        setEditingPlaylist(playlist);
+        setEditPlaylistName(playlist.name);
+        setEditPlaylistDesc(playlist.description || '');
+        setEditPlaylistUrl(playlist.source_url || '');
+    };
+
+    const updatePlaylist = async () => {
+        if (!editPlaylistName.trim()) {
+            alert('Playlist name is required');
+            return;
+        }
+
+        setUpdatingPlaylist(true);
+        try {
+            const res = await fetch('/api/playlists', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    id: editingPlaylist.id,
+                    name: editPlaylistName,
+                    description: editPlaylistDesc,
+                    source_url: editPlaylistUrl
+                })
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.error || 'Failed to update playlist');
+            }
+
+            // Update the playlist in state
+            setPlaylists(prev => prev.map(p =>
+                p.id === editingPlaylist.id ? { ...p, name: editPlaylistName, description: editPlaylistDesc, source_url: editPlaylistUrl } : p
+            ));
+
+            setEditingPlaylist(null);
+            alert('Playlist updated successfully!');
+
+        } catch (err) {
+            console.error('Error updating playlist:', err);
+            alert(err.message);
+        } finally {
+            setUpdatingPlaylist(false);
+        }
+    };
+
     // UI Render
     return (
         <div className="p-6 max-w-7xl mx-auto space-y-6">
@@ -619,6 +779,23 @@ export default function PlaylistPage() {
                                         <div className="text-xs text-slate-400">{pl.total_channels} channels</div>
                                     </div>
                                     <div className="flex gap-2">
+                                        <button
+                                            onClick={() => startEditingPlaylist(pl)}
+                                            className="text-xs bg-slate-600 text-white px-3 py-1 rounded hover:bg-slate-500"
+                                            title="Edit playlist"
+                                        >
+                                            <Edit size={14} className="inline" />
+                                        </button>
+                                        {pl.source_url && (
+                                            <button
+                                                onClick={() => refreshPlaylist(pl)}
+                                                disabled={refreshingPlaylist === pl.id}
+                                                className="text-xs bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 disabled:opacity-50"
+                                                title="Refresh from source URL"
+                                            >
+                                                {refreshingPlaylist === pl.id ? 'Refreshing...' : 'Refresh'}
+                                            </button>
+                                        )}
                                         {pl.is_active ? (
                                             <button
                                                 onClick={() => togglePlaylistStatus(pl, false)}
@@ -647,7 +824,104 @@ export default function PlaylistPage() {
                                 </div>
                             ))}
                         </div>
-                        <button className="btn-primary w-full">Create New Playlist</button>
+                        <button onClick={() => setShowCreatePlaylist(true)} className="btn-primary w-full">Create New Playlist</button>
+                    </div>
+                </div>
+            )}
+
+            {/* Edit Playlist Modal */}
+            {editingPlaylist && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+                    <div className="bg-slate-800 rounded-lg shadow-lg max-w-lg w-full p-6 border border-slate-700">
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="text-lg font-bold text-white">Edit Playlist</h3>
+                            <button onClick={() => setEditingPlaylist(null)} className="text-slate-400 hover:text-white"><X size={20} /></button>
+                        </div>
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-slate-400 mb-1">Playlist Name *</label>
+                                <input
+                                    className="form-input w-full bg-slate-900 border-slate-600 rounded p-2 text-white"
+                                    value={editPlaylistName}
+                                    onChange={e => setEditPlaylistName(e.target.value)}
+                                    placeholder="My Playlist"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-slate-400 mb-1">Description</label>
+                                <textarea
+                                    className="form-input w-full bg-slate-900 border-slate-600 rounded p-2 text-white"
+                                    value={editPlaylistDesc}
+                                    onChange={e => setEditPlaylistDesc(e.target.value)}
+                                    placeholder="Optional description"
+                                    rows={3}
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-slate-400 mb-1">Source URL</label>
+                                <input
+                                    className="form-input w-full bg-slate-900 border-slate-600 rounded p-2 text-white"
+                                    value={editPlaylistUrl}
+                                    onChange={e => setEditPlaylistUrl(e.target.value)}
+                                    placeholder="https://example.com/playlist.m3u"
+                                />
+                                <p className="text-xs text-slate-500 mt-1">Change the URL and click Refresh in the playlist list to reload channels</p>
+                            </div>
+                            <div className="flex justify-end gap-3 pt-4">
+                                <button onClick={() => setEditingPlaylist(null)} className="btn-secondary">Cancel</button>
+                                <button onClick={updatePlaylist} disabled={updatingPlaylist} className="btn-primary">
+                                    {updatingPlaylist ? 'Updating...' : 'Update Playlist'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Create Playlist Modal */}
+            {showCreatePlaylist && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+                    <div className="bg-slate-800 rounded-lg shadow-lg max-w-lg w-full p-6 border border-slate-700">
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="text-lg font-bold text-white">Create New Playlist</h3>
+                            <button onClick={() => setShowCreatePlaylist(false)} className="text-slate-400 hover:text-white"><X size={20} /></button>
+                        </div>
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-slate-400 mb-1">Playlist Name *</label>
+                                <input
+                                    className="form-input w-full bg-slate-900 border-slate-600 rounded p-2 text-white"
+                                    value={newPlaylistName}
+                                    onChange={e => setNewPlaylistName(e.target.value)}
+                                    placeholder="My Playlist"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-slate-400 mb-1">Description</label>
+                                <textarea
+                                    className="form-input w-full bg-slate-900 border-slate-600 rounded p-2 text-white"
+                                    value={newPlaylistDesc}
+                                    onChange={e => setNewPlaylistDesc(e.target.value)}
+                                    placeholder="Optional description"
+                                    rows={3}
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-slate-400 mb-1">Source URL (optional)</label>
+                                <input
+                                    className="form-input w-full bg-slate-900 border-slate-600 rounded p-2 text-white"
+                                    value={newPlaylistUrl}
+                                    onChange={e => setNewPlaylistUrl(e.target.value)}
+                                    placeholder="https://example.com/playlist.m3u"
+                                />
+                            </div>
+                            <div className="flex justify-end gap-3 pt-4">
+                                <button onClick={() => setShowCreatePlaylist(false)} className="btn-secondary">Cancel</button>
+                                <button onClick={createPlaylist} disabled={creatingPlaylist} className="btn-primary">
+                                    {creatingPlaylist ? 'Creating...' : 'Create Playlist'}
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             )}
