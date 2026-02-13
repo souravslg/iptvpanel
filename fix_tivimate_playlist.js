@@ -62,7 +62,25 @@ for (let i = 0; i < lines.length; i++) {
 
     // Check if it's a URL line
     if (line && !line.startsWith('#')) {
-        let url = line.split('|')[0]; // Strip existing pipe params if any to avoid duplication
+        let url = line;
+
+        // Extract existing params from the URL if present
+        let existingParams = {};
+        if (url.includes('|')) {
+            const parts = url.split('|');
+            url = parts[0]; // Base URL
+            const paramStr = parts[1];
+
+            // Parse key=value pairs from the pipe block
+            // They might be separated by & (standard) or just appended
+            const pairs = paramStr.split('&');
+            pairs.forEach(pair => {
+                const [key, val] = pair.split('=');
+                if (key && val) {
+                    existingParams[key] = decodeURIComponent(val);
+                }
+            });
+        }
 
         // Smart encode function: Encodes spaces and special chars but keeps structure chars like = / : ,
         const smartEncode = (str) => {
@@ -84,15 +102,38 @@ for (let i = 0; i < lines.length; i++) {
             pendingDrm = null;
         }
 
-        // 2. HTTP Headers
-        if (pendingCookie) {
-            // Decode first to ensure raw assumption, then smart encode
-            params.push(`Cookie=${smartEncode(decodeURIComponent(pendingCookie))}`);
+        // 2. HTTP Headers & Other Params
+        // Prioritize pending headers (from tags), fallback to existing URL params
+
+        // Cookie
+        let cookieVal = pendingCookie || existingParams['Cookie'];
+        if (cookieVal) {
+            params.push(`Cookie=${smartEncode(cookieVal)}`);
             pendingCookie = null;
         }
-        if (pendingUserAgent) {
-            params.push(`User-Agent=${smartEncode(decodeURIComponent(pendingUserAgent))}`);
+
+        // User-Agent
+        let uaVal = pendingUserAgent || existingParams['User-Agent'] || existingParams['User-agent'];
+        if (uaVal) {
+            params.push(`User-Agent=${smartEncode(uaVal)}`);
             pendingUserAgent = null;
+        }
+
+        // Preserve other existing params (like Referer, Origin) if found
+        Object.keys(existingParams).forEach(key => {
+            if (key !== 'Cookie' && key !== 'User-Agent' && key !== 'User-agent' && key !== 'drmScheme' && key !== 'drmLicense') {
+                params.push(`${key}=${smartEncode(existingParams[key])}`);
+            }
+        });
+
+        // 3. Inject Missing Defaults for JioTV
+        if (url.includes('jio.com') || url.includes('jiotv')) {
+            if (!existingParams['Referer']) {
+                params.push(`Referer=${smartEncode('https://jiotv.com/')}`);
+            }
+            if (!existingParams['Origin']) {
+                params.push(`Origin=${smartEncode('https://jiotv.com')}`);
+            }
         }
 
         // Append all parameters after a single pipe '|'
