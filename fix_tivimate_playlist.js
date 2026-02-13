@@ -83,14 +83,18 @@ for (let i = 0; i < lines.length; i++) {
         }
 
         // Smart encode function: Encodes spaces and special chars but keeps structure chars like = / : ,
+        // Also must preserve * (for cookies) and () (for UA) to avoid signature mismatch
         const smartEncode = (str) => {
             return encodeURIComponent(str)
-                .replace(/%3D/g, '=')  // Keep = for key=value
-                .replace(/%2F/g, '/')  // Keep / for paths/UA
-                .replace(/%3A/g, ':')  // Keep : 
+                .replace(/%3D/g, '=')  // Keep =
+                .replace(/%2F/g, '/')  // Keep /
+                .replace(/%3A/g, ':')  // Keep :
                 .replace(/%2C/g, ',')  // Keep ,
                 .replace(/%3B/g, ';')  // Keep ;
-                .replace(/%7E/g, '~'); // Keep ~ (common in tokens)
+                .replace(/%7E/g, '~')  // Keep ~
+                .replace(/%2A/g, '*')  // Keep * (Vital for Cookie acl=/*)
+                .replace(/%28/g, '(')  // Keep ( (Vital for UA)
+                .replace(/%29/g, ')'); // Keep ) (Vital for UA)
         };
 
         const params = [];
