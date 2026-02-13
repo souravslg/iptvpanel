@@ -80,13 +80,26 @@ for (let i = 0; i < lines.length; i++) {
 
         // 2. Handle Headers (Pipe Separator)
         // usage: url.mpd?params|Cookie=...&User-Agent=...
+
+        // Smart encode function: Encodes spaces and special chars but keeps structure chars like = / : ,
+        const smartEncode = (str) => {
+            return encodeURIComponent(str)
+                .replace(/%3D/g, '=')  // Keep = for key=value
+                .replace(/%2F/g, '/')  // Keep / for paths/UA
+                .replace(/%3A/g, ':')  // Keep : 
+                .replace(/%2C/g, ',')  // Keep ,
+                .replace(/%3B/g, ';')  // Keep ;
+                .replace(/%7E/g, '~'); // Keep ~ (common in tokens)
+        };
+
         const headerParams = [];
         if (pendingCookie) {
-            headerParams.push(`Cookie=${decodeURIComponent(pendingCookie)}`);
+            // Decode first to ensure raw assumption, then smart encode
+            headerParams.push(`Cookie=${smartEncode(decodeURIComponent(pendingCookie))}`);
             pendingCookie = null;
         }
         if (pendingUserAgent) {
-            headerParams.push(`User-Agent=${decodeURIComponent(pendingUserAgent)}`);
+            headerParams.push(`User-Agent=${smartEncode(decodeURIComponent(pendingUserAgent))}`);
             pendingUserAgent = null;
         }
 
