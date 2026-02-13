@@ -77,16 +77,16 @@ jobs:
       # -------- Merge both --------
       - name: Merge playlists
         run: |
-          echo "#EXTM3U" > merged.m3u
-          tail -n +2 ztv.m3u >> merged.m3u
-          tail -n +2 sony.m3u >> merged.m3u
+          echo "#EXTM3U" > merged1.m3u
+          tail -n +2 ztv.m3u >> merged1.m3u
+          tail -n +2 sony.m3u >> merged1.m3u
 
       # -------- Commit --------
-      - name: Commit merged.m3u
+      - name: Commit merged1.m3u
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add merged.m3u
+          git add merged1.m3u
           git diff --cached --quiet && exit 0
           git commit -m "Auto update merged IPTV"
           git push
