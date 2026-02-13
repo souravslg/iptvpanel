@@ -1,8 +1,6 @@
 #EXTM3U
 # Created: 2026-02-13T17:12:57.387773 UTC
 
-#EXTINF:-1 tvg-id="2" tvg-name="Sony SAB SD" tvg-language="Hindi" tvg-logo="https://i.ibb.co/svHcHWBz/x.jpg" group-title="SONYLI√" group-logo="https://www.sonypicturesnetworks.com/images/logos/Sony_LIV.png", Sony SAB SD
-https://billatv.netlify.app/.netlify/functions/Opplex?id=221256.m3u8
 #EXTINF:-1 tvg-id="1000009246" tvg-name="SONY HD" group-title="Entertainment" tvg-language="Hindi" tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Sony_HD.png",SONY HD
 https://dishmt.slivcdn.com/hls/live/2011671-b/SETHD/master.m3u8?hdnea=exp=1771007412~acl=/*~id=4980e8eb32cdbdf1fc489579380e878a-1770964200605~hmac=2ecaee8a35c2399139dc74c085419baa719161221087e3d7ba4f4004902befdd
 #EXTINF:-1 tvg-id="1000009248" tvg-name="SAB HD" group-title="Entertainment" tvg-language="Hindi" tvg-logo="https://jiotvimages.cdn.jio.com/dare_images/images/Sony_SAB_HD.png",SAB HD
