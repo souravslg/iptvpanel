@@ -9,11 +9,25 @@ export async function GET(request) {
             return new NextResponse('Missing URL parameter', { status: 400 });
         }
 
+        // Prepare headers
+        const fetchHeaders = {
+            'User-Agent': request.headers.get('user-agent') || 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+        };
+
+        // Allow passing headers via query param (JSON encoded)
+        const headersParam = searchParams.get('headers');
+        if (headersParam) {
+            try {
+                const parsedHeaders = JSON.parse(headersParam);
+                Object.assign(fetchHeaders, parsedHeaders);
+            } catch (e) {
+                console.error('Failed to parse headers param:', e);
+            }
+        }
+
         // Fetch the stream content
         const response = await fetch(url, {
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-            },
+            headers: fetchHeaders,
         });
 
         if (!response.ok) {
@@ -73,6 +87,47 @@ export async function GET(request) {
                 },
             });
         }
+
+        // Rewrite DASH/MPD manifests
+        if (contentType.includes('dash') || contentType.includes('xml') || url.includes('.mpd')) {
+            const decoder = new TextDecoder('utf-8');
+            const text = decoder.decode(data);
+            const baseUrl = new URL(response.url);
+
+            // Simple regex to rewrite http(s) URLs in MPD to point to proxy
+            // We need to verify if the URLs are media segments or other manifests
+            // For safety, we rewrite all http/https URLs found inside attributes or tags
+
+            // Prepare the headers param to propagate
+            let headersQuery = '';
+            if (headersParam) {
+                headersQuery = `&headers=${encodeURIComponent(headersParam)}`;
+            }
+
+            // Regex for http:// or https:// inside quotes or brackets
+            const modifiedText = text.replace(/(https?:\/\/[^"<>\s]+)/g, (match) => {
+                try {
+                    const absoluteUrl = new URL(match, baseUrl).toString();
+                    // Avoid double proxying
+                    if (absoluteUrl.includes('/api/proxy/stream')) return match;
+
+                    return `/api/proxy/stream?url=${encodeURIComponent(absoluteUrl)}${headersQuery}`;
+                } catch (e) {
+                    return match;
+                }
+            });
+
+            return new NextResponse(modifiedText, {
+                status: 200,
+                headers: {
+                    'Content-Type': 'application/dash+xml', // Start enforcing correct mime
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Methods': 'GET, OPTIONS',
+                    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+                },
+            });
+        }
+
 
         // Return binary data for segments/fragments
         return new NextResponse(data, {
