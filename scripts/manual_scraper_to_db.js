@@ -99,7 +99,20 @@ async function manualSync() {
                 const chunk = streams.slice(i, i + chunkSize).map(stream => ({
                     stream_id: stream.id,
                     name: stream.name,
-                    url: stream.url,
+                    url: (() => {
+                        let finalUrl = stream.url;
+                        if (stream.headers && (stream.headers.Cookie || stream.headers.cookie)) {
+                            const cookie = stream.headers.Cookie || stream.headers.cookie;
+                            if (cookie.includes('__hdnea__=')) {
+                                const token = cookie.split('__hdnea__=')[1].split(';')[0];
+                                const separator = finalUrl.includes('?') ? '&' : '?';
+                                if (!finalUrl.includes('__hdnea__=')) {
+                                    finalUrl = `${finalUrl}${separator}__hdnea__=${token}`;
+                                }
+                            }
+                        }
+                        return finalUrl;
+                    })(),
                     logo: stream.logo,
                     category: stream.group,
                     playlist_id: jtvPlaylist.id,
@@ -108,7 +121,8 @@ async function manualSync() {
                     drm_key_id: stream.drmKeyId || null,
                     drm_key: stream.drmKey || null,
                     stream_format: stream.streamFormat || 'hls',
-                    channel_number: stream.channelNumber || null
+                    channel_number: stream.channelNumber || null,
+                    headers: stream.headers ? JSON.stringify(stream.headers) : null
                 }));
 
                 const { error: insertError } = await db
