@@ -113,6 +113,32 @@ async function addJioTvSource() {
                 if (!currentStream.headers) currentStream.headers = {};
                 currentStream.headers['User-Agent'] = line.split('=')[1];
             }
+        } else if (line.startsWith('#KODIPROP:')) {
+            const prop = line.substring(10).trim();
+            if (prop.includes('=')) {
+                const equalsIndex = prop.indexOf('=');
+                const key = prop.substring(0, equalsIndex).trim();
+                const value = prop.substring(equalsIndex + 1).trim();
+
+                if (key === 'inputstream.adaptive.license_type') {
+                    currentStream.drm_scheme = value.toLowerCase();
+                    if (currentStream.drm_scheme === 'org.w3.clearkey') currentStream.drm_scheme = 'clearkey';
+                } else if (key === 'inputstream.adaptive.license_key') {
+                    if (value.startsWith('{')) {
+                        try {
+                            const jwk = JSON.parse(value);
+                            if (jwk.keys && jwk.keys.length > 0) {
+                                const keyObj = jwk.keys[0];
+                                if (keyObj.k && keyObj.kid) {
+                                    currentStream.drm_key = Buffer.from(keyObj.k.replace(/-/g, '+').replace(/_/g, '/'), 'base64').toString('hex');
+                                    currentStream.drm_key_id = Buffer.from(keyObj.kid.replace(/-/g, '+').replace(/_/g, '/'), 'base64').toString('hex');
+                                    currentStream.drm_scheme = 'clearkey';
+                                }
+                            }
+                        } catch (e) { }
+                    }
+                }
+            }
         } else if (!line.startsWith('#')) {
             currentStream.url = line;
             currentStream.playlist_id = playlistId;
@@ -130,6 +156,9 @@ async function addJioTvSource() {
                     logo: currentStream.logo,
                     category: currentStream.category,
                     headers: currentStream.headers || null,
+                    drm_scheme: currentStream.drm_scheme || null,
+                    drm_key_id: currentStream.drm_key_id || null,
+                    drm_key: currentStream.drm_key || null,
                     type: 'live'
                 });
             }
