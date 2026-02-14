@@ -82,6 +82,19 @@ async function handleRequest(request) {
             console.error('Error fetching invalid video setting:', e);
         }
 
+        // Fetch stream mode setting
+        let streamMode = 'proxy';
+        try {
+            const { data: modeData } = await supabase
+                .from('settings')
+                .select('value')
+                .eq('key', 'stream_mode')
+                .single();
+            if (modeData?.value) streamMode = modeData.value;
+        } catch (e) {
+            console.error('Error fetching stream_mode:', e);
+        }
+
         // Helper to get consistent category mapping
         // Added typeFilter to support VOD/Series categories
         const getCategoryMapping = async (activePlaylistIds, typeFilter = 'live') => {
@@ -203,88 +216,80 @@ async function handleRequest(request) {
             const formattedStreams = allStreams.map(stream => {
                 const streamId = stream.stream_id || stream.id;
 
-                // URL Construction - Always use direct URLs
+                // URL Construction
                 let streamUrl = stream.url;
                 let licenseUrl = stream.drm_license_url;
 
-                // Add pipe headers for compatibility with TiviMate/OTT Navigator
-                // Check if stream needs cookie authentication (JioTV, etc.)
-                let needsCookieAuth = false;
                 if (stream.headers) {
                     const headers = typeof stream.headers === 'string' ? JSON.parse(stream.headers) : stream.headers;
-                    // Check for Cookie header (case-insensitive)
-                    needsCookieAuth = Object.keys(headers).some(key =>
-                        key.toLowerCase() === 'cookie'
-                    );
+                    const headerParts = [];
+                    const getHeader = (key) => headers[key] || headers[key.toLowerCase()];
 
-                    // Only add pipe headers for non-cookie streams
-                    if (!needsCookieAuth) {
-                        const headerParts = [];
-                        const getHeader = (key) => headers[key] || headers[key.toLowerCase()];
+                    const ua = getHeader('User-Agent');
+                    if (ua) headerParts.push(`User-Agent=${ua}`);
 
-                        const ua = getHeader('User-Agent');
-                        if (ua) headerParts.push(`User-Agent=${ua}`);
+                    const ref = getHeader('Referer') || getHeader('Origin');
+                    if (ref) headerParts.push(`Referer=${ref}`);
 
-                        const ref = getHeader('Referer') || getHeader('Origin');
-                        if (ref) headerParts.push(`Referer=${ref}`);
-
-                        if (headerParts.length > 0) {
-                            const pipeHeaders = headerParts.join('&');
-                            if (streamUrl) streamUrl += `|${pipeHeaders}`;
-                            if (licenseUrl) licenseUrl += `|${pipeHeaders}`;
-                        }
+                    if (headerParts.length > 0) {
+                        const pipeHeaders = headerParts.join('&');
+                        if (streamUrl) streamUrl += `|${pipeHeaders}`;
+                        if (licenseUrl) licenseUrl += `|${pipeHeaders}`;
                     }
                 }
 
+
+
+
                 // Determine extension based on actual stream format
                 let extension = 'ts';
-                if (stream.stream_format === 'mpd' || stream.stream_format === 'dash') {
-                    extension = 'mpd';
-                } else if (stream.stream_format === 'm3u8' || stream.stream_format === 'hls') {
-                    extension = 'm3u8';
-                }
-
-                const output = searchParams.get('output');
-                if ((output === 'm3u8' || output === 'hls') && extension !== 'mpd') {
-                    extension = 'm3u8';
-                }
-
                 if (targetType === 'movie') {
                     extension = 'mp4';
                 }
+                // For live streams, we default to 'ts' for Xtream compatibility.
+                // The proxy will handle the redirect to the actual source (m3u8/mpd/etc).
+                // Returning 'mpd' explicitly causes some players to fail if they don't support DASH via Xtream correctly.
+                // Exception: if it's strictly m3u8, we can keep m3u8 if preferred, but TS is safest.
+                // if (stream.url && (stream.url.includes('.m3u8') || stream.url.includes('/hls/'))) {
+                //    extension = 'm3u8';
+                // }
 
-                // SELECTIVE PROXY: Use proxy ONLY for streams with cookie authentication
-                // All other streams use direct URLs
-                let directSourceUrl;
+                // Get stream mode preference
+                // optimization: could fetch once outside loop, but for now safe inside or passed in
 
-                if (needsCookieAuth) {
-                    // Cookie-based streams (JioTV, etc.) - use proxy for server-side cookie injection
-                    directSourceUrl = `${protocol}://${host}/live/${username}/${password}/${streamId}.${extension}`;
-                } else {
-                    // Direct URL for all other streams
+                // Use PROXY URL instead of raw stream URL for direct_source
+                let directSourceUrl = `${protocol}://${host}/live/${username}/${password}/${streamId}.${extension}`;
+
+                if (streamMode === 'direct') {
+                    // Direct mode: expose raw URL
                     directSourceUrl = streamUrl;
 
                     // Attempt to detect real extension from URL (ignoring query params)
                     try {
-                        const cleanUrl = stream.url.split('|')[0].split('?')[0];
+                        // Extract base URL before query params or pipe headers
+                        const cleanUrl = streamUrl.split('|')[0].split('?')[0];
                         if (cleanUrl.endsWith('.mpd')) extension = 'mpd';
                         else if (cleanUrl.endsWith('.m3u8')) extension = 'm3u8';
                         else if (cleanUrl.endsWith('.mkv')) extension = 'mkv';
                         else if (cleanUrl.endsWith('.mp4')) extension = 'mp4';
                     } catch (e) { }
+
+                    if (stream.headers) {
+                        // We already constructed streamUrl with pipe headers above if needed
+                    }
                 }
 
                 // Map category name to ID
-                const catId = categoryMap[stream.category] || '0';
+                const catId = categoryMap[stream.category] || '0'; // 0 or Uncategorized
 
                 const streamData = {
                     num: stream.id,
                     name: stream.name,
-                    title: stream.name,
+                    title: stream.name, // Many players verify 'title'
                     stream_type: stream.type || 'live',
-                    stream_id: streamId,
+                    stream_id: streamId, // Use same ID as proxy URL for consistency
                     stream_icon: stream.logo || '',
-                    epg_channel_id: null,
+                    epg_channel_id: null, // Critical for some players
                     added: stream.created_at ? Math.floor(new Date(stream.created_at).getTime() / 1000).toString() : '0',
                     category_id: catId,
                     custom_sid: '',
@@ -294,14 +299,20 @@ async function handleRequest(request) {
                     container_extension: extension
                 };
 
-                // DRM - Return keys as HEX format (standard for Xtream Codes)
+                // DRM
                 if (stream.drm_scheme) {
                     streamData.drm_scheme = stream.drm_scheme;
                     if (licenseUrl) streamData.drm_license_url = licenseUrl;
 
-                    // Always return DRM keys as-is (HEX format from database)
-                    if (stream.drm_key_id) streamData.drm_key_id = stream.drm_key_id;
-                    if (stream.drm_key) streamData.drm_key = stream.drm_key;
+                    // For clearkey, return keys as Hex (standard for Xtream Codes & TiviMate)
+                    if (stream.drm_scheme === 'clearkey' && stream.drm_key_id && stream.drm_key) {
+                        streamData.drm_key_id = stream.drm_key_id;
+                        streamData.drm_key = stream.drm_key;
+                    } else {
+                        // For other DRM schemes (Widevine), return keys as-is
+                        if (stream.drm_key_id) streamData.drm_key_id = stream.drm_key_id;
+                        if (stream.drm_key) streamData.drm_key = stream.drm_key;
+                    }
                 }
 
                 return streamData;
@@ -311,6 +322,18 @@ async function handleRequest(request) {
         }
 
         if (action === 'get_live_categories' || action === 'get_vod_categories' || action === 'get_series_categories') {
+            if (!isActive) {
+                // Return empty system category only for live? Or just return valid empty list.
+                if (action === 'get_live_categories') {
+                    return jsonResponse([{
+                        category_id: '1',
+                        category_name: 'System',
+                        parent_id: 0
+                    }]);
+                }
+                return jsonResponse([]);
+            }
+
             // Get active playlists
             const { data: activePlaylists, error: playlistError } = await supabase
                 .from('playlists')
@@ -328,7 +351,7 @@ async function handleRequest(request) {
             if (action === 'get_vod_categories') targetType = 'movie';
             if (action === 'get_series_categories') targetType = 'series';
 
-            //Get consistent mapping
+            // Get consistent mapping
             const { sortedCategories, categoryMap } = await getCategoryMapping(playlistIds, targetType);
 
             const formattedCategories = sortedCategories.map(cat => ({
@@ -339,7 +362,6 @@ async function handleRequest(request) {
 
             return jsonResponse(formattedCategories);
         }
-
 
         // Match get_simple_data_table (EPG/Stream data)
         if (action === 'get_simple_data_table') {
@@ -467,9 +489,9 @@ async function handleRequest(request) {
                 timezone: 'Asia/Kolkata',
                 timestamp_now: Math.floor(Date.now() / 1000),
                 time_now: nowFormatted,
-                version: '2.9.0', // Xtream API V2 (Standard)
-                revision: 2,
-                process: true // Some players check this
+                version: '2.9.1', // Bumped to 2.9.1 for V2 upgrade
+                revision: 5,
+                xui: true // Signal XUI compatibility
             }
         });
     } catch (error) {
