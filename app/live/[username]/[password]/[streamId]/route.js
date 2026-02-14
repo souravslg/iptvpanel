@@ -106,13 +106,29 @@ export async function GET(request, context) {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
         };
 
+        let pipeSuffix = '';
+
         if (stream.headers) {
             const storedHeaders = typeof stream.headers === 'string' ? JSON.parse(stream.headers) : stream.headers;
             const getStored = (k) => storedHeaders[k] || storedHeaders[k.toLowerCase()];
-            if (getStored('User-Agent')) fetchHeaders['User-Agent'] = getStored('User-Agent');
-            if (getStored('Referer')) fetchHeaders['Referer'] = getStored('Referer');
+
+            const ua = getStored('User-Agent');
+            if (ua) {
+                fetchHeaders['User-Agent'] = ua;
+                pipeSuffix += `User-Agent=${ua}&`;
+            }
+
+            const ref = getStored('Referer');
+            if (ref) {
+                fetchHeaders['Referer'] = ref;
+                pipeSuffix += `Referer=${ref}&`;
+            }
+
             if (getStored('Origin')) fetchHeaders['Origin'] = getStored('Origin');
             if (getStored('Cookie')) fetchHeaders['Cookie'] = getStored('Cookie');
+
+            if (pipeSuffix.endsWith('&')) pipeSuffix = pipeSuffix.slice(0, -1);
+            if (pipeSuffix) pipeSuffix = '|' + pipeSuffix;
         }
 
         // -------------------------------------------------------------
@@ -255,15 +271,12 @@ export async function GET(request, context) {
         console.log('Stream Mode:', streamMode);
 
         // Check if stream requires cookies (JTV, Hotstar etc)
-        // If it does, we MUST use proxy mode regardless of setting
-        // because standard HTTP redirects drop custom headers like Cookie
+        // If it does, we MUST use proxy mode for 'proxy' or 'redirect' modes
+        // BUT if mode is 'direct', we trust the player to handle the headers via pipe
         let forceProxy = false;
 
-        if (stream.headers) {
+        if (stream.headers && streamMode !== 'direct') {
             const h = typeof stream.headers === 'string' ? JSON.parse(stream.headers) : stream.headers;
-            // Check for cookie or Cookie or user-agent
-            // Actually, Hotstar/JTV need specific headers. Redirecting to CDN usually fails 
-            // if the CDN checks for specific UA or Cookies that were in the original pipe but lost in 302.
             if (h.cookie || h.Cookie || h['User-Agent'] || h['user-agent']) {
                 console.log('Stream requires headers/cookies. Forcing PROXY mode.');
                 forceProxy = true;
@@ -275,6 +288,10 @@ export async function GET(request, context) {
         // If Direct/Redirect mode AND not forced to proxy
         // We redirect user to source 
         if ((streamMode === 'direct' || streamMode === 'redirect') && !forceProxy) {
+            if (streamMode === 'direct' && pipeSuffix && !targetUrl.includes('|')) {
+                const cleanTarget = targetUrl.split('|')[0]; // Remove existing pipes if any to match clean concat
+                targetUrl = cleanTarget + pipeSuffix;
+            }
             console.log('Redirecting to direct source:', targetUrl);
             return NextResponse.redirect(targetUrl, { status: 302 });
         }
