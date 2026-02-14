@@ -13,9 +13,12 @@ async function analyze() {
 
         let matchCount = 0;
         lines.forEach((line, index) => {
-            if (line.includes('KODIPROP') || line.toLowerCase().includes('drm') || line.includes('license') || line.includes('clearkey')) {
-                console.log(`Line ${index + 1}: ${line}`);
-                matchCount++;
+            if (line.includes('Zee Cafe HD')) {
+                console.log(`\n--- Zee Cafe HD Entry ---`);
+                // Print surrounding lines
+                for (let i = Math.max(0, index - 5); i <= Math.min(lines.length - 1, index + 5); i++) {
+                    console.log(lines[i]);
+                }
             }
         });
 

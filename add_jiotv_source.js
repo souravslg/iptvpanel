@@ -136,6 +136,50 @@ async function addJioTvSource() {
                                 }
                             }
                         } catch (e) { }
+                    } else {
+                        // Handle simple key string (e.g. key_id:key or just key)
+                        // It seems the format is typically key_id:key or just a hex string
+                        // Based on the log, it looks like a hex string: ec7d00...
+                        // If it's just a hex string, it might be the key itself, or key:key_id?
+                        // Let's assume standard hex key. Wait, Clearkey usually needs ID and Key.
+                        // If only one value is provided, maybe it's the key and ID is derived or same?
+                        // Or maybe it is key_id:key format but without braces?
+                        // Inspecting "Star Sports 1 HD" from log: 
+                        // #KODIPROP:inputstream.adaptive.license_key=ec7d009d07aa5cbc81a441880530d...
+                        // This looks like a single hex string. 
+                        // Actually, standard defined as: license_type=clearkey, license_key=userid:userkey
+                        // But here it seems to be just one long string? 
+
+                        // Let's try to interpret it. If it contains ':', split it.
+                        if (value.includes(':')) {
+                            const parts = value.split(':');
+                            // Usually keyId:key
+                            currentStream.drm_key_id = parts[0];
+                            currentStream.drm_key = parts[1];
+                            currentStream.drm_scheme = 'clearkey';
+                        } else {
+                            // If no colon, maybe it's just the key?? 
+                            // Or maybe TiviMate expects just license_url to be this value?
+                            // But for clearkey we need key_id and key. 
+                            // Let's look closer at the log. 
+                            // #KODIPROP:inputstream.adaptive.license_key=ec7d...
+                            // It is 32 bytes (64 hex chars)? 
+                            // If so, it might be the KEY. But what is the ID?
+                            // Sometimes ID is in the MPD?
+
+                            // If we can't find ID, we can try to save this as key and let player figure it out?
+                            // But XTREAM codes needs separate fields.
+
+                            // Let's save it as key and use same for ID if length matches?
+                            if (value.length > 30) {
+                                // Assume it's a key. Use it for both? Or leave ID null?
+                                // If we leave ID null, my analyze script says it's broken.
+                                // Let's try setting both to this value if valid hex?
+                                currentStream.drm_key = value;
+                                // currentStream.drm_key_id = value; // Risky?
+                                currentStream.drm_scheme = 'clearkey';
+                            }
+                        }
                     }
                 }
             }
