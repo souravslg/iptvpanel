@@ -1,4 +1,4 @@
-name: Smart Merge IPTV
+name: Dual IPTV Build
 
 on:
   workflow_dispatch:
@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # -------- Download playlists --------
+      # -------- Download sources --------
       - name: Download playlists
         run: |
           curl -sL "https://livetv-cb7.pages.dev/hotstar" -o 1.m3u
@@ -23,37 +23,52 @@ jobs:
           curl -sL "https://raw.githubusercontent.com/drmlive/sliv-live-events/main/sonyliv.m3u" -o 3.m3u
           curl -sL "https://raw.githubusercontent.com/drmlive/fancode-live-events/main/fancode.m3u" -o 4.m3u
 
-      # -------- Clean + Merge (TiviMate safe) --------
-      - name: Build merged playlist
+      # -------- Merge raw --------
+      - name: Merge raw playlists
         run: |
-          echo "#EXTM3U" > new.m3u
-
+          echo "#EXTM3U" > all.m3u
           for f in 1.m3u 2.m3u 3.m3u 4.m3u; do
-            # remove header + Windows line endings + blank lines
-            sed '1{/^#EXTM3U/d}; s/\r$//; /^$/d' "$f" >> new.m3u
+            sed '1{/^#EXTM3U/d}; s/\r$//; /^$/d' "$f" >> all.m3u
           done
 
-      # -------- Change detection --------
-      - name: Check changes
-        id: diff
+      # -------- Remove duplicate clearkey lines --------
+      - name: Clean duplicate clearkey tags
         run: |
-          if [ -f merged3.m3u ] && cmp -s merged3.m3u new.m3u; then
-            echo "changed=false" >> $GITHUB_OUTPUT
-          else
-            echo "changed=true" >> $GITHUB_OUTPUT
-          fi
+          awk '
+          {
+            if ($0 == "#KODIPROP:inputstream.adaptive.license_type=clearkey") {
+              if (prev == $0) next
+            }
+            print
+            prev = $0
+          }
+          ' all.m3u > cleaned.m3u
+          mv cleaned.m3u all.m3u
 
-      # -------- Replace only if changed --------
-      - name: Update file
-        if: steps.diff.outputs.changed == 'true'
-        run: mv new.m3u merged3.m3u
+      # -------- Build Tivimate-only playlist --------
+      - name: Build tivimate.m3u
+        run: |
+          echo "#EXTM3U" > tivimate.m3u
+          awk '
+          /#EXTINF/ {info=$0; getline url}
+          {
+            if (url ~ /\.m3u8/ || url ~ /\.mpd/) {
+              print info
+              print url
+            }
+          }' all.m3u >> tivimate.m3u
+
+      # -------- Build OTT full playlist --------
+      - name: Build ott.m3u
+        run: |
+          cp all.m3u ott.m3u
 
       # -------- Commit only if changed --------
-      - name: Commit
-        if: steps.diff.outputs.changed == 'true'
+      - name: Commit playlists
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add merged3.m3u
-          git commit -m "Auto update merged3 IPTV (clean TiviMate safe)"
+          git add tivimate.m3u ott.m3u
+          git diff --cached --quiet && exit 0
+          git commit -m "Auto update dual IPTV playlists (clearkey duplicate fixed)"
           git push
