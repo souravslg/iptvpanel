@@ -257,7 +257,17 @@ async function handleRequest(request) {
                 // Use PROXY URL instead of raw stream URL for direct_source
                 let directSourceUrl = `${protocol}://${host}/live/${username}/${password}/${streamId}.${extension}`;
 
-                if (streamMode === 'direct') {
+                // Check if we should force proxy for DASH with headers (to allow manifest rewriting)
+                let forceProxyForDash = false;
+                if (extension === 'mpd' && stream.headers) {
+                    const h = typeof stream.headers === 'string' ? JSON.parse(stream.headers) : stream.headers;
+                    // If UA or Cookie is present, we need to rewrite headers into the manifest absolute URLs
+                    if (h['User-Agent'] || h['user-agent'] || h['Cookie'] || h['cookie']) {
+                        forceProxyForDash = true;
+                    }
+                }
+
+                if (streamMode === 'direct' && !forceProxyForDash) {
                     // Direct mode: expose raw URL
                     directSourceUrl = streamUrl;
 

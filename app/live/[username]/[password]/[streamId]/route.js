@@ -314,6 +314,40 @@ export async function GET(request, context) {
                 return new NextResponse(`Upstream Error: ${response.status}`, { status: response.status });
             }
 
+            // SMART MANIFEST REWRITING FOR DASH
+            // If it's a DASH manifest (MPD) and we have headers, we need to inject them into the segment URLs
+            // because players often lose headers when following absolute URLs in the manifest.
+            const contentType = response.headers.get('content-type') || '';
+            const isDash = targetUrl.includes('.mpd') || contentType.includes('dash') || contentType.includes('xml');
+
+            if (isDash && pipeSuffix) { // pipeSuffix calculated above (e.g. |User-Agent=...)
+                console.log('⚡ Rewriting DASH manifest with headers...');
+                const text = await response.text();
+
+                // Simple regex to append pipe headers to http/https URLs inside the XML
+                // We target URLs inside quotes (attributes) or tags
+                // Avoid double-piping if already exists (unlikely from source)
+
+                // Regex matches http(s)://... until a quote " or < or > or whitespace
+                // We verify it looks like a URL.
+
+                const modifiedText = text.replace(/(https?:\/\/[^"<>\s]+)/g, (match) => {
+                    if (match.includes(pipeSuffix)) return match; // Already verified
+                    return match + pipeSuffix;
+                });
+
+                const newHeaders = new Headers(response.headers);
+                newHeaders.delete('Content-Length'); // Content changed
+                newHeaders.set('Access-Control-Allow-Origin', '*');
+                newHeaders.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+
+                return new NextResponse(modifiedText, {
+                    status: response.status,
+                    headers: newHeaders
+                });
+            }
+
+            // Normal Proxying for non-DASH or no headers
             // Forward relevant headers
             const responseHeaders = new Headers(response.headers);
             // Ensure we don't cache locally if we want real-time control (already handled by route headers, but be safe)
