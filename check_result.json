@@ -1,0 +1,17 @@
+{
+  "stream_mode": "direct",
+  "stream": {
+    "id": "1000009246",
+    "name": "SONY HD",
+    "url": "https://dishmt.slivcdn.com/hls/live/2011671-b/SETHD/master.m3u8?hdnea=exp=1771050603~acl=/*~id=26591230781746436425536307401140~hmac=6c2b67e9fb791f950fb24d4c7db655f34215977596e9c8ee1d3f026c5f6c4aa8",
+    "headers": null
+  },
+  "fetchHeaders": {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+  },
+  "action": "redirect",
+  "redirectUrl": "https://dishmt.slivcdn.com/hls/live/2011671-b/SETHD/master.m3u8?hdnea=exp=1771050603~acl=/*~id=26591230781746436425536307401140~hmac=6c2b67e9fb791f950fb24d4c7db655f34215977596e9c8ee1d3f026c5f6c4aa8",
+  "isComplex": false,
+  "apiMode": "Direct (Raw URL)",
+  "servedUrl": "https://dishmt.slivcdn.com/hls/live/2011671-b/SETHD/master.m3u8?hdnea=exp=1771050603~acl=/*~id=26591230781746436425536307401140~hmac=6c2b67e9fb791f950fb24d4c7db655f34215977596e9c8ee1d3f026c5f6c4aa8"
+}

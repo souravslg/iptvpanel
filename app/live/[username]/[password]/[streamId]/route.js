@@ -261,7 +261,7 @@ export async function GET(request, context) {
         if (streamMode === 'direct' || streamMode === 'redirect') {
             console.log('Redirecting to direct source:', targetUrl);
             // We still logged the active stream above, which is good.
-            return NextResponse.redirect(targetUrl, { status: 307 }); // 307 preserves method, though usually GET
+            return NextResponse.redirect(targetUrl, { status: 302 }); // 302 is better for player compatibility than 307
         }
 
         // 4. PROXY MODE: Fetch and stream back to client
