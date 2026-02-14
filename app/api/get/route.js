@@ -178,19 +178,13 @@ export async function GET(request) {
             m3u += `#EXTINF:-1 tvg-id="${tvgId}" tvg-name="${tvgName}" tvg-logo="${tvgLogo}" group-title="${groupTitle}",${tvgName}\n`;
 
             // 4. Final Stream URL (Must be immediately after EXTINF)
-            // Use DIRECT stream URL from database
-            let finalUrl = stream.url || '';
-
-            // Fallback to proxy URL if no direct URL is available
-            if (!finalUrl) {
-                console.warn(`Stream ${stream.id} has no URL, using proxy fallback`);
-                let extension = 'ts';
-                if (stream.type === 'movie') {
-                    extension = 'mp4';
-                }
-                const sId = stream.stream_id || stream.id;
-                finalUrl = `${protocol}://${host}/live/${username}/${password}/${sId}.${extension}`;
+            // ALWAYS use PROXY URL to ensure authentication cookies are handled server-side
+            let extension = 'ts';
+            if (stream.type === 'movie') {
+                extension = 'mp4';
             }
+            const sId = stream.stream_id || stream.id;
+            const finalUrl = `${protocol}://${host}/live/${username}/${password}/${sId}.${extension}`;
 
             m3u += `${finalUrl}\n`;
         });
