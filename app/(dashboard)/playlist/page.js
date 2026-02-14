@@ -401,36 +401,14 @@ export default function PlaylistPage() {
 
         setCreatingPlaylist(true);
         try {
-            let finalSourceUrl = newPlaylistUrl;
-
-            // If user uploaded a file, process it first
-            if (uploadMethod === 'file' && uploadedFile) {
-                const reader = new FileReader();
-                const fileContent = await new Promise((resolve, reject) => {
-                    reader.onload = (e) => resolve(e.target.result);
-                    reader.onerror = reject;
-                    reader.readAsText(uploadedFile);
-                });
-
-                // Create playlist with file content directly
-                const uploadRes = await fetch('/api/playlist', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ content: fileContent })
-                });
-
-                if (!uploadRes.ok) {
-                    throw new Error('Failed to process uploaded file');
-                }
-            }
-
+            // Create the playlist record first
             const res = await fetch('/api/playlists', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     name: newPlaylistName,
                     description: newPlaylistDesc,
-                    sourceUrl: finalSourceUrl
+                    sourceUrl: newPlaylistUrl || null
                 })
             });
 
@@ -443,8 +421,39 @@ export default function PlaylistPage() {
             // Add new playlist to the list
             setPlaylists(prev => [data.playlist, ...prev]);
 
-            // If source URL provided, automatically refresh to import channels
-            if (newPlaylistUrl.trim() && uploadMethod === 'url') {
+            // Now handle the import based on method
+            if (uploadMethod === 'file' && uploadedFile) {
+                // File upload: Read and import channels
+                const reader = new FileReader();
+                const fileContent = await new Promise((resolve, reject) => {
+                    reader.onload = (e) => resolve(e.target.result);
+                    reader.onerror = reject;
+                    reader.readAsText(uploadedFile);
+                });
+
+                // Import the file content with playlist_id
+                const uploadRes = await fetch('/api/playlist', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        content: fileContent,
+                        playlist_id: data.playlist.id // Associate with new playlist
+                    })
+                });
+
+                if (uploadRes.ok) {
+                    const uploadData = await uploadRes.json();
+                    alert(`Playlist created with ${uploadData.imported || 0} channels from file!`);
+                    // Update playlist count
+                    setPlaylists(prev => prev.map(p =>
+                        p.id === data.playlist.id ? { ...p, total_channels: uploadData.imported || 0 } : p
+                    ));
+                } else {
+                    alert('Playlist created but failed to import file');
+                }
+
+            } else if (newPlaylistUrl.trim() && uploadMethod === 'url') {
+                // URL import: Use refresh endpoint
                 const refreshRes = await fetch('/api/playlists/refresh', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -462,8 +471,6 @@ export default function PlaylistPage() {
                 } else {
                     alert(`Playlist created but failed to import: ${refreshData.error}`);
                 }
-            } else if (uploadMethod === 'file') {
-                alert(`Playlist created from uploaded file!`);
             } else {
                 alert('Playlist created successfully!');
             }

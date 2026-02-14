@@ -82,19 +82,6 @@ async function handleRequest(request) {
             console.error('Error fetching invalid video setting:', e);
         }
 
-        // Fetch stream mode setting
-        let streamMode = 'proxy';
-        try {
-            const { data: modeData } = await supabase
-                .from('settings')
-                .select('value')
-                .eq('key', 'stream_mode')
-                .single();
-            if (modeData?.value) streamMode = modeData.value;
-        } catch (e) {
-            console.error('Error fetching stream_mode:', e);
-        }
-
         // Helper to get consistent category mapping
         // Added typeFilter to support VOD/Series categories
         const getCategoryMapping = async (activePlaylistIds, typeFilter = 'live') => {
@@ -216,20 +203,13 @@ async function handleRequest(request) {
             const formattedStreams = allStreams.map(stream => {
                 const streamId = stream.stream_id || stream.id;
 
-
-                // URL Construction
+                // URL Construction - Always use direct URLs
                 let streamUrl = stream.url;
-                let cleanStreamUrl = stream.url; // Keep original URL without headers for direct mode
                 let licenseUrl = stream.drm_license_url;
 
-                // Check if stream has authentication cookies (not just User-Agent/Referer)
-                let hasAuthCookies = false;
+                // Add pipe headers for compatibility with TiviMate/OTT Navigator
                 if (stream.headers) {
                     const headers = typeof stream.headers === 'string' ? JSON.parse(stream.headers) : stream.headers;
-                    // Check for Cookie or cookie header (case-insensitive)
-                    hasAuthCookies = Object.keys(headers).some(key =>
-                        key.toLowerCase() === 'cookie'
-                    );
 
                     const headerParts = [];
                     const getHeader = (key) => headers[key] || headers[key.toLowerCase()];
@@ -247,9 +227,6 @@ async function handleRequest(request) {
                     }
                 }
 
-
-
-
                 // Determine extension based on actual stream format
                 let extension = 'ts';
                 if (stream.stream_format === 'mpd') extension = 'mpd';
@@ -264,41 +241,29 @@ async function handleRequest(request) {
                     extension = 'mp4';
                 }
 
-                // Get stream mode preference
-                // optimization: could fetch once outside loop, but for now safe inside or passed in
+                // Always use direct URL (no proxy)
+                let directSourceUrl = streamUrl;
 
-                // Use PROXY URL instead of raw stream URL for direct_source
-                let directSourceUrl = `${protocol}://${host}/live/${username}/${password}/${streamId}.${extension}`;
-
-                // SMART PROXY: Only use direct mode if stream has NO authentication cookies
-                // Cookies like JioTV's __hdnea__ require server-side proxying
-                if (streamMode === 'direct' && !hasAuthCookies) {
-                    // Direct mode: expose raw URL (WITH pipe headers if available, for TiviMate compatibility)
-                    directSourceUrl = streamUrl;
-
-                    // Attempt to detect real extension from URL (ignoring query params)
-                    try {
-                        // Extract base URL before query params or pipe headers
-                        const cleanUrl = cleanStreamUrl.split('|')[0].split('?')[0];
-                        if (cleanUrl.endsWith('.mpd')) extension = 'mpd';
-                        else if (cleanUrl.endsWith('.m3u8')) extension = 'm3u8';
-                        else if (cleanUrl.endsWith('.mkv')) extension = 'mkv';
-                        else if (cleanUrl.endsWith('.mp4')) extension = 'mp4';
-                    } catch (e) { }
-                }
-                // If hasAuthCookies is true, we keep directSourceUrl as proxy URL
+                // Attempt to detect real extension from URL (ignoring query params)
+                try {
+                    const cleanUrl = stream.url.split('|')[0].split('?')[0];
+                    if (cleanUrl.endsWith('.mpd')) extension = 'mpd';
+                    else if (cleanUrl.endsWith('.m3u8')) extension = 'm3u8';
+                    else if (cleanUrl.endsWith('.mkv')) extension = 'mkv';
+                    else if (cleanUrl.endsWith('.mp4')) extension = 'mp4';
+                } catch (e) { }
 
                 // Map category name to ID
-                const catId = categoryMap[stream.category] || '0'; // 0 or Uncategorized
+                const catId = categoryMap[stream.category] || '0';
 
                 const streamData = {
                     num: stream.id,
                     name: stream.name,
-                    title: stream.name, // Many players verify 'title'
+                    title: stream.name,
                     stream_type: stream.type || 'live',
-                    stream_id: streamId, // Use same ID as proxy URL for consistency
+                    stream_id: streamId,
                     stream_icon: stream.logo || '',
-                    epg_channel_id: null, // Critical for some players
+                    epg_channel_id: null,
                     added: stream.created_at ? Math.floor(new Date(stream.created_at).getTime() / 1000).toString() : '0',
                     category_id: catId,
                     custom_sid: '',
@@ -308,20 +273,14 @@ async function handleRequest(request) {
                     container_extension: extension
                 };
 
-                // DRM
+                // DRM - Return keys as HEX format (standard for Xtream Codes)
                 if (stream.drm_scheme) {
                     streamData.drm_scheme = stream.drm_scheme;
                     if (licenseUrl) streamData.drm_license_url = licenseUrl;
 
-                    // For clearkey, return keys as Hex (standard for Xtream Codes & TiviMate)
-                    if (stream.drm_scheme === 'clearkey' && stream.drm_key_id && stream.drm_key) {
-                        streamData.drm_key_id = stream.drm_key_id;
-                        streamData.drm_key = stream.drm_key;
-                    } else {
-                        // For other DRM schemes (Widevine), return keys as-is
-                        if (stream.drm_key_id) streamData.drm_key_id = stream.drm_key_id;
-                        if (stream.drm_key) streamData.drm_key = stream.drm_key;
-                    }
+                    // Always return DRM keys as-is (HEX format from database)
+                    if (stream.drm_key_id) streamData.drm_key_id = stream.drm_key_id;
+                    if (stream.drm_key) streamData.drm_key = stream.drm_key;
                 }
 
                 return streamData;

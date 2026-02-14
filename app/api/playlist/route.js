@@ -5,48 +5,53 @@ import { parseM3U } from '@/lib/m3u_v2';
 
 export async function POST(request) {
   try {
-    const { content } = await request.json();
+    const { content, playlist_id } = await request.json();
     const streams = parseM3U(content);
 
     if (streams.length === 0) {
       return NextResponse.json({ error: 'No streams found' }, { status: 400 });
     }
 
-    // Get first active playlist or create default one
-    let { data: activePlaylists } = await supabase
-      .from('playlists')
-      .select('id')
-      .eq('is_active', true);
+    let targetPlaylistId = playlist_id;
 
-    let activePlaylist = activePlaylists?.[0];
-
-    // If no active playlist exists, create a default one
-    if (!activePlaylist) {
-      const { data: newPlaylist, error: createError } = await supabase
+    // If no playlist_id provided, get first active playlist or create default one
+    if (!targetPlaylistId) {
+      let { data: activePlaylists } = await supabase
         .from('playlists')
-        .insert({
-          name: 'Default Playlist',
-          description: 'Main playlist',
-          is_active: true,
-          total_channels: 0
-        })
         .select('id')
-        .single();
+        .eq('is_active', true);
 
-      if (createError) {
-        console.error('Error creating default playlist:', createError);
-        return NextResponse.json({ error: 'Failed to create default playlist' }, { status: 500 });
+      let activePlaylist = activePlaylists?.[0];
+
+      // If no active playlist exists, create a default one
+      if (!activePlaylist) {
+        const { data: newPlaylist, error: createError } = await supabase
+          .from('playlists')
+          .insert({
+            name: 'Default Playlist',
+            description: 'Main playlist',
+            is_active: true,
+            total_channels: 0
+          })
+          .select('id')
+          .single();
+
+        if (createError) {
+          console.error('Error creating default playlist:', createError);
+          return NextResponse.json({ error: 'Failed to create default playlist' }, { status: 500 });
+        }
+
+        activePlaylist = newPlaylist;
       }
 
-      activePlaylist = newPlaylist;
+      targetPlaylistId = activePlaylist.id;
     }
 
-
-    // Delete existing streams in active playlist
+    // Delete existing streams in target playlist
     const { error: deleteError } = await supabase
       .from('streams')
       .delete()
-      .eq('playlist_id', activePlaylist.id);
+      .eq('playlist_id', targetPlaylistId);
 
     if (deleteError) throw deleteError;
 
@@ -59,12 +64,10 @@ export async function POST(request) {
         url: stream.url,
         logo: stream.logo,
         category: stream.group,
-        playlist_id: activePlaylist.id,
+        playlist_id: targetPlaylistId,
         // DRM fields from M3U parser
         drm_scheme: stream.drmScheme || null,
         drm_license_url: stream.drmLicenseUrl || null,
-        drm_key_id: stream.drmKeyId || null,
-        drm_key: stream.drmKey || null,
         drm_key_id: stream.drmKeyId || null,
         drm_key: stream.drmKey || null,
         stream_format: stream.streamFormat || 'hls',
@@ -79,13 +82,16 @@ export async function POST(request) {
       if (insertError) throw insertError;
     }
 
-    // Update playlist metadata
+    // Update playlist metadata and channel count
     await supabase
       .from('playlists')
-      .update({ updated_at: new Date().toISOString() })
-      .eq('id', activePlaylist.id);
+      .update({
+        updated_at: new Date().toISOString(),
+        total_channels: streams.length
+      })
+      .eq('id', targetPlaylistId);
 
-    return NextResponse.json({ success: true, count: streams.length });
+    return NextResponse.json({ success: true, imported: streams.length, playlist_id: targetPlaylistId });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: 'Failed to save playlist' }, { status: 500 });
