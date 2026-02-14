@@ -254,14 +254,29 @@ export async function GET(request, context) {
         }
         console.log('Stream Mode:', streamMode);
 
+        // Check if stream requires cookies (JTV, Hotstar etc)
+        // If it does, we MUST use proxy mode regardless of setting
+        // because standard HTTP redirects drop custom headers like Cookie
+        let forceProxy = false;
+
+        if (stream.headers) {
+            const h = typeof stream.headers === 'string' ? JSON.parse(stream.headers) : stream.headers;
+            // Check for cookie or Cookie or user-agent
+            // Actually, Hotstar/JTV need specific headers. Redirecting to CDN usually fails 
+            // if the CDN checks for specific UA or Cookies that were in the original pipe but lost in 302.
+            if (h.cookie || h.Cookie || h['User-Agent'] || h['user-agent']) {
+                console.log('Stream requires headers/cookies. Forcing PROXY mode.');
+                forceProxy = true;
+            }
+        }
+
         console.log('Fetching source URL:', targetUrl);
 
-        // If Direct/Redirect mode, we redirect user to source
-        // This handles cases where players construct the /live/ URL manually
-        if (streamMode === 'direct' || streamMode === 'redirect') {
+        // If Direct/Redirect mode AND not forced to proxy
+        // We redirect user to source 
+        if ((streamMode === 'direct' || streamMode === 'redirect') && !forceProxy) {
             console.log('Redirecting to direct source:', targetUrl);
-            // We still logged the active stream above, which is good.
-            return NextResponse.redirect(targetUrl, { status: 302 }); // 302 is better for player compatibility than 307
+            return NextResponse.redirect(targetUrl, { status: 302 });
         }
 
         // 4. PROXY MODE: Fetch and stream back to client
