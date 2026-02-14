@@ -116,42 +116,38 @@ export async function GET(request) {
 
 
             // 1. DRM Properties (Kodi / Standard HLS)
-            if (stream.drm_scheme === 'clearkey' && stream.drm_key_id && stream.drm_key) {
-                const toBase64Url = (s) => {
-                    try {
-                        if (s && /^[0-9a-fA-F]+$/.test(s) && s.length % 2 === 0) {
-                            return Buffer.from(s, 'hex').toString('base64url');
-                        }
-                        return s;
-                    } catch (e) { return s; }
-                };
-                const k = toBase64Url(stream.drm_key);
-                const kid = toBase64Url(stream.drm_key_id);
+            // Handle generic KODIPROP license key if present (for both Widevine and ClearKey via URL)
+            if (stream.drm_license_url) {
+                const licenseType = stream.drm_scheme || 'com.widevine.alpha';
+                m3u += `#KODIPROP:inputstream.adaptive.license_type=${licenseType}\n`;
 
-                m3u += `#KODIPROP:inputstream.adaptive.license_type=clearkey\n`;
-                m3u += `#KODIPROP:inputstream.adaptive.license_key={"keys":[{"kty":"oct","k":"${k}","kid":"${kid}"}],"type":"temporary"}\n`;
+                let finalLicenseUrl = stream.drm_license_url;
 
-                const keyJson = JSON.stringify({ keys: [{ kty: 'oct', k: k, kid: kid }], type: 'temporary' });
-                const keyBase64 = Buffer.from(keyJson).toString('base64');
-                m3u += `#EXT-X-KEY:METHOD=SAMPLE-AES,URI="data:text/plain;base64,${keyBase64}",KEYFORMAT="clearkey",KEYFORMATVERSIONS="1"\n`;
-
-            } else if (stream.drm_scheme === 'widevine' && stream.drm_license_url) {
-                let licenseUrl = stream.drm_license_url;
+                // Append headers to license URL if needed (for Kodi/tivimate)
                 if (stream.headers) {
                     const headers = typeof stream.headers === 'string' ? JSON.parse(stream.headers) : stream.headers;
                     const headerParts = [];
                     const getHeader = (key) => headers[key] || headers[key.toLowerCase()];
                     const ua = getHeader('User-Agent');
-                    if (ua) headerParts.push(`User-Agent=${ua}`);
                     const ref = getHeader('Referer') || getHeader('Origin');
-                    if (ref) headerParts.push(`Referer=${ref}`);
+                    const cookie = getHeader('Cookie');
 
-                    if (headerParts.length > 0) licenseUrl += `|${headerParts.join('&')}`;
+                    if (ua) headerParts.push(`User-Agent=${ua}`);
+                    if (ref) headerParts.push(`Referer=${ref}`);
+                    if (cookie) headerParts.push(`Cookie=${cookie}`);
+
+                    if (headerParts.length > 0) finalLicenseUrl += `|${headerParts.join('&')}`;
                 }
 
-                m3u += `#KODIPROP:inputstream.adaptive.license_type=com.widevine.alpha\n`;
-                m3u += `#KODIPROP:inputstream.adaptive.license_key=${licenseUrl}\n`;
-                m3u += `#EXT-X-KEY:METHOD=SAMPLE-AES,URI="${licenseUrl}",KEYFORMAT="urn:uuid:edef8ba9-79d6-4ace-a3c8-27dcd51d21ed",KEYFORMATVERSIONS="1"\n`;
+                m3u += `#KODIPROP:inputstream.adaptive.license_key=${finalLicenseUrl}\n`;
+            }
+
+            // Handle Specific ClearKey (kid:key) mapping
+            if (stream.drm_scheme === 'clearkey' && stream.drm_key_id && stream.drm_key) {
+                // Standard generic simple format works best for most players:
+                // #KODIPROP:inputstream.adaptive.license_key=kid:key
+                m3u += `#KODIPROP:inputstream.adaptive.license_type=org.w3.clearkey\n`;
+                m3u += `#KODIPROP:inputstream.adaptive.license_key=${stream.drm_key_id}:${stream.drm_key}\n`;
             }
 
             // 2. HTTP Headers (User-Agent, Referer, Origin)
@@ -178,11 +174,18 @@ export async function GET(request) {
             m3u += `#EXTINF:-1 tvg-id="${tvgId}" tvg-name="${tvgName}" tvg-logo="${tvgLogo}" group-title="${groupTitle}",${tvgName}\n`;
 
             // 4. Final Stream URL (Must be immediately after EXTINF)
-            // ALWAYS use PROXY URL to ensure authentication cookies are handled server-side
+            // Use correct extension from stream_format
             let extension = 'ts';
-            if (stream.type === 'movie') {
-                extension = 'mp4';
+            if (stream.stream_format === 'mpd') extension = 'mpd';
+            else if (stream.stream_format === 'm3u8') extension = 'm3u8';
+            else if (stream.type === 'movie') extension = 'mp4';
+
+            // Fallback: if output param forced m3u8, use it (unless it's mpd which shouldn't be forced to m3u8)
+            const output = searchParams.get('output');
+            if ((output === 'm3u8' || output === 'hls') && extension !== 'mpd') {
+                extension = 'm3u8';
             }
+
             const sId = stream.stream_id || stream.id;
             const finalUrl = `${protocol}://${host}/live/${username}/${password}/${sId}.${extension}`;
 

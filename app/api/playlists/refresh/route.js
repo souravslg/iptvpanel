@@ -28,11 +28,34 @@ export async function POST(request) {
         console.log(`Refreshing playlist "${playlist.name}" from: ${playlist.source_url}`);
 
         // 2. Fetch content from source URL
-        const response = await fetch(playlist.source_url, {
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-            },
-        });
+        let response;
+        let usedUrl = playlist.source_url;
+
+        try {
+            response = await fetch(playlist.source_url, {
+                headers: {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                },
+            });
+        } catch (fetchError) {
+            // Check for SSL errors (e.g. HTTPS on HTTP port)
+            // ERR_SSL_PACKET_LENGTH_TOO_LONG is common when accessing HTTP port via HTTPS
+            const isSslError = fetchError.cause?.code === 'ERR_SSL_PACKET_LENGTH_TOO_LONG' ||
+                fetchError.message?.includes('SSL') ||
+                fetchError.message?.includes('versions');
+
+            if (isSslError && playlist.source_url.startsWith('https:')) {
+                console.warn(`SSL error fetching ${playlist.source_url}, retrying with HTTP...`);
+                usedUrl = playlist.source_url.replace('https:', 'http:');
+                response = await fetch(usedUrl, {
+                    headers: {
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                    },
+                });
+            } else {
+                throw fetchError;
+            }
+        }
 
         if (!response.ok) {
             return NextResponse.json({

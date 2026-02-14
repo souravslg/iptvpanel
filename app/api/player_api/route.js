@@ -252,16 +252,17 @@ async function handleRequest(request) {
 
                 // Determine extension based on actual stream format
                 let extension = 'ts';
+                if (stream.stream_format === 'mpd') extension = 'mpd';
+                else if (stream.stream_format === 'm3u8') extension = 'm3u8';
+
+                const output = searchParams.get('output');
+                if ((output === 'm3u8' || output === 'hls') && extension !== 'mpd') {
+                    extension = 'm3u8';
+                }
+
                 if (targetType === 'movie') {
                     extension = 'mp4';
                 }
-                // For live streams, we default to 'ts' for Xtream compatibility.
-                // The proxy will handle the redirect to the actual source (m3u8/mpd/etc).
-                // Returning 'mpd' explicitly causes some players to fail if they don't support DASH via Xtream correctly.
-                // Exception: if it's strictly m3u8, we can keep m3u8 if preferred, but TS is safest.
-                // if (stream.url && (stream.url.includes('.m3u8') || stream.url.includes('/hls/'))) {
-                //    extension = 'm3u8';
-                // }
 
                 // Get stream mode preference
                 // optimization: could fetch once outside loop, but for now safe inside or passed in
@@ -331,18 +332,6 @@ async function handleRequest(request) {
         }
 
         if (action === 'get_live_categories' || action === 'get_vod_categories' || action === 'get_series_categories') {
-            if (!isActive) {
-                // Return empty system category only for live? Or just return valid empty list.
-                if (action === 'get_live_categories') {
-                    return jsonResponse([{
-                        category_id: '1',
-                        category_name: 'System',
-                        parent_id: 0
-                    }]);
-                }
-                return jsonResponse([]);
-            }
-
             // Get active playlists
             const { data: activePlaylists, error: playlistError } = await supabase
                 .from('playlists')
@@ -360,7 +349,7 @@ async function handleRequest(request) {
             if (action === 'get_vod_categories') targetType = 'movie';
             if (action === 'get_series_categories') targetType = 'series';
 
-            // Get consistent mapping
+            //Get consistent mapping
             const { sortedCategories, categoryMap } = await getCategoryMapping(playlistIds, targetType);
 
             const formattedCategories = sortedCategories.map(cat => ({
@@ -371,6 +360,7 @@ async function handleRequest(request) {
 
             return jsonResponse(formattedCategories);
         }
+
 
         // Match get_simple_data_table (EPG/Stream data)
         if (action === 'get_simple_data_table') {
@@ -498,8 +488,8 @@ async function handleRequest(request) {
                 timezone: 'Asia/Kolkata',
                 timestamp_now: Math.floor(Date.now() / 1000),
                 time_now: nowFormatted,
-                version: '2.9.1', // Bumped to 2.9.1 for V2 upgrade
-                revision: 5,
+                version: '1.0.0', // Xtream API V1
+                revision: 1,
                 xui: true // Signal XUI compatibility
             }
         });
