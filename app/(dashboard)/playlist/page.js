@@ -81,6 +81,11 @@ export default function PlaylistPage() {
     const [editPlaylistUrl, setEditPlaylistUrl] = useState('');
     const [updatingPlaylist, setUpdatingPlaylist] = useState(false);
 
+    // File upload for playlist creation
+    const [uploadMethod, setUploadMethod] = useState('url'); // 'url' or 'file'
+    const [uploadedFile, setUploadedFile] = useState(null);
+    const playlistFileRef = useRef(null);
+
     const fileInputRef = useRef(null);
 
     useEffect(() => {
@@ -396,13 +401,36 @@ export default function PlaylistPage() {
 
         setCreatingPlaylist(true);
         try {
+            let finalSourceUrl = newPlaylistUrl;
+
+            // If user uploaded a file, process it first
+            if (uploadMethod === 'file' && uploadedFile) {
+                const reader = new FileReader();
+                const fileContent = await new Promise((resolve, reject) => {
+                    reader.onload = (e) => resolve(e.target.result);
+                    reader.onerror = reject;
+                    reader.readAsText(uploadedFile);
+                });
+
+                // Create playlist with file content directly
+                const uploadRes = await fetch('/api/playlist', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content: fileContent })
+                });
+
+                if (!uploadRes.ok) {
+                    throw new Error('Failed to process uploaded file');
+                }
+            }
+
             const res = await fetch('/api/playlists', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     name: newPlaylistName,
                     description: newPlaylistDesc,
-                    sourceUrl: newPlaylistUrl
+                    sourceUrl: finalSourceUrl
                 })
             });
 
@@ -416,7 +444,7 @@ export default function PlaylistPage() {
             setPlaylists(prev => [data.playlist, ...prev]);
 
             // If source URL provided, automatically refresh to import channels
-            if (newPlaylistUrl.trim()) {
+            if (newPlaylistUrl.trim() && uploadMethod === 'url') {
                 const refreshRes = await fetch('/api/playlists/refresh', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -434,6 +462,8 @@ export default function PlaylistPage() {
                 } else {
                     alert(`Playlist created but failed to import: ${refreshData.error}`);
                 }
+            } else if (uploadMethod === 'file') {
+                alert(`Playlist created from uploaded file!`);
             } else {
                 alert('Playlist created successfully!');
             }
@@ -442,10 +472,13 @@ export default function PlaylistPage() {
             setNewPlaylistName('');
             setNewPlaylistDesc('');
             setNewPlaylistUrl('');
+            setUploadedFile(null);
+            setUploadMethod('url');
             setShowCreatePlaylist(false);
 
             // Refresh playlist data if this was activated
             fetchPlaylists();
+            fetchPlaylistData();
 
         } catch (err) {
             console.error('Error creating playlist:', err);
@@ -884,7 +917,7 @@ export default function PlaylistPage() {
                     <div className="bg-slate-800 rounded-lg shadow-lg max-w-lg w-full p-6 border border-slate-700">
                         <div className="flex justify-between items-center mb-4">
                             <h3 className="text-lg font-bold text-white">Create New Playlist</h3>
-                            <button onClick={() => setShowCreatePlaylist(false)} className="text-slate-400 hover:text-white"><X size={20} /></button>
+                            <button onClick={() => { setShowCreatePlaylist(false); setUploadedFile(null); setUploadMethod('url'); }} className="text-slate-400 hover:text-white"><X size={20} /></button>
                         </div>
                         <div className="space-y-4">
                             <div>
@@ -906,17 +939,78 @@ export default function PlaylistPage() {
                                     rows={3}
                                 />
                             </div>
+
+                            {/* Upload Method Toggle */}
                             <div>
-                                <label className="block text-sm font-medium text-slate-400 mb-1">Source URL (optional)</label>
-                                <input
-                                    className="form-input w-full bg-slate-900 border-slate-600 rounded p-2 text-white"
-                                    value={newPlaylistUrl}
-                                    onChange={e => setNewPlaylistUrl(e.target.value)}
-                                    placeholder="https://example.com/playlist.m3u"
-                                />
+                                <label className="block text-sm font-medium text-slate-400 mb-2">Import Method</label>
+                                <div className="flex gap-2 mb-3">
+                                    <button
+                                        type="button"
+                                        onClick={() => setUploadMethod('url')}
+                                        className={`flex-1 px-4 py-2 rounded text-sm font-medium transition-colors ${uploadMethod === 'url'
+                                            ? 'bg-blue-600 text-white'
+                                            : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                                            }`}
+                                    >
+                                        <Link size={16} className="inline mr-2" />
+                                        From URL
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setUploadMethod('file')}
+                                        className={`flex-1 px-4 py-2 rounded text-sm font-medium transition-colors ${uploadMethod === 'file'
+                                            ? 'bg-blue-600 text-white'
+                                            : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                                            }`}
+                                    >
+                                        <Upload size={16} className="inline mr-2" />
+                                        From File
+                                    </button>
+                                </div>
+
+                                {uploadMethod === 'url' ? (
+                                    <div>
+                                        <input
+                                            className="form-input w-full bg-slate-900 border-slate-600 rounded p-2 text-white"
+                                            value={newPlaylistUrl}
+                                            onChange={e => setNewPlaylistUrl(e.target.value)}
+                                            placeholder="https://example.com/playlist.m3u"
+                                        />
+                                        <p className="text-xs text-slate-500 mt-1">Enter a URL to import M3U playlist</p>
+                                    </div>
+                                ) : (
+                                    <div>
+                                        <input
+                                            type="file"
+                                            ref={playlistFileRef}
+                                            onChange={e => setUploadedFile(e.target.files[0])}
+                                            accept=".m3u,.m3u8"
+                                            className="hidden"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => playlistFileRef.current?.click()}
+                                            className="w-full bg-slate-900 border-2 border-dashed border-slate-600 rounded p-4 text-center hover:border-blue-500 transition-colors"
+                                        >
+                                            {uploadedFile ? (
+                                                <div className="flex items-center justify-center gap-2 text-green-400">
+                                                    <CheckCircle size={20} />
+                                                    <span className="font-medium">{uploadedFile.name}</span>
+                                                </div>
+                                            ) : (
+                                                <div className="text-slate-400">
+                                                    <Upload size={32} className="mx-auto mb-2" />
+                                                    <p className="font-medium">Click to upload M3U file</p>
+                                                    <p className="text-xs mt-1">Supports .m3u and .m3u8 files</p>
+                                                </div>
+                                            )}
+                                        </button>
+                                    </div>
+                                )}
                             </div>
+
                             <div className="flex justify-end gap-3 pt-4">
-                                <button onClick={() => setShowCreatePlaylist(false)} className="btn-secondary">Cancel</button>
+                                <button onClick={() => { setShowCreatePlaylist(false); setUploadedFile(null); setUploadMethod('url'); }} className="btn-secondary">Cancel</button>
                                 <button onClick={createPlaylist} disabled={creatingPlaylist} className="btn-primary">
                                     {creatingPlaylist ? 'Creating...' : 'Create Playlist'}
                                 </button>
