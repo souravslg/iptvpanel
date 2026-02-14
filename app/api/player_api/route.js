@@ -245,14 +245,11 @@ async function handleRequest(request) {
                 let extension = 'ts';
                 if (targetType === 'movie') {
                     extension = 'mp4';
+                } else if (stream.stream_format) {
+                    // Use format from DB if available
+                    if (stream.stream_format === 'mpd') extension = 'mpd';
+                    else if (stream.stream_format === 'm3u8' || stream.stream_format === 'hls') extension = 'm3u8';
                 }
-                // For live streams, we default to 'ts' for Xtream compatibility.
-                // The proxy will handle the redirect to the actual source (m3u8/mpd/etc).
-                // Returning 'mpd' explicitly causes some players to fail if they don't support DASH via Xtream correctly.
-                // Exception: if it's strictly m3u8, we can keep m3u8 if preferred, but TS is safest.
-                // if (stream.url && (stream.url.includes('.m3u8') || stream.url.includes('/hls/'))) {
-                //    extension = 'm3u8';
-                // }
 
                 // Get stream mode preference
                 // optimization: could fetch once outside loop, but for now safe inside or passed in
