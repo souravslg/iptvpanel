@@ -238,8 +238,11 @@ async function handleRequest(request) {
 
                 // Determine extension based on actual stream format
                 let extension = 'ts';
-                if (stream.stream_format === 'mpd') extension = 'mpd';
-                else if (stream.stream_format === 'm3u8') extension = 'm3u8';
+                if (stream.stream_format === 'mpd' || stream.stream_format === 'dash') {
+                    extension = 'mpd';
+                } else if (stream.stream_format === 'm3u8' || stream.stream_format === 'hls') {
+                    extension = 'm3u8';
+                }
 
                 const output = searchParams.get('output');
                 if ((output === 'm3u8' || output === 'hls') && extension !== 'mpd') {
