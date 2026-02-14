@@ -273,9 +273,8 @@ async function handleRequest(request) {
                 // SMART PROXY: Only use direct mode if stream has NO authentication cookies
                 // Cookies like JioTV's __hdnea__ require server-side proxying
                 if (streamMode === 'direct' && !hasAuthCookies) {
-                    // Direct mode: expose raw URL WITHOUT pipe headers
-                    // Use cleanStreamUrl which doesn't have pipe headers appended
-                    directSourceUrl = cleanStreamUrl;
+                    // Direct mode: expose raw URL (WITH pipe headers if available, for TiviMate compatibility)
+                    directSourceUrl = streamUrl;
 
                     // Attempt to detect real extension from URL (ignoring query params)
                     try {
