@@ -488,9 +488,9 @@ async function handleRequest(request) {
                 timezone: 'Asia/Kolkata',
                 timestamp_now: Math.floor(Date.now() / 1000),
                 time_now: nowFormatted,
-                version: '1.0.0', // Xtream API V1
-                revision: 1,
-                xui: true // Signal XUI compatibility
+                version: '2.9.0', // Xtream API V2 (Standard)
+                revision: 2,
+                process: true // Some players check this
             }
         });
     } catch (error) {
