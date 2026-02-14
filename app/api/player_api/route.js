@@ -216,8 +216,10 @@ async function handleRequest(request) {
             const formattedStreams = allStreams.map(stream => {
                 const streamId = stream.stream_id || stream.id;
 
+
                 // URL Construction
                 let streamUrl = stream.url;
+                let cleanStreamUrl = stream.url; // Keep original URL without headers for direct mode
                 let licenseUrl = stream.drm_license_url;
 
                 if (stream.headers) {
@@ -261,22 +263,19 @@ async function handleRequest(request) {
                 let directSourceUrl = `${protocol}://${host}/live/${username}/${password}/${streamId}.${extension}`;
 
                 if (streamMode === 'direct') {
-                    // Direct mode: expose raw URL
-                    directSourceUrl = streamUrl;
+                    // Direct mode: expose raw URL WITHOUT pipe headers
+                    // Use cleanStreamUrl which doesn't have pipe headers appended
+                    directSourceUrl = cleanStreamUrl;
 
                     // Attempt to detect real extension from URL (ignoring query params)
                     try {
                         // Extract base URL before query params or pipe headers
-                        const cleanUrl = streamUrl.split('|')[0].split('?')[0];
+                        const cleanUrl = cleanStreamUrl.split('|')[0].split('?')[0];
                         if (cleanUrl.endsWith('.mpd')) extension = 'mpd';
                         else if (cleanUrl.endsWith('.m3u8')) extension = 'm3u8';
                         else if (cleanUrl.endsWith('.mkv')) extension = 'mkv';
                         else if (cleanUrl.endsWith('.mp4')) extension = 'mp4';
                     } catch (e) { }
-
-                    if (stream.headers) {
-                        // We already constructed streamUrl with pipe headers above if needed
-                    }
                 }
 
                 // Map category name to ID
