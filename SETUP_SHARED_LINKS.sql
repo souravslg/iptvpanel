@@ -1,0 +1,34 @@
+-- ===================================================================
+-- MANUAL SQL EXECUTION REQUIRED
+-- ===================================================================
+-- Please run this SQL in your Supabase Dashboard → SQL Editor
+-- This will create the shared_links table for the M3U link sharing feature
+-- ===================================================================
+
+-- Create shared_links table for managing shareable M3U URLs with expiry
+CREATE TABLE IF NOT EXISTS shared_links (
+    id SERIAL PRIMARY KEY,
+    link_id TEXT UNIQUE NOT NULL,
+    name TEXT NOT NULL,
+    source_url TEXT NOT NULL,
+    expire_date TIMESTAMP,
+    max_uses INTEGER DEFAULT NULL,
+    current_uses INTEGER DEFAULT 0,
+    status TEXT DEFAULT 'Active',
+    created_by INTEGER REFERENCES admin(id),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    last_accessed_at TIMESTAMP
+);
+
+-- Create index on link_id for faster lookups
+CREATE INDEX IF NOT EXISTS idx_shared_links_link_id ON shared_links(link_id);
+
+-- Create index on status for filtering
+CREATE INDEX IF NOT EXISTS idx_shared_links_status ON shared_links(status);
+
+-- ===================================================================
+-- After running this SQL:
+-- 1. Refresh your dev server or wait for it to auto-reload
+-- 2. Navigate to http://localhost:3000/shared-links
+-- 3. You should see the Shared Links management page
+-- ===================================================================

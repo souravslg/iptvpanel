@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react';
 import {
     Users, Plus, Search, Edit, Trash2, RefreshCw,
     Check, Copy, Link2, UserMinus, UserCheck,
-    Calendar, Key, Shield, Hash, Activity
+    Calendar, Key, Shield, Hash, Activity,
+    List, Monitor, PlayCircle, Loader
 } from 'lucide-react';
 
 export default function UsersPage() {
@@ -16,6 +17,7 @@ export default function UsersPage() {
     const [showAddModal, setShowAddModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
     const [showLinkModal, setShowLinkModal] = useState(false);
+    const [showPlaylistModal, setShowPlaylistModal] = useState(false);
 
     const [selectedUser, setSelectedUser] = useState(null);
     const [editingUser, setEditingUser] = useState(null);
@@ -192,6 +194,31 @@ export default function UsersPage() {
         };
     };
 
+    const generatePlaylistForUser = async (user) => {
+        try {
+            const res = await fetch('/api/user-playlist', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId: user.id })
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                alert(`Playlist generated!\n\n${window.location.origin}${data.playlistUrl}`);
+                fetchUsers(); // Refresh to show new playlist data
+            }
+        } catch (error) {
+            console.error('Failed to generate playlist:', error);
+            alert('Failed to generate playlist');
+        }
+    };
+
+    const getPlaylistUrl = (user) => {
+        if (!user.playlist_token) return null;
+        const origin = typeof window !== 'undefined' ? window.location.origin : '';
+        return `${origin}/playlist/${user.username}/${user.playlist_token}`;
+    };
+
     const filteredUsers = users.filter(user =>
         user.username.toLowerCase().includes(search.toLowerCase()) ||
         (user.notes && user.notes.toLowerCase().includes(search.toLowerCase()))
@@ -295,6 +322,25 @@ export default function UsersPage() {
                                     </td>
                                     <td className="text-right">
                                         <div className="flex justify-end items-center gap-3">
+                                            {/* Playlist Button */}
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    if (user.playlist_token) {
+                                                        const playlistUrl = getPlaylistUrl(user);
+                                                        copyToClipboard(playlistUrl);
+                                                    } else {
+                                                        generatePlaylistForUser(user);
+                                                    }
+                                                }}
+                                                className={`w-11 h-11 flex items-center justify-center rounded-2xl transition-all shadow-lg border active:scale-90 ${user.playlist_token
+                                                        ? 'bg-purple-500/10 text-purple-400 border-purple-500/20 hover:bg-purple-500 hover:text-white'
+                                                        : 'bg-purple-500/5 text-purple-300/50 border-purple-500/10 hover:bg-purple-500/10 hover:text-purple-400'
+                                                    }`}
+                                                title={user.playlist_token ? 'Copy Playlist URL' : 'Generate Playlist'}
+                                            >
+                                                <PlayCircle size={20} />
+                                            </button>
                                             <button
                                                 onClick={(e) => { e.stopPropagation(); setSelectedUser(user); setShowLinkModal(true); }}
                                                 className="w-11 h-11 flex items-center justify-center rounded-2xl bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500 hover:text-white transition-all shadow-lg hover:shadow-indigo-500/20 border border-indigo-500/20 active:scale-90"
