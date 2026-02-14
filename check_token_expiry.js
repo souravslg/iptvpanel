@@ -11,7 +11,7 @@ async function checkTokenIssue() {
     const { data: streams } = await supabase
         .from('streams')
         .select('stream_id, name, url')
-        .in('playlist_id', [30])
+        .in('playlist_id', [44])
         .limit(1);
 
     if (!streams || streams.length === 0) {

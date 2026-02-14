@@ -59,6 +59,19 @@ export async function GET(request) {
             .select('id')
             .eq('is_active', true);
 
+        // Fetch stream_mode setting
+        let streamMode = 'proxy';
+        try {
+            const { data: modeData } = await supabase
+                .from('settings')
+                .select('value')
+                .eq('key', 'stream_mode')
+                .single();
+            if (modeData?.value) streamMode = modeData.value;
+        } catch (e) {
+            console.error('Error fetching stream_mode:', e);
+        }
+
         if (!activePlaylists || activePlaylists.length === 0) {
             return new NextResponse('#EXTM3U\n', {
                 headers: {
@@ -187,7 +200,31 @@ export async function GET(request) {
             }
 
             const sId = stream.stream_id || stream.id;
-            const finalUrl = `${protocol}://${host}/live/${username}/${password}/${sId}.${extension}`;
+            let finalUrl = `${protocol}://${host}/live/${username}/${password}/${sId}.${extension}`;
+
+            // If Direct Mode, use the source URL with pipe headers
+            if (streamMode === 'direct' && stream.url) {
+                let directUrl = stream.url;
+                if (stream.headers) {
+                    const headers = typeof stream.headers === 'string' ? JSON.parse(stream.headers) : stream.headers;
+                    const headerParts = [];
+                    const getHeader = (key) => headers[key] || headers[key.toLowerCase()];
+
+                    const ua = getHeader('User-Agent');
+                    if (ua) headerParts.push(`User-Agent=${ua}`);
+
+                    const ref = getHeader('Referer') || getHeader('Origin');
+                    if (ref) headerParts.push(`Referer=${ref}`);
+
+                    if (headerParts.length > 0) {
+                        const pipeString = `|${headerParts.join('&')}`;
+                        if (!directUrl.includes('|')) {
+                            directUrl += pipeString;
+                        }
+                    }
+                }
+                finalUrl = directUrl;
+            }
 
             m3u += `${finalUrl}\n`;
         });
