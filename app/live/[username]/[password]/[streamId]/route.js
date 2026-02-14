@@ -320,26 +320,42 @@ export async function GET(request, context) {
             const contentType = response.headers.get('content-type') || '';
             const isDash = targetUrl.includes('.mpd') || contentType.includes('dash') || contentType.includes('xml');
 
-            if (isDash && pipeSuffix) { // pipeSuffix calculated above (e.g. |User-Agent=...)
-                console.log('⚡ Rewriting DASH manifest with headers...');
+            if (isDash && pipeSuffix) {
+                console.log('⚡ Rewriting DASH manifest with headers via PROXY QUERY PARAMS...');
                 const text = await response.text();
 
-                // Simple regex to append pipe headers to http/https URLs inside the XML
-                // We target URLs inside quotes (attributes) or tags
-                // Avoid double-piping if already exists (unlikely from source)
+                // Get the headers as a JSON string to pass to our proxy
+                const headersToPass = {};
+                // Extract headers from pipeSuffix or use available headers
+                // pipeSuffix format: |Key=Value&Key2=Value2
+                if (pipeSuffix) {
+                    const parts = pipeSuffix.substring(1).split('&'); // remove leading |
+                    parts.forEach(p => {
+                        const [k, v] = p.split('=');
+                        if (k && v) headersToPass[k] = v;
+                    });
+                }
+
+                const headersQueryParam = encodeURIComponent(JSON.stringify(headersToPass));
+                const baseUrl = new URL(targetUrl); // The base for relative URLs in the manifest
 
                 // Regex matches http(s)://... until a quote " or < or > or whitespace
-                // We verify it looks like a URL.
-
                 const modifiedText = text.replace(/(https?:\/\/[^"<>\s]+)/g, (match) => {
-                    if (match.includes(pipeSuffix)) return match; // Already verified
-                    return match + pipeSuffix;
+                    // Check if match is absolute
+                    try {
+                        const absoluteUrl = new URL(match).toString();
+                        // Rewrite to point to our proxy
+                        return `${protocol}://${host}/api/proxy/stream?url=${encodeURIComponent(absoluteUrl)}&headers=${headersQueryParam}`;
+                    } catch (e) {
+                        return match;
+                    }
                 });
 
                 const newHeaders = new Headers(response.headers);
                 newHeaders.delete('Content-Length'); // Content changed
                 newHeaders.set('Access-Control-Allow-Origin', '*');
                 newHeaders.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+                newHeaders.set('Content-Type', 'application/dash+xml');
 
                 return new NextResponse(modifiedText, {
                     status: response.status,
