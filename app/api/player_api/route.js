@@ -222,8 +222,15 @@ async function handleRequest(request) {
                 let cleanStreamUrl = stream.url; // Keep original URL without headers for direct mode
                 let licenseUrl = stream.drm_license_url;
 
+                // Check if stream has authentication cookies (not just User-Agent/Referer)
+                let hasAuthCookies = false;
                 if (stream.headers) {
                     const headers = typeof stream.headers === 'string' ? JSON.parse(stream.headers) : stream.headers;
+                    // Check for Cookie or cookie header (case-insensitive)
+                    hasAuthCookies = Object.keys(headers).some(key =>
+                        key.toLowerCase() === 'cookie'
+                    );
+
                     const headerParts = [];
                     const getHeader = (key) => headers[key] || headers[key.toLowerCase()];
 
@@ -262,7 +269,9 @@ async function handleRequest(request) {
                 // Use PROXY URL instead of raw stream URL for direct_source
                 let directSourceUrl = `${protocol}://${host}/live/${username}/${password}/${streamId}.${extension}`;
 
-                if (streamMode === 'direct') {
+                // SMART PROXY: Only use direct mode if stream has NO authentication cookies
+                // Cookies like JioTV's __hdnea__ require server-side proxying
+                if (streamMode === 'direct' && !hasAuthCookies) {
                     // Direct mode: expose raw URL WITHOUT pipe headers
                     // Use cleanStreamUrl which doesn't have pipe headers appended
                     directSourceUrl = cleanStreamUrl;
@@ -277,6 +286,7 @@ async function handleRequest(request) {
                         else if (cleanUrl.endsWith('.mp4')) extension = 'mp4';
                     } catch (e) { }
                 }
+                // If hasAuthCookies is true, we keep directSourceUrl as proxy URL
 
                 // Map category name to ID
                 const catId = categoryMap[stream.category] || '0'; // 0 or Uncategorized

@@ -259,9 +259,20 @@ export async function GET(request, context) {
         // If Direct/Redirect mode, we redirect user to source
         // This handles cases where players construct the /live/ URL manually
         if (streamMode === 'direct' || streamMode === 'redirect') {
-            console.log('Redirecting to direct source:', targetUrl);
-            // We still logged the active stream above, which is good.
-            return NextResponse.redirect(targetUrl, { status: 302 }); // 302 is better for player compatibility than 307
+            // SMART PROXY: Check if stream has authentication cookies
+            // Cookies like JioTV's __hdnea__ require server-side proxying
+            const hasAuthCookies = Object.keys(fetchHeaders).some(key =>
+                key.toLowerCase() === 'cookie'
+            );
+
+            if (hasAuthCookies) {
+                console.log('⚠️ Smart Proxy: Stream has authentication cookies, FORCING PROXY mode.');
+                // Fall through to proxy mode below
+            } else {
+                console.log('Redirecting to direct source:', targetUrl);
+                // We still logged the active stream above, which is good.
+                return NextResponse.redirect(targetUrl, { status: 302 }); // 302 is better for player compatibility than 307
+            }
         }
 
         // 4. PROXY MODE: Fetch and stream back to client
