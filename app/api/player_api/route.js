@@ -208,22 +208,31 @@ async function handleRequest(request) {
                 let licenseUrl = stream.drm_license_url;
 
                 // Add pipe headers for compatibility with TiviMate/OTT Navigator
+                // Check if stream needs cookie authentication (JioTV, etc.)
+                let needsCookieAuth = false;
                 if (stream.headers) {
                     const headers = typeof stream.headers === 'string' ? JSON.parse(stream.headers) : stream.headers;
+                    // Check for Cookie header (case-insensitive)
+                    needsCookieAuth = Object.keys(headers).some(key =>
+                        key.toLowerCase() === 'cookie'
+                    );
 
-                    const headerParts = [];
-                    const getHeader = (key) => headers[key] || headers[key.toLowerCase()];
+                    // Only add pipe headers for non-cookie streams
+                    if (!needsCookieAuth) {
+                        const headerParts = [];
+                        const getHeader = (key) => headers[key] || headers[key.toLowerCase()];
 
-                    const ua = getHeader('User-Agent');
-                    if (ua) headerParts.push(`User-Agent=${ua}`);
+                        const ua = getHeader('User-Agent');
+                        if (ua) headerParts.push(`User-Agent=${ua}`);
 
-                    const ref = getHeader('Referer') || getHeader('Origin');
-                    if (ref) headerParts.push(`Referer=${ref}`);
+                        const ref = getHeader('Referer') || getHeader('Origin');
+                        if (ref) headerParts.push(`Referer=${ref}`);
 
-                    if (headerParts.length > 0) {
-                        const pipeHeaders = headerParts.join('&');
-                        if (streamUrl) streamUrl += `|${pipeHeaders}`;
-                        if (licenseUrl) licenseUrl += `|${pipeHeaders}`;
+                        if (headerParts.length > 0) {
+                            const pipeHeaders = headerParts.join('&');
+                            if (streamUrl) streamUrl += `|${pipeHeaders}`;
+                            if (licenseUrl) licenseUrl += `|${pipeHeaders}`;
+                        }
                     }
                 }
 
@@ -241,17 +250,26 @@ async function handleRequest(request) {
                     extension = 'mp4';
                 }
 
-                // Always use direct URL (no proxy)
-                let directSourceUrl = streamUrl;
+                // SELECTIVE PROXY: Use proxy ONLY for streams with cookie authentication
+                // All other streams use direct URLs
+                let directSourceUrl;
 
-                // Attempt to detect real extension from URL (ignoring query params)
-                try {
-                    const cleanUrl = stream.url.split('|')[0].split('?')[0];
-                    if (cleanUrl.endsWith('.mpd')) extension = 'mpd';
-                    else if (cleanUrl.endsWith('.m3u8')) extension = 'm3u8';
-                    else if (cleanUrl.endsWith('.mkv')) extension = 'mkv';
-                    else if (cleanUrl.endsWith('.mp4')) extension = 'mp4';
-                } catch (e) { }
+                if (needsCookieAuth) {
+                    // Cookie-based streams (JioTV, etc.) - use proxy for server-side cookie injection
+                    directSourceUrl = `${protocol}://${host}/live/${username}/${password}/${streamId}.${extension}`;
+                } else {
+                    // Direct URL for all other streams
+                    directSourceUrl = streamUrl;
+
+                    // Attempt to detect real extension from URL (ignoring query params)
+                    try {
+                        const cleanUrl = stream.url.split('|')[0].split('?')[0];
+                        if (cleanUrl.endsWith('.mpd')) extension = 'mpd';
+                        else if (cleanUrl.endsWith('.m3u8')) extension = 'm3u8';
+                        else if (cleanUrl.endsWith('.mkv')) extension = 'mkv';
+                        else if (cleanUrl.endsWith('.mp4')) extension = 'mp4';
+                    } catch (e) { }
+                }
 
                 // Map category name to ID
                 const catId = categoryMap[stream.category] || '0';
