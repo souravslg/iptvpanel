@@ -170,6 +170,13 @@ export async function GET(request) {
                 const ua = getHeader('User-Agent');
                 const ref = getHeader('Referer');
                 const org = getHeader('Origin');
+                const cookie = getHeader('Cookie');
+
+                // CRITICAL: Add EXTHTTP tag for cookie authentication (JioTV, etc.)
+                // This MUST come before EXTVLCOPT for TiviMate to parse correctly
+                if (cookie) {
+                    m3u += `#EXTHTTP:{"cookie":"${cookie}"}\n`;
+                }
 
                 if (ua) m3u += `#EXTVLCOPT:http-user-agent=${ua}\n`;
                 if (ref) m3u += `#EXTVLCOPT:http-referrer=${ref}\n`;
