@@ -1,0 +1,12 @@
+Found 'NE News' at line 4237:
+4237: #EXTINF:-1 tvg-id="3217" group-title="News" tvg-logo="https://jiotv.catchup.cdn.jio.com/dare_images/images/NE_News.png",NE News
+4238: #KODIPROP:inputstream.adaptive.license_type=clearkey
+4239: #KODIPROP:inputstream.adaptive.license_type=clearkey
+4240: #KODIPROP:inputstream.adaptive.license_key=https://aqfadtv.xyz/clearkey/results.php?keyid=cd743c165dc95fecada6f9ad675624d0&key=5997e48e21cb600c2abc1877d6e8c685
+4241: #EXTVLCOPT:http-user-agent=plaYtv/7.1.3 (Linux;Android 13) ygx/824.1 ExoPlayerLib/824.0
+4242: #EXTHTTP:{"cookie":"__hdnea__=st=1770968162~exp=1771054562~acl=/*~hmac=a20b369ce7b0b48ea6f53ecd616f0e94ba595042495610cae245fed7b640c883"}
+4243: https://jiotvbpkmob.cdn.jio.com/bpk-tv/NE_News_BTS/output/index.mpd
+4244: 
+4245: #EXTINF:-1 tvg-id="3218" group-title="News" tvg-logo="https://jiotv.catchup.cdn.jio.com/dare_images/images/STV24_News.png",STV24 News
+4246: #KODIPROP:inputstream.adaptive.license_type=clearkey
+

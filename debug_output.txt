@@ -1,0 +1,20 @@
+--- Debugging Channel Formats ---
+
+[Working Channel] Star Sports HD:
+Name: Star Sports Select 1 HD
+URL: https://jiotvmblive.cdn.jio.com/bpk-tv/Star_Sports_Select_HD_1_BTS/output/index.mpd?__hdnea__=st=1771137001~exp=1771223401~acl=/*~hmac=a709ae5cf502690006aee78a08fb78fbbd937f0d5206e5092cf30bcb0a4b138a
+Format: mpd
+Headers: {
+  "User-Agent": "plaYtv/7.1.3 (Linux;Android 13) ygx/69.1 ExoPlayerLib/824.0"
+}
+DRM: clearkey
+
+[Comparison] Other Jio Channel:
+Name: NE News
+URL: https://jiotvmblive.cdn.jio.com/bpk-tv/NE_News_BTS/output/index.mpd?__hdnea__=st=1771149635~exp=1771236035~acl=/*~hmac=d1ce25b22e9357b887deebeaf40a7d4120c4bf507d2c45bb53de5b077fa51bb5
+Format: mpd
+Headers: {
+  "User-Agent": "plaYtv/7.1.3 (Linux;Android 13) ygx/69.1 ExoPlayerLib/824.0"
+}
+DRM: clearkey
+
