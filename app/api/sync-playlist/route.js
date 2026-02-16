@@ -2,10 +2,6 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
 // Auto-sync endpoint - fetches source M3U and updates database cookies daily
-const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.SUPABASE_SERVICE_ROLE_KEY
-);
 
 // Parse M3U content to extract streams with headers
 function parseM3U(m3uContent) {
@@ -53,6 +49,12 @@ function parseM3U(m3uContent) {
 
 export async function GET(request) {
     try {
+        // Initialize Supabase client at runtime (not build time)
+        const supabase = createClient(
+            process.env.NEXT_PUBLIC_SUPABASE_URL,
+            process.env.SUPABASE_SERVICE_ROLE_KEY
+        );
+
         // Verify authorization (cron secret or admin)
         const authHeader = request.headers.get('authorization');
         const cronSecret = process.env.CRON_SECRET || 'dev-secret-key';
