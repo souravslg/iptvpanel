@@ -1,0 +1,172 @@
+name: Update M3U
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/10 * * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  update-m3u:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for rebase
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Playwright and dependencies
+        run: |
+          npm init -y
+          npm install playwright
+          npx playwright install chromium --with-deps
+
+      - name: Fetch M3U with enhanced cookies
+        id: fetch
+        run: |
+          node -e "
+          const { chromium } = require('playwright');
+          const fs = require('fs');
+          const path = require('path');
+
+          (async () => {
+            console.log('Starting Playwright...');
+            
+            const browser = await chromium.launch({ 
+              headless: true,
+              args: ['--no-sandbox', '--disable-setuid-sandbox']
+            });
+            
+            const context = await browser.newContext({
+              userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+              viewport: { width: 1920, height: 1080 }
+            });
+            
+            const page = await context.newPage();
+            
+            try {
+              // Go to URL with longer timeout
+              console.log('Navigating to URL...');
+              await page.goto('https://j-plus.free.nf/jtv/jtv.m3u.php', {
+                waitUntil: 'networkidle',
+                timeout: 120000
+              });
+              
+              // Wait for content to load
+              await page.waitForSelector('body', { timeout: 30000 });
+              
+              // Additional wait for JS execution
+              await page.waitForTimeout(10000);
+              
+              // Get content
+              const content = await page.content();
+              
+              // Try multiple extraction methods
+              let m3uContent = '';
+              
+              // Method 1: Extract from pre/code tag
+              const preContent = await page.evaluate(() => {
+                const pre = document.querySelector('pre');
+                const code = document.querySelector('code');
+                return pre ? pre.textContent : (code ? code.textContent : null);
+              });
+              
+              if (preContent && preContent.includes('#EXTM3U')) {
+                m3uContent = preContent;
+              } else {
+                // Method 2: Get body text
+                m3uContent = await page.evaluate(() => document.body.innerText);
+              }
+              
+              // Clean up
+              m3uContent = m3uContent.trim();
+              
+              // Save to file
+              const filePath = path.join(process.cwd(), 'jtv.m3u');
+              fs.writeFileSync(filePath, m3uContent);
+              console.log('File saved successfully');
+              console.log('First 500 chars:', m3uContent.substring(0, 500));
+              
+            } catch (error) {
+              console.error('Error:', error);
+              process.exit(1);
+            } finally {
+              await browser.close();
+            }
+          })();
+          "
+
+      - name: Validate M3U file
+        run: |
+          echo "=== Checking M3U file ==="
+          ls -la jtv.m3u
+          echo "=== First 10 lines ==="
+          head -10 jtv.m3u
+          echo "=== Line count ==="
+          wc -l jtv.m3u
+          
+          if [ ! -f "jtv.m3u" ]; then
+            echo "❌ File not created!"
+            exit 1
+          fi
+          
+          if ! grep -q "#EXTM3U" jtv.m3u; then
+            echo "❌ Invalid M3U format!"
+            echo "=== File content (first 200 chars) ==="
+            head -c 200 jtv.m3u
+            exit 1
+          fi
+          
+          echo "✅ Valid M3U file detected"
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global pull.rebase true
+
+      - name: Check for changes
+        id: git-check
+        run: |
+          git status
+          if git diff --quiet HEAD jtv.m3u; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "No changes detected"
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "Changes detected in jtv.m3u"
+            git diff HEAD jtv.m3u | head -50
+          fi
+
+      - name: Commit and push changes
+        if: steps.git-check.outputs.has_changes == 'true'
+        run: |
+          # First, pull latest changes without modifying working directory
+          git fetch origin main
+          
+          # Now stage, commit and push
+          git add jtv.m3u
+          git commit -m "🔄 Auto-update jtv.m3u - $(date +'%Y-%m-%d %H:%M:%S')"
+          
+          # Pull with rebase to incorporate any remote changes
+          git pull --rebase origin main
+          
+          # Push the changes
+          git push origin main
+          
+          echo "✅ Successfully updated jtv.m3u"
+
+      - name: No changes needed
+        if: steps.git-check.outputs.has_changes == 'false'
+        run: |
+          echo "✅ jtv.m3u is already up to date"
+          # Still pull latest to keep repo updated
+          git pull origin main
