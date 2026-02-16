@@ -209,8 +209,20 @@ export async function GET(request) {
             const sId = stream.stream_id || stream.id;
             let finalUrl = `${protocol}://${host}/live/${username}/${password}/${sId}.${extension}`;
 
-            // If Direct Mode, use the source URL with pipe headers
-            if (streamMode === 'direct' && stream.url) {
+            // CRITICAL: Check if stream requires cookies - if so, FORCE proxy mode
+            // Cookie-authenticated streams (like JioTV) MUST go through proxy to inject headers
+            let forceProxyForCookies = false;
+            if (stream.headers) {
+                const headers = typeof stream.headers === 'string' ? JSON.parse(stream.headers) : stream.headers;
+                const getHeader = (key) => headers[key] || headers[key.toLowerCase()];
+                const cookie = getHeader('Cookie');
+                if (cookie) {
+                    forceProxyForCookies = true;
+                }
+            }
+
+            // If Direct Mode AND no cookies required, use the source URL with pipe headers
+            if (streamMode === 'direct' && !forceProxyForCookies && stream.url) {
                 let directUrl = stream.url;
                 if (stream.headers) {
                     const headers = typeof stream.headers === 'string' ? JSON.parse(stream.headers) : stream.headers;
