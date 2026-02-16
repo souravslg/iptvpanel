@@ -126,74 +126,41 @@ export async function GET(request) {
             // ... (DRM and Header logic preserved in omitted lines if not replaced, wait, I need to keep the DRM logic)
             // Ideally I should only replace the URL line, but the DRM logic is inside the loop.
             // I will replace the generation block.
+            // M3U Tag Order (CRITICAL for TiviMate):
+            // 1. #EXTINF (channel info) - MUST be first
+            // 2. #KODIPROP (DRM keys)
+            // 3. #EXTVLCOPT (user-agent)
+            // 4. #EXTHTTP (cookies)
+            // 5. URL
 
+            // 1. Channel Info - MUST be first
+            m3u += `#EXTINF:-1 tvg-id=\"${tvgId}\" tvg-name=\"${tvgName}\" tvg-logo=\"${tvgLogo}\" group-title=\"${groupTitle}\", ${tvgName}\n`;
 
-            // 1. DRM Properties (Kodi / Standard HLS)
-            // Handle generic KODIPROP license key if present (for both Widevine and ClearKey via URL)
-            if (stream.drm_license_url) {
-                const licenseType = stream.drm_scheme || 'com.widevine.alpha';
-                m3u += `#KODIPROP:inputstream.adaptive.license_type=${licenseType}\n`;
-
-                let finalLicenseUrl = stream.drm_license_url;
-
-                // Append headers to license URL if needed (for Kodi/tivimate)
-                if (stream.headers) {
-                    const headers = typeof stream.headers === 'string' ? JSON.parse(stream.headers) : stream.headers;
-                    const headerParts = [];
-                    const getHeader = (key) => headers[key] || headers[key.toLowerCase()];
-                    const ua = getHeader('User-Agent');
-                    const ref = getHeader('Referer') || getHeader('Origin');
-                    const cookie = getHeader('Cookie');
-
-                    if (ua) headerParts.push(`User-Agent=${ua}`);
-                    if (ref) headerParts.push(`Referer=${ref}`);
-                    if (cookie) headerParts.push(`Cookie=${cookie}`);
-
-                    if (headerParts.length > 0) finalLicenseUrl += `|${headerParts.join('&')}`;
-                }
-
-                m3u += `#KODIPROP:inputstream.adaptive.license_key=${finalLicenseUrl}\n`;
-            }
-
-            // Handle Specific ClearKey (kid:key) mapping
+            // 2. DRM Keys (if present)
             if (stream.drm_scheme === 'clearkey' && stream.drm_key_id && stream.drm_key) {
-                // Standard generic simple format works best for most players:
-                // #KODIPROP:inputstream.adaptive.license_key=kid:key
-                m3u += `#KODIPROP:inputstream.adaptive.license_type=org.w3.clearkey\n`;
+                // TiviMate wants "clearkey" not "org.w3.clearkey"
+                m3u += `#KODIPROP:inputstream.adaptive.license_type=clearkey\n`;
                 m3u += `#KODIPROP:inputstream.adaptive.license_key=${stream.drm_key_id}:${stream.drm_key}\n`;
             }
 
-            // 2. HTTP Headers (User-Agent, Referer, Origin)
+            // 3. User-Agent (if present)
             if (stream.headers) {
                 const headers = typeof stream.headers === 'string' ? JSON.parse(stream.headers) : stream.headers;
                 const getHeader = (key) => headers[key] || headers[key.toLowerCase()];
                 const ua = getHeader('User-Agent');
-                const ref = getHeader('Referer');
-                const org = getHeader('Origin');
-                const cookie = getHeader('Cookie');
 
-                // CRITICAL: Add EXTHTTP tag for cookie authentication (JioTV, etc.)
-                // This MUST come before EXTVLCOPT for TiviMate to parse correctly
-                if (cookie) {
-                    m3u += `#EXTHTTP:{"cookie":"${cookie}"}\n`;
+                if (ua) {
+                    m3u += `#EXTVLCOPT:http-user-agent=${ua}\n`;
                 }
 
-                if (ua) m3u += `#EXTVLCOPT:http-user-agent=${ua}\n`;
-                if (ref) m3u += `#EXTVLCOPT:http-referrer=${ref}\n`;
-
-                const kodiHeaders = [];
-                if (ua) kodiHeaders.push(`User-Agent=${ua}`);
-                if (ref) kodiHeaders.push(`Referer=${ref}`);
-                if (org) kodiHeaders.push(`Origin=${org}`);
-                if (kodiHeaders.length > 0) {
-                    m3u += `#KODIPROP:inputstream.adaptive.stream_headers=${kodiHeaders.join('&')}\n`;
+                // 4. Cookie (MUST be after EXTVLCOPT for TiviMate)
+                const cookie = getHeader('Cookie');
+                if (cookie) {
+                    m3u += `#EXTHTTP:{\"cookie\":\"${cookie}\"}\n`;
                 }
             }
 
-            // 3. Channel Info
-            m3u += `#EXTINF:-1 tvg-id="${tvgId}" tvg-name="${tvgName}" tvg-logo="${tvgLogo}" group-title="${groupTitle}",${tvgName}\n`;
-
-            // 4. Final Stream URL (Must be immediately after EXTINF)
+            // 5. Final Stream URL
             // Use correct extension from stream_format
             let extension = 'ts';
             if (stream.stream_format === 'mpd') extension = 'mpd';
@@ -209,28 +176,11 @@ export async function GET(request) {
             const sId = stream.stream_id || stream.id;
             let finalUrl = `${protocol}://${host}/live/${username}/${password}/${sId}.${extension}`;
 
-            // If Direct Mode, use the source URL with pipe headers
+            // If Direct Mode, use the source URL WITHOUT pipe headers
+            // TiviMate reads #EXTHTTP tags, NOT pipe headers in the URL
             if (streamMode === 'direct' && stream.url) {
-                let directUrl = stream.url;
-                if (stream.headers) {
-                    const headers = typeof stream.headers === 'string' ? JSON.parse(stream.headers) : stream.headers;
-                    const headerParts = [];
-                    const getHeader = (key) => headers[key] || headers[key.toLowerCase()];
-
-                    const ua = getHeader('User-Agent');
-                    if (ua) headerParts.push(`User-Agent=${ua}`);
-
-                    const ref = getHeader('Referer') || getHeader('Origin');
-                    if (ref) headerParts.push(`Referer=${ref}`);
-
-                    if (headerParts.length > 0) {
-                        const pipeString = `|${headerParts.join('&')}`;
-                        if (!directUrl.includes('|')) {
-                            directUrl += pipeString;
-                        }
-                    }
-                }
-                finalUrl = directUrl;
+                // Use clean URL - headers are in #EXTHTTP tag above
+                finalUrl = stream.url;
             }
 
             m3u += `${finalUrl}\n`;
