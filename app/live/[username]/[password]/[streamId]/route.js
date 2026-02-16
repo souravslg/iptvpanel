@@ -271,14 +271,14 @@ export async function GET(request, context) {
         console.log('Stream Mode:', streamMode);
 
         // Check if stream requires cookies (JTV, Hotstar etc)
-        // If it does, we MUST use proxy mode for 'proxy' or 'redirect' modes
-        // BUT if mode is 'direct', we trust the player to handle the headers via pipe
+        // CRITICAL: If stream has cookies, we MUST proxy (can't use redirect/direct mode)
+        // because TiviMate and many players don't handle redirects with pipe headers
         let forceProxy = false;
 
-        if (stream.headers && streamMode !== 'direct') {
+        if (stream.headers) {
             const h = typeof stream.headers === 'string' ? JSON.parse(stream.headers) : stream.headers;
-            if (h.cookie || h.Cookie || h['User-Agent'] || h['user-agent']) {
-                console.log('Stream requires headers/cookies. Forcing PROXY mode.');
+            if (h.cookie || h.Cookie) {
+                console.log('Stream requires cookies. FORCING PROXY mode.');
                 forceProxy = true;
             }
         }
