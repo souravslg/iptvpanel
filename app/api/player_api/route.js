@@ -254,6 +254,18 @@ async function handleRequest(request) {
                 // Get stream mode preference
                 // optimization: could fetch once outside loop, but for now safe inside or passed in
 
+                // CRITICAL: Check if stream requires cookies - if so, FORCE proxy mode
+                // Cookie-authenticated streams (like JioTV) MUST go through proxy to inject headers
+                let forceProxyForCookies = false;
+                if (stream.headers) {
+                    const h = typeof stream.headers === 'string' ? JSON.parse(stream.headers) : stream.headers;
+                    // If Cookie header is present, we MUST use proxy mode
+                    if (h.Cookie || h.cookie) {
+                        forceProxyForCookies = true;
+                        console.log(`Stream ${streamId} requires cookies - forcing proxy mode`);
+                    }
+                }
+
                 // Use PROXY URL instead of raw stream URL for direct_source
                 let directSourceUrl = `${protocol}://${host}/live/${username}/${password}/${streamId}.${extension}`;
 
@@ -267,7 +279,12 @@ async function handleRequest(request) {
                     }
                 }
 
-                if (streamMode === 'direct' && !forceProxyForDash) {
+                // ONLY use direct mode if:
+                // 1. Setting is 'direct' AND
+                // 2. No cookies required AND
+                // 3. Not forcing proxy for DASH
+                if (streamMode === 'direct' && !forceProxyForCookies && !forceProxyForDash) {
+
                     // Direct mode: expose raw URL
                     directSourceUrl = streamUrl;
 

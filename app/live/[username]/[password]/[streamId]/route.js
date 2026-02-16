@@ -324,6 +324,11 @@ export async function GET(request, context) {
                 console.log('⚡ Rewriting DASH manifest with headers via PROXY QUERY PARAMS...');
                 const text = await response.text();
 
+                // Extract protocol and host from the request
+                const requestUrl = new URL(request.url);
+                const protocol = requestUrl.protocol.replace(':', ''); // http or https
+                const host = requestUrl.host; // includes port if present
+
                 // Get the headers as a JSON string to pass to our proxy
                 const headersToPass = {};
                 // Extract headers from pipeSuffix or use available headers
