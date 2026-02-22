@@ -6003,12 +6003,12 @@ https://dishmt.slivcdn.com/hls/live/2011748/PIXHD/master.m3u8?hdnea=exp=17718008
 https://dishmt.slivcdn.com/hls/live/2011740/SonyMarathi/master.m3u8?hdnea=exp=1771800895~acl=/*~id=59044686395913957044934271560044~hmac=2378b8cc9468d82c1aadd429cc333aabfaf706d4fad7d5ce1a4f244110f6b6bc
 #EXTINF:-1 tvg-id="sony-aath" tvg-name="Sony Aath" tvg-language="Bengali" tvg-logo="https://i.postimg.cc/bY12WVTm/SONY-AATH.png" group-title="Entertainment",Sony Aath
 https://dishmt.slivcdn.com/hls/live/2011641/SonyAathSD/master.m3u8?hdnea=exp=1771800895~acl=/*~id=59044686395913957044934271560044~hmac=2378b8cc9468d82c1aadd429cc333aabfaf706d4fad7d5ce1a4f244110f6b6bc#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000015364/1771401550988586_DP_World_Tour_Magical_Kenya_Open_Day4_landscape_thumb.jpg" group-title="sonyliv-Golf", Magical Kenya Open - Day 4 - 22 Feb 2026 [ENG] - DP World Tour
-https://sonydaimenew.akamaized.net/hls/live/2094587/DAI03ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1771803317~acl=/*~id=11657632048022171529912582052400~hmac=47918759dbd63b11ce434d1ddf75dec98ff759efeaea4ed2a1b3e345a65f1279
+https://sonydaimenew.akamaized.net/hls/live/2094587/DAI03ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1771804528~acl=/*~id=34384660459690758459514751255324~hmac=c54b8b75b2bdb566bccc2c78761c00797bd99d1f0384467ec40bc1b7f2bd968b
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Mini-Match-Card-(1080x810)-(2)_1771323008079.png" group-title="Fancode-Cricket", England Lions vs Pakistan Shaheens (England Lions and Pakistan Shaheens tour of UAE)
 https://in-mc-fdlive.fancode.com/mumbai/140662_english_hls_160f2d86ad43710_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140682_5968_PRC_VDS_FC-Web.jpg" group-title="Fancode-Cricket", Paarl CC vs Vredenburg/Saldanha CC (Boland T20 Super League Finals 2026)
+https://in-mc-fdlive.fancode.com/mumbai/140682_english_hls_0ba926e6dd98695_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140441_5956_BFC_NEUFC_fc-web_1771412946471.jpg" group-title="Fancode-Football", Bengaluru FC vs NorthEast United FC (ISL 2025-26)
 https://in-mc-fdlive.fancode.com/mumbai/140441_english_hls_9d6d4c2e8d43686_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140125_5489_SHF_SHFF_fc-web.jpg" group-title="Fancode-Football", Sheffield United F.C. vs Sheffield Wednesday F.C. (EFL Championship 2025-26)
 https://in-mc-fdlive.fancode.com/mumbai/140125_english_hls_b464520a9b8646_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140682_5968_PRC_VDS_FC-Web.jpg" group-title="Fancode-Cricket", Paarl CC vs Vredenburg/Saldanha CC (Boland T20 Super League Finals 2026)
-https://in-mc-fdlive.fancode.com/mumbai/140682_english_hls_0ba926e6dd98695_1ta-di_h264/index.m3u8
