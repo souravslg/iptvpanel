@@ -51,8 +51,6 @@ https://dishmt.slivcdn.com/hls/live/2011740/SonyMarathi/master.m3u8?hdnea=exp=17
 https://dishmt.slivcdn.com/hls/live/2011641/SonyAathSD/master.m3u8?hdnea=exp=1771914784~acl=/*~id=77284567316916060422542621040611~hmac=d5553eaa26eae30a00d73439e6c27e8adc27edefa6d8ed87de8c585cd5c1a6cc#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Women's-National-Cricket-League_old_v3_1758034980120.jpg" group-title="Fancode-Cricket", South Australian Scorpions vs ACT Meteors (Women's National Cricket League, 2025-26)
 #EXTINF:-1 tvg-id="sony-aath" tvg-name="Sony Aath" tvg-language="Bengali" tvg-logo="https://i.postimg.cc/bY12WVTm/SONY-AATH.png" group-title="Entertainment",Sony Aath
 https://dishmt.slivcdn.com/hls/live/2011641/SonyAathSD/master.m3u8?hdnea=exp=1771914784~acl=/*~id=77284567316916060422542621040611~hmac=d5553eaa26eae30a00d73439e6c27e8adc27edefa6d8ed87de8c585cd5c1a6cc#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Women's-National-Cricket-League_old_v3_1758034980120.jpg" group-title="Fancode-Cricket", South Australian Scorpions vs ACT Meteors (Women's National Cricket League, 2025-26)
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/BCI-Seguros-Chile-Open,-Clay,-ATP-250-old-.png" group-title="Fancode-Tennis", Court Jaime Fillol vs Santiago, Chile (ATP 250 - BCI Seguros Chile Open 2026)
-https://in-mc-fdlive.fancode.com/mumbai/140357_english_hls_a30faa2f5741221_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Abierto-Mexicano-_web.jpg" group-title="Fancode-Tennis", World Feed vs Acapulco, Mexico (ATP 500 - Abierto Mexicano Telcel)
 https://in-mc-fdlive.fancode.com/mumbai/140351_english_hls_fc7f3ef58a3756_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Abierto-Mexicano-_web.jpg" group-title="Fancode-Tennis", Cancha 1 vs Acapulco, Mexico (ATP 500 - Abierto Mexicano Telcel)
@@ -60,6 +58,4 @@ https://in-mc-fdlive.fancode.com/mumbai/140831_english_hls_5f1a9653a843727_1ta-d
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Abierto-Mexicano-_web.jpg" group-title="Fancode-Tennis", Grandstand vs Acapulco, Mexico (ATP 500 - Abierto Mexicano Telcel)
 https://in-mc-fdlive.fancode.com/mumbai/140830_english_hls_db79b7a9ae31299_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Abierto-Mexicano-_web.jpg" group-title="Fancode-Tennis", Estadio vs Acapulco, Mexico (ATP 500 - Abierto Mexicano Telcel)
-https://in-mc-fdlive.fancode.com/mumbai/140829_english_hls_ce63c6a72971170_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/TGL_Mini-Match-Card-(1080x810).png" group-title="Fancode-Golf", Los Angeles vs Atlanta vs Florida (TGL Season 2)
 https://in-mc-fdlive.fancode.com/mumbai/140829_english_hls_ce63c6a72971170_1ta-di_h264/index.m3u8
