@@ -6,7 +6,7 @@ http://66.102.120.18:8000/play/a013/index.m3u8
 #EXTINF:-1 group-title="HOTSTAR" tvg-logo="usus",DISNEY HD
 http://66.102.120.18:8000/play/a013/index.m3u8
 404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000015700/177217706800066_FC_Cup_26_RD4_Port-Vale-vs-Bristol-City_landscape_thumb.jpg" group-title="sonyliv-Football", Port Vale vs Bristol City - Round 4 - 4 Mar 2026 [ENG] - The Emirates FA Cup 2025-26
-https://sonydaimenew.akamaized.net/hls/live/2094587/DAI03ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1772612748~acl=/*~id=09710272424718506432418138301520~hmac=264f929b5168169f54d6649e5f66a26416a3e90ffa6ccdd14a0b582570960cf8
+https://sonydaimenew.akamaized.net/hls/live/2094587/DAI03ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1772614563~acl=/*~id=25815842721846213930585843740964~hmac=154a26e164423ea0645fae39289911ddb116bb07a37ec60372a5db889881c412
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140525_5806_BAR_ATL_FC-Web.jpg" group-title="Fancode-Football", FC Barcelona vs Atletico de Madrid (Copa del Rey, 2025-26)
 https://in-mc-fdlive.fancode.com/mumbai/140525_english_hls_a91807268298168_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Mini-Match-Card-(1080x810)-(5)_1772173611237.png" group-title="Fancode-Football", Doncaster Rovers F.C. vs Stockport County (Vertu Trophy 2025-26)
