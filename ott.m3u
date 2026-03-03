@@ -5956,7 +5956,4 @@ http://jiotvbpkmob.cdn.jio.com/bpk-tv/Zing_MOB/WDVLive/index.mpd
 #EXTVLCOPT:http-user-agent=billatvoriginals
 #EXTHTTP:{ "cookie":"__hdnea__=st=1772474432~exp=1772560832~acl=/*~hmac=d0ee1cf6207599dec3372119d5e17142d901727196ebf9bb6d0c280732e7c654" }
 http://jiotvbpkmob.cdn.jio.com/bpk-tv/Zoom_BTS/output/index.mpd
-404: Not Found#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Mini-Match-Card-(1080x810)-(5)_1772173611237.png" group-title="Fancode-Football", Doncaster Rovers F.C. vs Stockport County (Vertu Trophy 2025-26)
-https://in-mc-fdlive.fancode.com/mumbai/140875_english_hls_0551b4d96438461_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140525_5806_BAR_ATL_FC-Web.jpg" group-title="Fancode-Football", FC Barcelona vs Atletico de Madrid (Copa del Rey, 2025-26)
-https://in-mc-fdlive.fancode.com/mumbai/140525_english_hls_a91807268298168_1ta-di_h264/index.m3u8
+404: Not Found
