@@ -5956,4 +5956,5 @@ http://jiotvbpkmob.cdn.jio.com/bpk-tv/Zing_MOB/WDVLive/index.mpd
 #EXTVLCOPT:http-user-agent=billatvoriginals
 #EXTHTTP:{ "cookie":"__hdnea__=st=1772474432~exp=1772560832~acl=/*~hmac=d0ee1cf6207599dec3372119d5e17142d901727196ebf9bb6d0c280732e7c654" }
 http://jiotvbpkmob.cdn.jio.com/bpk-tv/Zoom_BTS/output/index.mpd
-404: Not Found
+404: Not Found#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/TGL_Mini-Match-Card-(1080x810).png" group-title="Fancode-Golf", The Bay vs Jupiter vs Florida (TGL Season 2)
+https://in-mc-fdlive.fancode.com/mumbai/139177_english_hls_dff6b28b4382668_1ta-di_h264/index.m3u8
