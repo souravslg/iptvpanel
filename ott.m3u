@@ -5956,5 +5956,4 @@ http://jiotvbpkmob.cdn.jio.com/bpk-tv/Zing_MOB/WDVLive/index.mpd
 #EXTVLCOPT:http-user-agent=billatvoriginals
 #EXTHTTP:{ "cookie":"__hdnea__=st=1772569507~exp=1772655907~acl=/*~hmac=392bc917ffad0d4d27c61d8617c3dd3732ff28187ea1174ec88610955112a26c" }
 http://jiotvbpkmob.cdn.jio.com/bpk-tv/Zoom_BTS/output/index.mpd
-404: Not Found#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140853_5647_JDT_HIR_FC-Web.png" group-title="Fancode-Football", Johor Darul Ta'zim vs Sanfrecce Hiroshima (AFC Champions League Elite 2025-26)
-https://in-mc-fdlive.fancode.com/mumbai/140853_english_hls_bf7eac9c0e12005_1ta-di_h264/index.m3u8
+404: Not Found
