@@ -29,7 +29,7 @@ jobs:
           import os
           import sys
 
-          m3u_file = "jiostar.m3u"
+          m3u_file = "jtv.m3u"
           jio_worker = "https://zstar.pfy.workers.dev/"
           hotstar_worker = "https://voot.vodep39240327.workers.dev?voot.m3u"
 
@@ -89,7 +89,7 @@ jobs:
               with open(m3u_file, 'w', encoding='utf-8') as f:
                   f.writelines(updated_lines)
                             
-              print("Successfully updated Jio and Hotstar tokens in jiostar.m3u")
+              print("Successfully updated Jio and Hotstar tokens in jtv.m3u")
               print(f"Updated {updated_headers} Jio headers.")
 
           except Exception as e:
@@ -101,7 +101,7 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add jiostar.m3u
+          git add jtv.m3u
           if git diff --cached --quiet; then
             echo "No changes detected (Tokens are the same)"
             exit 0
