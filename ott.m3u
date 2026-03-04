@@ -5957,9 +5957,9 @@ http://jiotvbpkmob.cdn.jio.com/bpk-tv/Zing_MOB/WDVLive/index.mpd
 #EXTHTTP:{ "cookie":"__hdnea__=st=1772569507~exp=1772655907~acl=/*~hmac=392bc917ffad0d4d27c61d8617c3dd3732ff28187ea1174ec88610955112a26c" }
 http://jiotvbpkmob.cdn.jio.com/bpk-tv/Zoom_BTS/output/index.mpd
 404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000015764/1772613544098305_NZw_vs_ZIMw_1stODI_landscape_thumb.jpg" group-title="sonyliv-Cricket", 1st ODI - 5 Mar 2026 [ENG] - Zimbabwe Women's Tour of New Zealand 2026
-https://sonydaimenew.akamaized.net/hls/live/2037141/DAI21-criclive/std_lrh-800300010.m3u8?hdnea=exp=1772704067~acl=/*~id=46825179802394209253340736649737~hmac=0a3d69e45d7093b6c02e911afddd3c44ab5c8ae8f258b2916f1e133b0adfeb02
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140524_5806_RS_ATH_FC-Web.jpg" group-title="Fancode-Football", Real Sociedad vs Athletic Club (Copa del Rey, 2025-26)
-https://in-mc-fdlive.fancode.com/mumbai/140524_english_hls_714f133d3b74249_1ta-di_h264/index.m3u8
+https://sonydaimenew.akamaized.net/hls/live/2037141/DAI21-criclive/std_lrh-800300010.m3u8?hdnea=exp=1772706502~acl=/*~id=57734970120610122724257971652277~hmac=fe03cec1474de90d67397409fc6469c6c00bd04de8d3528f8eaa3482e5d45d6e
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/NZ-vs-ZIM_ODi_fc_web_1772618590773.jpg" group-title="Fancode-Cricket", New Zealand Women vs Zimbabwe Women (Zimbabwe Women tour of New Zealand, 2026)
+https://sonypartnersdaimenew.akamaized.net/hls/live/2037141/DAI21NZVSZM/master.m3u8?hdnea=exp=1772704631~acl=/*~id=71785011425195593525044196708121~hmac=6d0366235e8ad67ec91951da9fa25355bbb0ed74580b3ee750c425b6a11088d2
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/BNP_Paribas-Open_web.jpg" group-title="Fancode-Tennis", B Court Feed vs Indian, United States (ATP Masters BNP Paribas Open 2026)
 https://in-mc-fdlive.fancode.com/mumbai/141006_english_hls_6bf703572476628_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/BNP_Paribas-Open_web.jpg" group-title="Fancode-Tennis", A Court Feed vs Indian, United States (ATP Masters BNP Paribas Open 2026)
@@ -5974,3 +5974,5 @@ https://in-mc-fdlive.fancode.com/mumbai/141230_english_hls_0833749b2097113_1ta-d
 https://in-mc-fdlive.fancode.com/mumbai/141229_english_hls_7fca51d35a9762_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/BNP_Paribas-Open_web.jpg" group-title="Fancode-Tennis", C Court Feed vs Indian, United States (ATP Masters BNP Paribas Open 2026)
 https://in-mc-fdlive.fancode.com/mumbai/141228_english_hls_7a2e1d1fb551505_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140524_5806_RS_ATH_FC-Web.jpg" group-title="Fancode-Football", Real Sociedad vs Athletic Club (Copa del Rey, 2025-26)
+https://in-mc-fdlive.fancode.com/mumbai/140524_english_hls_714f133d3b74249_1ta-di_h264/index.m3u8
