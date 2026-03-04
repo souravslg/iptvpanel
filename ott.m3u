@@ -5957,7 +5957,7 @@ http://jiotvbpkmob.cdn.jio.com/bpk-tv/Zing_MOB/WDVLive/index.mpd
 #EXTHTTP:{ "cookie":"__hdnea__=st=1772569507~exp=1772655907~acl=/*~hmac=392bc917ffad0d4d27c61d8617c3dd3732ff28187ea1174ec88610955112a26c" }
 http://jiotvbpkmob.cdn.jio.com/bpk-tv/Zoom_BTS/output/index.mpd
 404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000015794/177265200486877_Bliga26_MD17_hamburger_SV_vs_Leverkusen_5mar_landscape_thumb.jpg" group-title="sonyliv-Football", Hamburger SV vs Bayer Leverkusen - MD 17 - 5 Mar 2026 [ENG] - Bundesliga 2025-26
-https://sonydaimenew.akamaized.net/hls/live/2018457/DAI09ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1772699228~acl=/*~id=66392912757411728851708706049887~hmac=c3cd19f7e3285c657212fee268bd46116894eac077412d1d7f9cd4a0332a721b
+https://sonydaimenew.akamaized.net/hls/live/2018457/DAI09ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1772701042~acl=/*~id=66148135780485755527570908280294~hmac=c325533eb891da1993b0fe848a9bc8a1a07d8f3ba8d2c4878afdb9dc4ba8eee9
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140524_5806_RS_ATH_FC-Web.jpg" group-title="Fancode-Football", Real Sociedad vs Athletic Club (Copa del Rey, 2025-26)
 https://in-mc-fdlive.fancode.com/mumbai/140524_english_hls_714f133d3b74249_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Mini-Match-Card-(1080x810)-(5)_1772173611237.png" group-title="Fancode-Football", Luton Town vs Northampton Town FC (Vertu Trophy 2025-26)
