@@ -1,0 +1,110 @@
+name: Update JioStar Playlist
+
+on:
+  schedule:
+    - cron: '0 */1 * * *' # Refreshes every 3 hours to keep Hotstar tokens active
+  workflow_dispatch:
+
+jobs:
+  update-playlist:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Process Jio and Hotstar Updates
+        run: |
+          python <<EOF
+          import requests
+          import re
+          import os
+          import sys
+
+          m3u_file = "jiostar.m3u"
+          jio_worker = "https://zstar.pfy.workers.dev/"
+          hotstar_worker = "https://voot.vodep39240327.workers.dev?voot.m3u"
+
+          try:
+              # 1. Fetch Jio Cookie
+              jio_res = requests.get(jio_worker, timeout=15)
+              jio_match = re.search(r'__hdnea__=([^"\'\s&]+)', jio_res.text)
+              jio_token = f"__hdnea__={jio_match.group(1)}" if jio_match else None
+                            
+              # 2. Fetch Hotstar Data
+              hs_res = requests.get(hotstar_worker, timeout=20)
+              hs_match = re.search(r'hdntl=exp=[^&"\'\s]+', hs_res.text)
+              hs_token = hs_match.group(0) if hs_match else None
+
+              if not os.path.exists(m3u_file):
+                  print(f"Error: {m3u_file} not found")
+                  sys.exit(1)
+
+              with open(m3u_file, 'r', encoding='utf-8') as f:
+                  lines = f.readlines()
+
+              updated_lines = []
+              updated_headers = 0
+
+              for line in lines:
+                  stripped = line.strip()
+                  
+                  # Skip processing if line is empty but keep it in the file
+                  if not stripped:
+                      updated_lines.append(line)
+                      continue
+                                    
+                  # --- HANDLE HOTSTAR LINES ---
+                  if "#EXTHTTP" in stripped and "hdntl" in stripped and hs_token:
+                      updated_line = re.sub(r'hdntl=exp=[^"}]+', hs_token, stripped)
+                      updated_lines.append(updated_line + "\n")
+                                    
+                  elif "hotstar.com" in stripped and hs_token:
+                      updated_line = re.sub(r'hdntl=exp=[^&|]+', hs_token, stripped)
+                      updated_lines.append(updated_line + "\n")
+
+                  # --- HANDLE JIO LINES ---
+                  elif "#EXTHTTP" in stripped and "__hdnea__" in stripped and jio_token:
+                      updated_line = re.sub(r'__hdnea__=[^"}]+', jio_token, stripped)
+                      updated_lines.append(updated_line + "\n")
+                      updated_headers += 1
+                      
+                  elif "jiotvbpkmob.cdn.jio.com" in stripped:
+                      clean_link = re.sub(r'([?&])__hdnea__=[^&]*', '', stripped)
+                      updated_lines.append(clean_link + "\n")
+                      
+                  # --- EVERYTHING ELSE ---
+                  else:
+                      updated_lines.append(line)
+
+              # Save results back to the same file
+              with open(m3u_file, 'w', encoding='utf-8') as f:
+                  f.writelines(updated_lines)
+                            
+              print("Successfully updated Jio and Hotstar tokens in jiostar.m3u")
+              print(f"Updated {updated_headers} Jio headers.")
+
+          except Exception as e:
+              print(f"Error: {e}")
+              sys.exit(1)
+          EOF
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add jiostar.m3u
+          if git diff --cached --quiet; then
+            echo "No changes detected (Tokens are the same)"
+            exit 0
+          fi
+          git commit -m "Automated update: Refreshed Jio and Hotstar tokens"
+          git push
