@@ -5956,5 +5956,7 @@ http://jiotvbpkmob.cdn.jio.com/bpk-tv/Zing_MOB/WDVLive/index.mpd
 #EXTVLCOPT:http-user-agent=billatvoriginals
 #EXTHTTP:{ "cookie":"__hdnea__=st=1772655905~exp=1772742305~acl=/*~hmac=68dd022bdca072e5aebbc33c2a5eb4540b9ec518d410712e11e7c7d9f158ce58" }
 http://jiotvbpkmob.cdn.jio.com/bpk-tv/Zoom_BTS/output/index.mpd
-404: Not Found#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140801_5979_IRNW_AUS-W_fc-Web_1772191702199.jpg" group-title="Fancode-Football", IR Iran Women vs Australia Women (AFC Women's Asian Cup, 2026)
+404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000015766/177261403814412_DP_World_Day1_Joburg-Open_landscape_thumb.jpg" group-title="sonyliv-Golf", Joburg Open Day 1 - 5 Mar 2026 [ENG] - DP World Tour
+https://sonydaimenew.akamaized.net/hls/live/2094590/DAI25ME-DPW/std_lrh-800300010.m3u8?hdnea=exp=1772751293~acl=/*~id=31743572276965008937714900668713~hmac=b0162f20a8528f6c7d10de35ba5fbd63658b1c706b5ae19e24257140cac6570e
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140801_5979_IRNW_AUS-W_fc-Web_1772191702199.jpg" group-title="Fancode-Football", IR Iran Women vs Australia Women (AFC Women's Asian Cup, 2026)
 https://in-mc-fdlive.fancode.com/mumbai/140801_english_hls_0f272eeb4a23489_1ta-di_h264/index.m3u8
