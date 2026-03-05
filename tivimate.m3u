@@ -6,8 +6,8 @@ http://66.102.120.18:8000/play/a013/index.m3u8
 #EXTINF:-1 group-title="HOTSTAR" tvg-logo="usus",DISNEY HD
 http://66.102.120.18:8000/play/a013/index.m3u8
 404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000015766/177261403814412_DP_World_Day1_Joburg-Open_landscape_thumb.jpg" group-title="sonyliv-Golf", Joburg Open Day 1 - 5 Mar 2026 [ENG] - DP World Tour
-https://sonydaimenew.akamaized.net/hls/live/2094590/DAI25ME-DPW/std_lrh-800300010.m3u8?hdnea=exp=1772762798~acl=/*~id=69535948407355417913583929832895~hmac=b27a99b6f046746dbb67cca87dc4258f57138180ea637b0912c485c3a5fc8974
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140865_5648_BU_TAM_FC-WEB.jpg" group-title="Fancode-Football", Bangkok United vs Tampines Rovers FC (AFC Champions League Two 2025-26)
-https://in-mc-fdlive.fancode.com/mumbai/140865_english_hls_d86ca6002f31985_1ta-di_h264/index.m3u8
+https://sonydaimenew.akamaized.net/hls/live/2094590/DAI25ME-DPW/std_lrh-800300010.m3u8?hdnea=exp=1772765830~acl=/*~id=56689127017083028869810377255973~hmac=6a57ce4a1c61890afbffec38d69c5a6bb51bce5874f77a2cd48a2a6966e44c04
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Mini-Match-Card-(1080x810)-(7).png" group-title="Fancode-Golf", Main Feed Day 1 vs Orlando, Florida (Arnold Palmer Invitational 2026)
 https://in-mc-fdlive.fancode.com/mumbai/140988_english_hls_65f4a904ef47085_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Mini-Match-Card-(1080x810)-(7).png" group-title="Fancode-Golf", Featured Group Day 1 vs Orlando, Florida (Arnold Palmer Invitational 2026)
+https://in-mc-fdlive.fancode.com/mumbai/140989_english_hls_b8ff07e2aa86981_1ta-di_h264/index.m3u8
