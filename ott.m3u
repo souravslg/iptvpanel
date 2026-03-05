@@ -5957,11 +5957,7 @@ http://jiotvbpkmob.cdn.jio.com/bpk-tv/Zing_MOB/WDVLive/index.mpd
 #EXTHTTP:{ "cookie":"__hdnea__=st=1772655905~exp=1772742305~acl=/*~hmac=68dd022bdca072e5aebbc33c2a5eb4540b9ec518d410712e11e7c7d9f158ce58" }
 http://jiotvbpkmob.cdn.jio.com/bpk-tv/Zoom_BTS/output/index.mpd
 404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000015766/177261403814412_DP_World_Day1_Joburg-Open_landscape_thumb.jpg" group-title="sonyliv-Golf", Joburg Open Day 1 - 5 Mar 2026 [ENG] - DP World Tour
-https://sonydaimenew.akamaized.net/hls/live/2094590/DAI25ME-DPW/std_lrh-800300010.m3u8?hdnea=exp=1772758556~acl=/*~id=78021985491151395669243237272780~hmac=cfbc17390fa4ab7b40c9a3767493863b6cf538e65cc74513055f1ac13efa48e2
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140452_5956_EBFC_FCG_FC-Web_1772449994533.jpg" group-title="Fancode-Football", East Bengal FC vs FC Goa (ISL 2025-26)
-https://in-mc-fdlive.fancode.com/mumbai/140452_english_hls_b8af32bb7720615_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140452_5956_EBFC_FCG_fc-web_1772688816397.jpg" group-title="Fancode-Football", East Bengal FC vs FC Goa (ISL 2025-26  - Regional)
-https://in-mc-fdlive.fancode.com/mumbai/141090_bengali_hls_4f1e74ec1c94981_1ta-di_h264/index.m3u8
+https://sonydaimenew.akamaized.net/hls/live/2094590/DAI25ME-DPW/std_lrh-800300010.m3u8?hdnea=exp=1772762798~acl=/*~id=69535948407355417913583929832895~hmac=b27a99b6f046746dbb67cca87dc4258f57138180ea637b0912c485c3a5fc8974
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140865_5648_BU_TAM_FC-WEB.jpg" group-title="Fancode-Football", Bangkok United vs Tampines Rovers FC (AFC Champions League Two 2025-26)
 https://in-mc-fdlive.fancode.com/mumbai/140865_english_hls_d86ca6002f31985_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Mini-Match-Card-(1080x810)-(7).png" group-title="Fancode-Golf", Main Feed Day 1 vs Orlando, Florida (Arnold Palmer Invitational 2026)
