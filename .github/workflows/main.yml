@@ -68,16 +68,30 @@ jobs:
                       
                   if stripped.startswith("# Last Updated:"):
                       continue
+
+                  # --- FIX DRM LICENSE KEYS ---
+                  elif stripped.startswith("#KODIPROP:inputstream.adaptive.license_key="):
+                      # Look for raw KID:KEY format and rewrite it to the working URL wrapper
+                      drm_match = re.search(r'license_key=([a-fA-F0-9]{32}):([a-fA-F0-9]{32})', stripped)
+                      if drm_match:
+                          kid = drm_match.group(1)
+                          key = drm_match.group(2)
+                          updated_lines.append(f"#KODIPROP:inputstream.adaptive.license_key=https://aqfadtv.xyz/clearkey/results.php?keyid={kid}&key={key}\n")
+                      else:
+                          updated_lines.append(line)
+
+                  # --- FIX BAD USER-AGENTS ---
+                  elif stripped.startswith("#EXTVLCOPT:http-user-agent="):
+                      updated_lines.append("#EXTVLCOPT:http-user-agent=plaYercore/2.9.3\n")
                                     
                   # --- HANDLE HOTSTAR LINES ---
-                  if "#EXTHTTP" in stripped and "hdntl" in stripped and hs_token:
+                  elif "#EXTHTTP" in stripped and "hdntl" in stripped and hs_token:
                       updated_line = re.sub(r'hdntl=exp=[^"}]+', hs_token, stripped)
                       updated_lines.append(updated_line + "\n")
                                     
                   elif stripped.startswith("http") and "hotstar.com" in stripped and hs_token:
                       clean_link = stripped.split('|')[0] 
                       updated_line = re.sub(r'hdntl=exp=[^&|]+', hs_token, clean_link)
-                      # Removed pipe from Hotstar too just to be safe
                       updated_lines.append(updated_line + "\n")
 
                   # --- HANDLE JIO LINES ---
@@ -92,7 +106,6 @@ jobs:
                       
                       jio_count += 1
                       
-                      # Fixed: Removed the |User-Agent pipe that breaks DRM decryption
                       if jio_token:
                           separator = '&' if '?' in clean_link else '?'
                           updated_lines.append(f"{clean_link}{separator}{jio_token}&xxx=\n")
@@ -127,5 +140,5 @@ jobs:
             echo "No changes detected"
             exit 0
           fi
-          git commit -m "Automated update: Removed pipe to allow DRM decryption"
+          git commit -m "Automated update: Fixed DRM ClearKey formatting"
           git push
