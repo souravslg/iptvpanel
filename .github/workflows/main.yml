@@ -38,93 +38,104 @@ jobs:
           hotstar_worker = "https://voot.vodep39240327.workers.dev?voot.m3u"
 
           try:
-              # 1. Fetch Jio Cookie
+              current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S UTC")
+              
+              # ==========================================
+              # PART 1: UPDATE STATIC JIO FILE (jtv.m3u)
+              # ==========================================
               jio_res = requests.get(jio_worker, timeout=15)
               jio_match = re.search(r'__hdnea__=([^"\'\s&]+)', jio_res.text)
               jio_token = f"__hdnea__={jio_match.group(1)}" if jio_match else None
-                            
-              # 2. Fetch Hotstar Data
-              hs_res = requests.get(hotstar_worker, timeout=20)
-              hs_match = re.search(r'hdntl=exp=[^&"\'\s]+', hs_res.text)
-              hs_token = hs_match.group(0) if hs_match else None
+              
+              if os.path.exists(m3u_file):
+                  with open(m3u_file, 'r', encoding='utf-8') as f:
+                      lines = f.readlines()
 
-              if not os.path.exists(m3u_file):
-                  print(f"Error: {m3u_file} not found")
-                  sys.exit(1)
-
-              with open(m3u_file, 'r', encoding='utf-8') as f:
-                  lines = f.readlines()
-
-              updated_lines = []
-              jio_count = 0
-              current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S UTC")
-
-              for line in lines:
-                  stripped = line.strip()
-                  
-                  if not stripped:
-                      updated_lines.append(line)
-                      continue
+                  updated_lines = []
+                  for line in lines:
+                      stripped = line.strip()
+                      if not stripped or stripped.startswith("# Last Updated:"):
+                          continue
                       
-                  if stripped.startswith("# Last Updated:"):
-                      continue
-
-                  # --- FIX DRM LICENSE KEYS ---
-                  elif stripped.startswith("#KODIPROP:inputstream.adaptive.license_key="):
-                      # Look for raw KID:KEY format and rewrite it to the working URL wrapper
-                      drm_match = re.search(r'license_key=([a-fA-F0-9]{32}):([a-fA-F0-9]{32})', stripped)
-                      if drm_match:
-                          kid = drm_match.group(1)
-                          key = drm_match.group(2)
-                          updated_lines.append(f"#KODIPROP:inputstream.adaptive.license_key=https://aqfadtv.xyz/clearkey/results.php?keyid={kid}&key={key}\n")
+                      # Fix DRM License Keys
+                      if stripped.startswith("#KODIPROP:inputstream.adaptive.license_key="):
+                          drm_match = re.search(r'license_key=([a-fA-F0-9]{32}):([a-fA-F0-9]{32})', stripped)
+                          if drm_match:
+                              updated_lines.append(f"#KODIPROP:inputstream.adaptive.license_key=https://aqfadtv.xyz/clearkey/results.php?keyid={drm_match.group(1)}&key={drm_match.group(2)}\n")
+                          else:
+                              updated_lines.append(line)
+                      
+                      # Fix Bad User Agents
+                      elif stripped.startswith("#EXTVLCOPT:http-user-agent="):
+                          updated_lines.append("#EXTVLCOPT:http-user-agent=plaYercore/2.9.3\n")
+                          
+                      # Update Jio URLs
+                      elif stripped.startswith("http") and "jio.com" in stripped:
+                          clean_link = re.sub(r'([?&])__hdnea__=[^&|]*', '', stripped)
+                          clean_link = clean_link.split('|')[0] 
+                          clean_link = re.sub(r'&xxx=$', '', clean_link)
+                          if jio_token:
+                              separator = '&' if '?' in clean_link else '?'
+                              updated_lines.append(f"{clean_link}{separator}{jio_token}&xxx=\n")
+                          else:
+                              updated_lines.append(clean_link + "\n")
                       else:
                           updated_lines.append(line)
 
-                  # --- FIX BAD USER-AGENTS ---
-                  elif stripped.startswith("#EXTVLCOPT:http-user-agent="):
-                      updated_lines.append("#EXTVLCOPT:http-user-agent=plaYercore/2.9.3\n")
-                                    
-                  # --- HANDLE HOTSTAR LINES ---
-                  elif "#EXTHTTP" in stripped and "hdntl" in stripped and hs_token:
-                      updated_line = re.sub(r'hdntl=exp=[^"}]+', hs_token, stripped)
-                      updated_lines.append(updated_line + "\n")
-                                    
-                  elif stripped.startswith("http") and "hotstar.com" in stripped and hs_token:
-                      clean_link = stripped.split('|')[0] 
-                      updated_line = re.sub(r'hdntl=exp=[^&|]+', hs_token, clean_link)
-                      updated_lines.append(updated_line + "\n")
+                  if updated_lines and updated_lines[0].startswith("#EXTM3U"):
+                      updated_lines.insert(1, f"# Last Updated: {current_time}\n")
 
-                  # --- HANDLE JIO LINES ---
-                  elif "#EXTHTTP" in stripped and "__hdnea__" in stripped and jio_token:
-                      updated_line = re.sub(r'__hdnea__=[^"}]+', jio_token, stripped)
-                      updated_lines.append(updated_line + "\n")
+                  with open(m3u_file, 'w', encoding='utf-8') as f:
+                      f.writelines(updated_lines)
                       
-                  elif stripped.startswith("http") and "jio.com" in stripped:
-                      clean_link = re.sub(r'([?&])__hdnea__=[^&|]*', '', stripped)
-                      clean_link = clean_link.split('|')[0] 
-                      clean_link = re.sub(r'&xxx=$', '', clean_link)
+              # ==========================================
+              # PART 2: GENERATE HOTSTAR FILE (hotstar.m3u)
+              # ==========================================
+              hs_res = requests.get(hotstar_worker, timeout=20)
+              hs_lines = hs_res.text.splitlines()
+              hs_updated = ["#EXTM3U\n", f"# Last Updated: {current_time}\n"]
+              
+              current_hs_cookie = ""
+              
+              for line in hs_lines:
+                  stripped = line.strip()
+                  if not stripped or stripped.startswith("#EXTM3U"):
+                      continue
                       
-                      jio_count += 1
-                      
-                      if jio_token:
-                          separator = '&' if '?' in clean_link else '?'
-                          updated_lines.append(f"{clean_link}{separator}{jio_token}&xxx=\n")
+                  # 1. Fix DRM Keys for TiviMate
+                  if stripped.startswith("#KODIPROP:inputstream.adaptive.license_key="):
+                      drm_match = re.search(r'license_key=([a-fA-F0-9]{32}):([a-fA-F0-9]{32})', stripped)
+                      if drm_match:
+                          hs_updated.append(f"#KODIPROP:inputstream.adaptive.license_key=https://aqfadtv.xyz/clearkey/results.php?keyid={drm_match.group(1)}&key={drm_match.group(2)}\n")
                       else:
-                          updated_lines.append(clean_link + "\n")
+                          hs_updated.append(line + "\n")
+                          
+                  # 2. Strip bad VLC tags that crash TiviMate
+                  elif stripped.startswith("#EXTVLCOPT"):
+                      continue
+                          
+                  # 3. Extract Cookie from #EXTHTTP (TiviMate ignores this tag)
+                  elif stripped.startswith("#EXTHTTP"):
+                      cookie_match = re.search(r'"cookie"\s*:\s*"([^"]+)"', stripped)
+                      if cookie_match:
+                          current_hs_cookie = cookie_match.group(1)
                       
-                  # --- EVERYTHING ELSE ---
+                  # 4. Format Stream URL properly for TiviMate
+                  elif stripped.startswith("http"):
+                      clean_link = stripped.split('|')[0]
+                      if current_hs_cookie:
+                          separator = '&' if '?' in clean_link else '?'
+                          # We append the cookie directly into the URL to avoid DRM pipe crashes
+                          hs_updated.append(f"{clean_link}{separator}{current_hs_cookie}\n")
+                          current_hs_cookie = "" 
+                      else:
+                          hs_updated.append(clean_link + "\n")
+                          
                   else:
-                      updated_lines.append(line)
-
-              # Forced timestamp
-              if updated_lines and updated_lines[0].startswith("#EXTM3U"):
-                  updated_lines.insert(1, f"# Last Updated: {current_time}\n")
-
-              with open(m3u_file, 'w', encoding='utf-8') as f:
-                  f.writelines(updated_lines)
-                            
-              print(f"Successfully processed jtv.m3u.")
-              print(f"Updated {jio_count} Jio channel links.")
+                      hs_updated.append(line + "\n")
+                      
+              with open("hotstar.m3u", "w", encoding="utf-8") as f:
+                  f.writelines(hs_updated)
 
           except Exception as e:
               print(f"Error: {e}")
@@ -135,10 +146,10 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add jtv.m3u
+          git add jtv.m3u hotstar.m3u
           if git diff --cached --quiet; then
             echo "No changes detected"
             exit 0
           fi
-          git commit -m "Automated update: Fixed DRM ClearKey formatting"
+          git commit -m "Automated update: Added hotstar.m3u generator for TiviMate"
           git push
