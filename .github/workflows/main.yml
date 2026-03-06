@@ -60,7 +60,6 @@ jobs:
               for line in lines:
                   stripped = line.strip()
                   
-                  # Skip processing if line is empty but keep it in the file
                   if not stripped:
                       updated_lines.append(line)
                       continue
@@ -71,8 +70,10 @@ jobs:
                       updated_lines.append(updated_line + "\n")
                                     
                   elif "hotstar.com" in stripped and hs_token:
-                      updated_line = re.sub(r'hdntl=exp=[^&|]+', hs_token, stripped)
-                      updated_lines.append(updated_line + "\n")
+                      clean_link = stripped.split('|')[0] # Remove old pipes
+                      updated_line = re.sub(r'hdntl=exp=[^&|]+', hs_token, clean_link)
+                      # Add a safe User-Agent for Hotstar just in case
+                      updated_lines.append(updated_line + "|User-Agent=ExoPlayer\n")
 
                   # --- HANDLE JIO LINES ---
                   elif "#EXTHTTP" in stripped and "__hdnea__" in stripped and jio_token:
@@ -81,21 +82,20 @@ jobs:
                       updated_headers += 1
                       
                   elif "jiotvbpkmob.cdn.jio.com" in stripped:
-                      # 1. Clean the URL (remove old tokens and old pipe strings to prevent duplicates)
+                      # 1. Clean the URL
                       clean_link = re.sub(r'([?&])__hdnea__=[^&|]*', '', stripped)
                       clean_link = clean_link.split('|')[0]
                       
-                      # 2. Append token using TiviMate's pipe format
+                      # 2. TiviMate Master Fix: Hardcoded User-Agent + Capitalized 'Cookie'
                       if jio_token:
-                          updated_lines.append(f"{clean_link}|cookie={jio_token}\n")
+                          updated_lines.append(f"{clean_link}|User-Agent=plaYercore/2.9.3&Cookie={jio_token}\n")
                       else:
-                          updated_lines.append(clean_link + "\n")
+                          updated_lines.append(f"{clean_link}|User-Agent=plaYercore/2.9.3\n")
                       
                   # --- EVERYTHING ELSE ---
                   else:
                       updated_lines.append(line)
 
-              # Save results back to the same file
               with open(m3u_file, 'w', encoding='utf-8') as f:
                   f.writelines(updated_lines)
                             
@@ -116,5 +116,5 @@ jobs:
             echo "No changes detected (Tokens are the same)"
             exit 0
           fi
-          git commit -m "Automated update: Refreshed Jio and Hotstar tokens for TiviMate"
+          git commit -m "Automated update: Hardcoded UA and Cookies for TiviMate"
           git push
