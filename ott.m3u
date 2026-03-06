@@ -5956,11 +5956,13 @@ http://jiotvbpkmob.cdn.jio.com/bpk-tv/Zing_MOB/WDVLive/index.mpd
 #EXTVLCOPT:http-user-agent=billatvoriginals
 #EXTHTTP:{ "cookie":"__hdnea__=st=1772742306~exp=1772828706~acl=/*~hmac=ffc9e0ba5a35d894e955180b59621ed9da1268909beb960275bbab2c488b475b" }
 http://jiotvbpkmob.cdn.jio.com/bpk-tv/Zoom_BTS/output/index.mpd
-404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000015766/177261405160412_DP_World_Day2_Joburg-Open_landscape_thumb.jpg" group-title="sonyliv-Golf", Joburg Open Day 2 - 6 Mar 2026 [ENG] - DP World Tour
-https://sonydaimenew.akamaized.net/hls/live/2094587/DAI03ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1772841450~acl=/*~id=75992377627607441503924263251318~hmac=1634f04558a458edb69c38678cbcce772c8953d099742c77477d8960eac3137b
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Tillo-Cup-2026-old-card-.jpg" group-title="Fancode-Cricket", Lightning Legends vs JP Sports Noida (Tillo Cup 2026)
-https://in-mc-fdlive.fancode.com/mumbai/141255_english_hls_197d05fbd248087_1ta-di_h264/index.m3u8
+404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000015830/1772732474234235_IFL26_AIZ_vs_RAJ_5mar_landscape_thumb.jpg" group-title="sonyliv-Football", Aizawl FC vs Rajasthan United FC - 6 Mar 2026 [ENG] - Indian Football League 2026
+https://sonydaimenew.akamaized.net/hls/live/2037143/DAI23ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1772845691~acl=/*~id=76634320378978493525241350721386~hmac=1ac7eeb006b84f70c5531bdcb950c44f0cb9f5e99f334f0d1050296936579d8f
+#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000015766/177261405160412_DP_World_Day2_Joburg-Open_landscape_thumb.jpg" group-title="sonyliv-Golf", Joburg Open Day 2 - 6 Mar 2026 [ENG] - DP World Tour
+https://sonydaimenew.akamaized.net/hls/live/2094587/DAI03ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1772845691~acl=/*~id=76634320378978493525241350721386~hmac=1ac7eeb006b84f70c5531bdcb950c44f0cb9f5e99f334f0d1050296936579d8f
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140454_5956_ODS_MBSG_FC-Web-(1).jpg" group-title="Fancode-Football", Mohun Bagan Super Giant vs Odisha FC (ISL 2025-26)
 https://in-mc-fdlive.fancode.com/mumbai/140454_english_hls_16f750f22f62551_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140454_5956_ODS_MBSG_FC-Web-(2).jpg" group-title="Fancode-Football", Mohun Bagan Super Giant vs Odisha FC (ISL 2025-26  - Regional)
 https://in-mc-fdlive.fancode.com/mumbai/141169_english_hls_9ac8dee75c30085_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Mini-Match-Card-(1080x810)-(7).png" group-title="Fancode-Golf", Main Feed Day 2 vs Orlando, Florida (Arnold Palmer Invitational 2026)
+https://in-mc-fdlive.fancode.com/mumbai/140992_english_hls_99ea6ba7a722304_1ta-di_h264/index.m3u8
