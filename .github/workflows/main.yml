@@ -66,7 +66,7 @@ jobs:
                       updated_lines.append(line)
                       continue
                       
-                  # Remove old timestamp if it exists so we don't duplicate it
+                  # Remove old timestamp
                   if stripped.startswith("# Last Updated:"):
                       continue
                                     
@@ -78,7 +78,7 @@ jobs:
                   elif "hotstar.com" in stripped and hs_token:
                       clean_link = stripped.split('|')[0] 
                       updated_line = re.sub(r'hdntl=exp=[^&|]+', hs_token, clean_link)
-                      updated_lines.append(updated_line + "|User-Agent=ExoPlayer\n")
+                      updated_lines.append(updated_line + "\n")
 
                   # --- HANDLE JIO LINES ---
                   elif "#EXTHTTP" in stripped and "__hdnea__" in stripped and jio_token:
@@ -86,21 +86,25 @@ jobs:
                       updated_lines.append(updated_line + "\n")
                       
                   elif "jiotvbpkmob.cdn.jio.com" in stripped:
+                      # 1. Clean the URL completely
                       clean_link = re.sub(r'([?&])__hdnea__=[^&|]*', '', stripped)
-                      clean_link = clean_link.split('|')[0]
+                      clean_link = clean_link.split('|')[0] # Remove any pipe configurations from previous tests
+                      clean_link = re.sub(r'&xxx=$', '', clean_link) # Remove old xxx
+                      
                       jio_count += 1
                       
-                      # The TiviMate magic format
+                      # 2. Format exactly like the working TiviMate link
                       if jio_token:
-                          updated_lines.append(f"{clean_link}|User-Agent=plaYercore/2.9.3&Cookie={jio_token}\n")
+                          separator = '&' if '?' in clean_link else '?'
+                          updated_lines.append(f"{clean_link}{separator}{jio_token}&xxx=\n")
                       else:
-                          updated_lines.append(f"{clean_link}|User-Agent=plaYercore/2.9.3\n")
+                          updated_lines.append(clean_link + "\n")
                       
                   # --- EVERYTHING ELSE ---
                   else:
                       updated_lines.append(line)
 
-              # Inject our forced timestamp directly under #EXTM3U
+              # Inject our forced timestamp
               if updated_lines and updated_lines[0].startswith("#EXTM3U"):
                   updated_lines.insert(1, f"# Last Updated: {current_time}\n")
 
@@ -121,8 +125,8 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git add jtv.m3u
           if git diff --cached --quiet; then
-            echo "No changes detected (Tokens are the same)"
+            echo "No changes detected"
             exit 0
           fi
-          git commit -m "Automated update: Refreshed tokens (Forced update)"
+          git commit -m "Automated update: Fixed URL structure for TiviMate"
           git push
