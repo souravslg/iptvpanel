@@ -5,6 +5,11 @@ on:
     - cron: '0 */1 * * *' # Refreshes every 3 hours to keep Hotstar tokens active
   workflow_dispatch:
 
+# --- THIS IS THE NEW BLOCK ---
+permissions:
+  contents: write
+# -----------------------------
+
 jobs:
   update-playlist:
     runs-on: ubuntu-latest
