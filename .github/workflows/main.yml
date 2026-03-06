@@ -2,7 +2,7 @@ name: Update JioStar Playlist
 
 on:
   schedule:
-    - cron: '0 */1 * * *' # Refreshes every 3 hours to keep Hotstar tokens active
+    - cron: '0 */1 * * *'
   workflow_dispatch:
 
 permissions:
@@ -31,6 +31,7 @@ jobs:
           import re
           import os
           import sys
+          import datetime
 
           m3u_file = "jtv.m3u"
           jio_worker = "https://zstar.pfy.workers.dev/"
@@ -55,13 +56,18 @@ jobs:
                   lines = f.readlines()
 
               updated_lines = []
-              updated_headers = 0
+              jio_count = 0
+              current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S UTC")
 
               for line in lines:
                   stripped = line.strip()
                   
                   if not stripped:
                       updated_lines.append(line)
+                      continue
+                      
+                  # Remove old timestamp if it exists so we don't duplicate it
+                  if stripped.startswith("# Last Updated:"):
                       continue
                                     
                   # --- HANDLE HOTSTAR LINES ---
@@ -70,23 +76,21 @@ jobs:
                       updated_lines.append(updated_line + "\n")
                                     
                   elif "hotstar.com" in stripped and hs_token:
-                      clean_link = stripped.split('|')[0] # Remove old pipes
+                      clean_link = stripped.split('|')[0] 
                       updated_line = re.sub(r'hdntl=exp=[^&|]+', hs_token, clean_link)
-                      # Add a safe User-Agent for Hotstar just in case
                       updated_lines.append(updated_line + "|User-Agent=ExoPlayer\n")
 
                   # --- HANDLE JIO LINES ---
                   elif "#EXTHTTP" in stripped and "__hdnea__" in stripped and jio_token:
                       updated_line = re.sub(r'__hdnea__=[^"}]+', jio_token, stripped)
                       updated_lines.append(updated_line + "\n")
-                      updated_headers += 1
                       
                   elif "jiotvbpkmob.cdn.jio.com" in stripped:
-                      # 1. Clean the URL
                       clean_link = re.sub(r'([?&])__hdnea__=[^&|]*', '', stripped)
                       clean_link = clean_link.split('|')[0]
+                      jio_count += 1
                       
-                      # 2. TiviMate Master Fix: Hardcoded User-Agent + Capitalized 'Cookie'
+                      # The TiviMate magic format
                       if jio_token:
                           updated_lines.append(f"{clean_link}|User-Agent=plaYercore/2.9.3&Cookie={jio_token}\n")
                       else:
@@ -96,11 +100,15 @@ jobs:
                   else:
                       updated_lines.append(line)
 
+              # Inject our forced timestamp directly under #EXTM3U
+              if updated_lines and updated_lines[0].startswith("#EXTM3U"):
+                  updated_lines.insert(1, f"# Last Updated: {current_time}\n")
+
               with open(m3u_file, 'w', encoding='utf-8') as f:
                   f.writelines(updated_lines)
                             
-              print("Successfully updated Jio and Hotstar tokens in jtv.m3u")
-              print(f"Updated {updated_headers} Jio headers.")
+              print(f"Successfully processed jtv.m3u.")
+              print(f"Updated {jio_count} Jio channel links.")
 
           except Exception as e:
               print(f"Error: {e}")
@@ -116,5 +124,5 @@ jobs:
             echo "No changes detected (Tokens are the same)"
             exit 0
           fi
-          git commit -m "Automated update: Hardcoded UA and Cookies for TiviMate"
+          git commit -m "Automated update: Refreshed tokens (Forced update)"
           git push
