@@ -5,10 +5,8 @@ on:
     - cron: '0 */1 * * *' # Refreshes every 3 hours to keep Hotstar tokens active
   workflow_dispatch:
 
-# --- THIS IS THE NEW BLOCK ---
 permissions:
   contents: write
-# -----------------------------
 
 jobs:
   update-playlist:
@@ -83,8 +81,15 @@ jobs:
                       updated_headers += 1
                       
                   elif "jiotvbpkmob.cdn.jio.com" in stripped:
-                      clean_link = re.sub(r'([?&])__hdnea__=[^&]*', '', stripped)
-                      updated_lines.append(clean_link + "\n")
+                      # 1. Clean the URL (remove old tokens and old pipe strings to prevent duplicates)
+                      clean_link = re.sub(r'([?&])__hdnea__=[^&|]*', '', stripped)
+                      clean_link = clean_link.split('|')[0]
+                      
+                      # 2. Append token using TiviMate's pipe format
+                      if jio_token:
+                          updated_lines.append(f"{clean_link}|cookie={jio_token}\n")
+                      else:
+                          updated_lines.append(clean_link + "\n")
                       
                   # --- EVERYTHING ELSE ---
                   else:
@@ -111,5 +116,5 @@ jobs:
             echo "No changes detected (Tokens are the same)"
             exit 0
           fi
-          git commit -m "Automated update: Refreshed Jio and Hotstar tokens"
+          git commit -m "Automated update: Refreshed Jio and Hotstar tokens for TiviMate"
           git push
