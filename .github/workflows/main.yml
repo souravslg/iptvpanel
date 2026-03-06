@@ -74,7 +74,7 @@ jobs:
                       updated_line = re.sub(r'hdntl=exp=[^"}]+', hs_token, stripped)
                       updated_lines.append(updated_line + "\n")
                                     
-                  elif "hotstar.com" in stripped and hs_token:
+                  elif stripped.startswith("http") and "hotstar.com" in stripped and hs_token:
                       clean_link = stripped.split('|')[0] 
                       updated_line = re.sub(r'hdntl=exp=[^&|]+', hs_token, clean_link)
                       updated_lines.append(updated_line + "|User-Agent=ExoPlayer\n")
@@ -84,7 +84,8 @@ jobs:
                       updated_line = re.sub(r'__hdnea__=[^"}]+', jio_token, stripped)
                       updated_lines.append(updated_line + "\n")
                       
-                  elif "jiotvbpkmob.cdn.jio.com" in stripped:
+                  # CHANGED THIS LINE TO MATCH ALL JIO LINKS
+                  elif stripped.startswith("http") and "jio.com" in stripped:
                       # Clean URL
                       clean_link = re.sub(r'([?&])__hdnea__=[^&|]*', '', stripped)
                       clean_link = clean_link.split('|')[0] 
@@ -127,5 +128,5 @@ jobs:
             echo "No changes detected"
             exit 0
           fi
-          git commit -m "Automated update: Added Token URL + UA Pipe for TiviMate"
+          git commit -m "Automated update: Fixed URL matching rule for Jio streams"
           git push
