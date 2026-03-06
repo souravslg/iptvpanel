@@ -77,28 +77,27 @@ jobs:
                   elif stripped.startswith("http") and "hotstar.com" in stripped and hs_token:
                       clean_link = stripped.split('|')[0] 
                       updated_line = re.sub(r'hdntl=exp=[^&|]+', hs_token, clean_link)
-                      updated_lines.append(updated_line + "|User-Agent=ExoPlayer\n")
+                      # Removed pipe from Hotstar too just to be safe
+                      updated_lines.append(updated_line + "\n")
 
                   # --- HANDLE JIO LINES ---
                   elif "#EXTHTTP" in stripped and "__hdnea__" in stripped and jio_token:
                       updated_line = re.sub(r'__hdnea__=[^"}]+', jio_token, stripped)
                       updated_lines.append(updated_line + "\n")
                       
-                  # CHANGED THIS LINE TO MATCH ALL JIO LINKS
                   elif stripped.startswith("http") and "jio.com" in stripped:
-                      # Clean URL
                       clean_link = re.sub(r'([?&])__hdnea__=[^&|]*', '', stripped)
                       clean_link = clean_link.split('|')[0] 
                       clean_link = re.sub(r'&xxx=$', '', clean_link)
                       
                       jio_count += 1
                       
-                      # Apply Working URL Token Format + TiviMate User-Agent Pipe
+                      # Fixed: Removed the |User-Agent pipe that breaks DRM decryption
                       if jio_token:
                           separator = '&' if '?' in clean_link else '?'
-                          updated_lines.append(f"{clean_link}{separator}{jio_token}&xxx=|User-Agent=plaYercore/2.9.3\n")
+                          updated_lines.append(f"{clean_link}{separator}{jio_token}&xxx=\n")
                       else:
-                          updated_lines.append(f"{clean_link}|User-Agent=plaYercore/2.9.3\n")
+                          updated_lines.append(clean_link + "\n")
                       
                   # --- EVERYTHING ELSE ---
                   else:
@@ -128,5 +127,5 @@ jobs:
             echo "No changes detected"
             exit 0
           fi
-          git commit -m "Automated update: Fixed URL matching rule for Jio streams"
+          git commit -m "Automated update: Removed pipe to allow DRM decryption"
           git push
