@@ -6,15 +6,11 @@ http://66.102.120.18:8000/play/a013/index.m3u8
 #EXTINF:-1 group-title="HOTSTAR" tvg-logo="usus",DISNEY HD
 http://66.102.120.18:8000/play/a013/index.m3u8
 404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000015888/1772853133611414_NZw_vs_ZIMw_2ODI_landscape_thumb.jpg" group-title="sonyliv-Cricket", 2nd ODI - 8 Mar 2026 [ENG] - Zimbabwe Women's Tour of New Zealand 2026
-https://sonydaimenew.akamaized.net/hls/live/2037141/DAI21-criclive/std_lrh-800300010.m3u8?hdnea=exp=1772966820~acl=/*~id=96191560827814875328620053150335~hmac=5867aefbde21bb6f66ce0b60dc0a68da536ca6a857bcae37c3fc97b0fe3299d4
+https://sonydaimenew.akamaized.net/hls/live/2037141/DAI21-criclive/std_lrh-800300010.m3u8?hdnea=exp=1772968634~acl=/*~id=66014164345970733046892906513525~hmac=c14fddfdc9ab97759a8f3cd8bc0e9e41cdabb8f4150c4cd3ecc9121ab171f0b7
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/NZ-vs-ZIM_ODi_fc_web_1772618590773.jpg" group-title="Fancode-Cricket", Zimbabwe Women vs New Zealand Women (Zimbabwe Women tour of New Zealand, 2026)
 https://sonypartnersdaimenew.akamaized.net/hls/live/2037141/DAI21NZVSZM/master.m3u8?hdnea=exp=1772963733~acl=/*~id=02256228094703966392344128637199~hmac=b2490228f52eea6fda5a910a9a2dd080aefb6fa6e6025b6bee920179fe5414be
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Mini-Match-Card-(1080x810)-(7).png" group-title="Fancode-Golf", Main Feed Day 3 vs Orlando, Florida (Arnold Palmer Invitational 2026)
-https://in-mc-fdlive.fancode.com/mumbai/140996_english_hls_de7809357e35318_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Mini-Match-Card-(1080x810)-(7).png" group-title="Fancode-Golf", Featured Group Day 3 vs Orlando, Florida (Arnold Palmer Invitational 2026)
 https://in-mc-fdlive.fancode.com/mumbai/140997_english_hls_102c0f584234160_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Mini-Match-Card-(1080x810)-(7).png" group-title="Fancode-Golf", Marquee Feed Day 3 vs Orlando, Florida (Arnold Palmer Invitational 2026)
-https://in-mc-fdlive.fancode.com/mumbai/140998_english_hls_193c7043f0592_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Mini-Match-Card-(1080x810)-(7).png" group-title="Fancode-Golf", World Feed Day 3 vs Orlando, Florida (Arnold Palmer Invitational 2026)
 https://in-mc-fdlive.fancode.com/mumbai/140999_english_hls_c77be8dce672545_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/BNP_Paribas-Open_web.jpg" group-title="Fancode-Tennis", B Court Feed vs Indian, United States (ATP Masters BNP Paribas Open 2026)
@@ -31,5 +27,3 @@ https://in-mc-fdlive.fancode.com/mumbai/141243_english_hls_66a1d804e756513_1ta-d
 https://in-mc-fdlive.fancode.com/mumbai/141242_english_hls_03fb55697861427_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/BNP_Paribas-Open_web.jpg" group-title="Fancode-Tennis", F Court Feed vs Indian, United States (ATP Masters BNP Paribas Open 2026)
 https://in-mc-fdlive.fancode.com/mumbai/141241_english_hls_311fc8a66291546_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/F3_Australia_web.jpg" group-title="Fancode-Motorsports", Feature Race vs Melbourne  (F3 AUSTRALIA 2026)
-https://in-mc-fdlive.fancode.com/mumbai/139707_english_hls_44dd080ff120846_1ta-di_h264/index.m3u8
