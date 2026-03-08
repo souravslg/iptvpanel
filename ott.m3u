@@ -5956,9 +5956,7 @@ https://jiotvmblive.cdn.jio.com/bpk-tv/Zing_MOB/WDVLive/index.mpd
 #EXTVLCOPT:http-user-agent=billatvoriginals
 #EXTHTTP:{ "cookie":"__hdnea__=st=1772979102~exp=1773065502~acl=/*~hmac=a97e08ca67be7d166ff9a94459a91be757881d702f1ad4f265fe9b6b988256f6" }
 https://jiotvmblive.cdn.jio.com/bpk-tv/Zoom_BTS/output/index.mpd
-404: Not Found#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140706_5971_MEX_SRN_fc-Web.jpg" group-title="Fancode-Cricket", Mexico vs Suriname (ICC Men's T20 WC Americas Sub Regional Qualifier B)
-https://in-mc-fdlive.fancode.com/mumbai/140706_english_hls_9093d46afb27336_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/BNP_Paribas-Open_web.jpg" group-title="Fancode-Tennis", E Court Feed vs Indian, United States (ATP Masters BNP Paribas Open 2026)
+404: Not Found#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/BNP_Paribas-Open_web.jpg" group-title="Fancode-Tennis", E Court Feed vs Indian, United States (ATP Masters BNP Paribas Open 2026)
 https://in-mc-fdlive.fancode.com/mumbai/141018_english_hls_6b68568fc210851_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/BNP_Paribas-Open_web.jpg" group-title="Fancode-Tennis", World Feed vs Indian, United States (ATP Masters BNP Paribas Open 2026)
 https://in-mc-fdlive.fancode.com/mumbai/141016_english_hls_4c74d9d37465766_1ta-di_h264/index.m3u8
