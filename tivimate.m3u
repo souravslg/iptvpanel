@@ -6,8 +6,12 @@ http://66.102.120.18:8000/play/a013/index.m3u8
 #EXTINF:-1 group-title="HOTSTAR" tvg-logo="usus",DISNEY HD
 http://66.102.120.18:8000/play/a013/index.m3u8
 404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000015766/177261407532912_DP_World_Day4_Joburg-Open_landscape_thumb.jpg" group-title="sonyliv-Golf", Joburg Open Day 4 - 8 Mar 2026 [ENG] - DP World Tour
-https://sonydaimenew.akamaized.net/hls/live/2094587/DAI03ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773002547~acl=/*~id=68466235782811253465196400590998~hmac=23daba48ace57ef0cd5f1a9ab5102af6e391c3d7baf0bc0ea6c2f25ca502abfd
+https://sonydaimenew.akamaized.net/hls/live/2094587/DAI03ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773003759~acl=/*~id=31292751554674599120494372833181~hmac=cdffd63a08599d5a5d886b66262e5a7a3abfaaf19d0447fdbb2adc878d49413d
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Bahrain-tour-of-Malaysia-old-card.jpg" group-title="Fancode-Cricket", Bahrain vs Malaysia (Bahrain tour of Malaysia, 2026)
 https://in-mc-fdlive.fancode.com/mumbai/141300_english_hls_f622647cc728380_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Tillo-Cup-2026-old-card-.jpg" group-title="Fancode-Cricket", JP Sports Noida vs A&S Kolkata (Tillo Cup 2026)
 https://in-mc-fdlive.fancode.com/mumbai/141258_english_hls_1f13f5955810654_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140807_5979_IRNW_PHI-W_fc-Web_1772191702166.jpg" group-title="Fancode-Football", IR Iran Women vs Philippines Women (AFC Women's Asian Cup, 2026)
+https://in-mc-fdlive.fancode.com/mumbai/140807_english_hls_322aaea57e36990_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140806_5979_AUS-W_KOR-W_fc-Web_1772191702169.jpg" group-title="Fancode-Football", Australia Women vs Korea Republic Women (AFC Women's Asian Cup, 2026)
+https://in-mc-fdlive.fancode.com/mumbai/140806_english_hls_2388de123442953_1ta-di_h264/index.m3u8
