@@ -5956,5 +5956,7 @@ https://jiotvmblive.cdn.jio.com/bpk-tv/Zing_MOB/WDVLive/index.mpd
 #EXTVLCOPT:http-user-agent=billatvoriginals
 #EXTHTTP:{ "cookie":"__hdnea__=st=1773048978~exp=1773135378~acl=/*~hmac=eb5f234b78ce6336ec153123f0b9957634c59a79aed75cca6c277f879dfe97df" }
 https://jiotvmblive.cdn.jio.com/bpk-tv/Zoom_BTS/output/index.mpd
-404: Not Found#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140458_5956_PFC_NEUFC_FC-Web_1772450979384.jpg" group-title="Fancode-Football", Punjab FC vs NorthEast United FC (ISL 2025-26)
+404: Not Found#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140707_5971_ARG_SRN_fc-Web.jpg" group-title="Fancode-Cricket", Argentina vs Suriname (ICC Men's T20 WC Americas Sub Regional Qualifier B)
+https://in-mc-fdlive.fancode.com/mumbai/140707_english_hls_dd9dc7f35a18995_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140458_5956_PFC_NEUFC_FC-Web_1772450979384.jpg" group-title="Fancode-Football", Punjab FC vs NorthEast United FC (ISL 2025-26)
 https://in-mc-fdlive.fancode.com/mumbai/140458_english_hls_0c62e70bfd19984_1ta-di_h264/index.m3u8
