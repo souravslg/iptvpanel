@@ -6,7 +6,7 @@ http://66.102.120.18:8000/play/a013/index.m3u8
 #EXTINF:-1 group-title="HOTSTAR" tvg-logo="usus",DISNEY HD
 http://66.102.120.18:8000/play/a013/index.m3u8
 404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000015895/1772875382658420_NZw_vs_ZIMw_3ODI_landscape_thumb.jpg" group-title="sonyliv-Cricket", 3rd ODI - 11 Mar 2026 [ENG] - Zimbabwe Women's Tour of New Zealand 2026
-https://sonydaimenew.akamaized.net/hls/live/2037141/DAI21-criclive/std_lrh-800300010.m3u8?hdnea=exp=1773228953~acl=/*~id=22450435614324446253302216499156~hmac=1f52ef28d8a929969cba5b28470bd51accb99a21451d2872221de54e1d0f8d57
+https://sonydaimenew.akamaized.net/hls/live/2037141/DAI21-criclive/std_lrh-800300010.m3u8?hdnea=exp=1773230165~acl=/*~id=84419004115748553163783703751508~hmac=65093c7890280db1497f698852337c37721ab5bcbec6ac4ac95ecf77842d69c8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141093_5954_PU_AME_1772957308825.png" group-title="Fancode-Football", Philadelphia Union vs Club América (CONCACAF Champions Cup 2026)
 https://in-mc-fdlive.fancode.com/mumbai/141093_english_hls_9d34f8290470358_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/BNP_Paribas-Open_web.jpg" group-title="Fancode-Tennis", B Court Feed vs Indian, United States (ATP Masters BNP Paribas Open 2026)
