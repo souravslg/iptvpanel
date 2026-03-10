@@ -5956,23 +5956,4 @@ https://jiotvmblive.cdn.jio.com/bpk-tv/Zing_MOB/WDVLive/index.mpd
 #EXTVLCOPT:http-user-agent=billatvoriginals
 #EXTHTTP:{ "cookie":"__hdnea__=st=1773162140~exp=1773248540~acl=/*~hmac=ed978c16e67f8ed90b19155801beca4c98aeb930c04a04d21790ea87be406aef" }
 https://jiotvmblive.cdn.jio.com/bpk-tv/Zoom_BTS/output/index.mpd
-404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000015939/1773010335908551_UCL26_R16_leg1_Newcastle_vs_Barcelona_8mar_eng_landscape_thumb.jpg" group-title="sonyliv-Football", Newcastle vs Barcelona - Round Of 16 - Leg 1 - 11 Mar 2026 [ENG] - UEFA Champions League 2025-26
-https://sonydaimenew.akamaized.net/hls/live/2037141/DAI21ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773225319~acl=/*~id=51171008488014619337622922953555~hmac=bf0a5073b1b6e809ed9daf5b575bbbf2523294691b1546457a68e6708bfd836d
-#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000015939/1773010335908551_UCL26_R16_leg1_Newcastle_vs_Barcelona_8mar_eng_landscape_thumb.jpg" group-title="sonyliv-Football", Newcastle vs Barcelona - Round Of 16 - Leg 1 - 11 Mar 2026 [HIN] - UEFA Champions League 2025-26
-https://sonydaimenew.akamaized.net/hls/live/2094587/DAI03ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773225319~acl=/*~id=51171008488014619337622922953555~hmac=bf0a5073b1b6e809ed9daf5b575bbbf2523294691b1546457a68e6708bfd836d
-#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000015939/1773010335908551_UCL26_R16_leg1_Newcastle_vs_Barcelona_8mar_eng_landscape_thumb.jpg" group-title="sonyliv-Football", Newcastle vs Barcelona - Round Of 16 - Leg 1 - 11 Mar 2026 [TAM] - UEFA Champions League 2025-26
-https://sonydaimenew.akamaized.net/hls/live/2005445/DAI06ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773225319~acl=/*~id=51171008488014619337622922953555~hmac=bf0a5073b1b6e809ed9daf5b575bbbf2523294691b1546457a68e6708bfd836d
-#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000015939/1773010335908551_UCL26_R16_leg1_Newcastle_vs_Barcelona_8mar_eng_landscape_thumb.jpg" group-title="sonyliv-Football", Newcastle vs Barcelona - Round Of 16 - Leg 1 - 11 Mar 2026 [TEL] - UEFA Champions League 2025-26
-https://sonydaimenew.akamaized.net/hls/live/2022317/DAI13ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773225319~acl=/*~id=51171008488014619337622922953555~hmac=bf0a5073b1b6e809ed9daf5b575bbbf2523294691b1546457a68e6708bfd836d
-#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000015895/1772875382658420_NZw_vs_ZIMw_3ODI_landscape_thumb.jpg" group-title="sonyliv-Cricket", 3rd ODI - 11 Mar 2026 [ENG] - Zimbabwe Women's Tour of New Zealand 2026
-https://sonydaimenew.akamaized.net/hls/live/2037141/DAI21-criclive/std_lrh-800300010.m3u8?hdnea=exp=1773225319~acl=/*~id=51171008488014619337622922953555~hmac=bf0a5073b1b6e809ed9daf5b575bbbf2523294691b1546457a68e6708bfd836d
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/BNP_Paribas-Open_web.jpg" group-title="Fancode-Tennis", B Court Feed vs Indian, United States (ATP Masters BNP Paribas Open 2026)
-https://in-mc-fdlive.fancode.com/mumbai/141024_english_hls_38374e3ee254830_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/BNP_Paribas-Open_web.jpg" group-title="Fancode-Tennis", C Court Feed vs Indian, United States (ATP Masters BNP Paribas Open 2026)
-https://in-mc-fdlive.fancode.com/mumbai/141254_english_hls_30bd8b7a9424972_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/BNP_Paribas-Open_web.jpg" group-title="Fancode-Tennis", World Feed vs Indian, United States (ATP Masters BNP Paribas Open 2026)
-https://in-mc-fdlive.fancode.com/mumbai/141253_english_hls_8c2e2a716f52844_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/BNP_Paribas-Open_web.jpg" group-title="Fancode-Tennis", A Court Feed vs Indian, United States (ATP Masters BNP Paribas Open 2026)
-https://in-mc-fdlive.fancode.com/mumbai/141023_english_hls_91c82d395883415_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/BNP_Paribas-Open_web.jpg" group-title="Fancode-Tennis", D Court Feed vs Indian, United States (ATP Masters BNP Paribas Open 2026)
-https://in-mc-fdlive.fancode.com/mumbai/141022_english_hls_5f1fffd1b798297_1ta-di_h264/index.m3u8
+404: Not FoundcURL Error #:Could not resolve host: www.fancode.com
