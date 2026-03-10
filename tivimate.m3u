@@ -5,5 +5,11 @@ https://livetv-push.hotstar.com/dash/live/2002466/sshindiwv/master.mpd?|Cookie=h
 http://66.102.120.18:8000/play/a013/index.m3u8
 #EXTINF:-1 group-title="HOTSTAR" tvg-logo="usus",DISNEY HD
 http://66.102.120.18:8000/play/a013/index.m3u8
-404: Not Found#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140857_5647_BU_MLC_FC-Web_1772186976696.png" group-title="Fancode-Football", Buriram United vs Melbourne City (AFC Champions League Elite 2025-26)
-https://in-mc-fdlive.fancode.com/mumbai/140857_english_hls_215870cfbc619_1ta-di_h264/index.m3u8
+404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016013/1773152786295832_ucl_champions_pe_charcha_10mar1_landcape_thumb.jpg" group-title="sonyliv-Football", Galatasaray vs Liverpool - Round Of 16 - Leg 1 - 10 Mar 2026 [ENG] - UEFA Champions League 2025-26
+https://sonydaimenew.akamaized.net/hls/live/2018458/DAI10ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773202272~acl=/*~id=55722876465794008874073679215847~hmac=0b2710dc08e6e39c844e73f2d106439f8919d7dd3534b5a3dfed90ea893605b0
+#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016013/1773152786295832_ucl_champions_pe_charcha_10mar1_landcape_thumb.jpg" group-title="sonyliv-Football", Galatasaray vs Liverpool - Round Of 16 - Leg 1 - 10 Mar 2026 [HIN] - UEFA Champions League 2025-26
+https://sonydaimenew.akamaized.net/hls/live/2105079/DAI08ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773202272~acl=/*~id=55722876465794008874073679215847~hmac=0b2710dc08e6e39c844e73f2d106439f8919d7dd3534b5a3dfed90ea893605b0
+#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016013/1773152786295832_ucl_champions_pe_charcha_10mar1_landcape_thumb.jpg" group-title="sonyliv-Football", Galatasaray vs Liverpool - Round Of 16 - Leg 1 - 10 Mar 2026 [TAM] - UEFA Champions League 2025-26
+https://sonydaimenew.akamaized.net/hls/live/2094588/DAI04ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773202272~acl=/*~id=55722876465794008874073679215847~hmac=0b2710dc08e6e39c844e73f2d106439f8919d7dd3534b5a3dfed90ea893605b0
+#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016013/1773152786295832_ucl_champions_pe_charcha_10mar1_landcape_thumb.jpg" group-title="sonyliv-Football", Galatasaray vs Liverpool - Round Of 16 - Leg 1 - 10 Mar 2026 [TEL] - UEFA Champions League 2025-26
+https://sonydaimenew.akamaized.net/hls/live/2022319/DAI15ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773202272~acl=/*~id=55722876465794008874073679215847~hmac=0b2710dc08e6e39c844e73f2d106439f8919d7dd3534b5a3dfed90ea893605b0
