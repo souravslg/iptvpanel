@@ -5956,7 +5956,13 @@ https://jiotvmblive.cdn.jio.com/bpk-tv/Zing_MOB/WDVLive/index.mpd
 #EXTVLCOPT:http-user-agent=billatvoriginals
 #EXTHTTP:{ "cookie":"__hdnea__=st=1773193670~exp=1773280070~acl=/*~hmac=4ebe72b1c4589b2272e5bbed1f9cda498e125b64f6fbc785619f49e820e2711e" }
 https://jiotvmblive.cdn.jio.com/bpk-tv/Zoom_BTS/output/index.mpd
-404: Not Found#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/BNP_Paribas-Open_web.jpg" group-title="Fancode-Tennis", World Feed vs Indian, United States (ATP Masters BNP Paribas Open 2026)
+404: Not Found#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Women's-National-Cricket-League_old_v3_1758034980120.jpg" group-title="Fancode-Cricket", New South Wales Breakers vs South Australian Scorpions (Women's National Cricket League, 2025-26)
+https://in-mc-fdlive.fancode.com/mumbai/133987_english_hls_0bee3a548371484_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Women's-National-Cricket-League_old_v2_1758034980092.jpg" group-title="Fancode-Cricket", Queensland Fire vs Victoria Women (Women's National Cricket League, 2025-26)
+https://in-mc-fdlive.fancode.com/mumbai/133986_english_hls_66278016ab68942_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141096_5954_NSH_MIA_1772957308854.png" group-title="Fancode-Football", Nashville SC vs Inter Miami CF (CONCACAF Champions Cup 2026)
+https://in-mc-fdlive.fancode.com/mumbai/141096_english_hls_7bc57b203544867_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/BNP_Paribas-Open_web.jpg" group-title="Fancode-Tennis", World Feed vs Indian, United States (ATP Masters BNP Paribas Open 2026)
 https://in-mc-fdlive.fancode.com/mumbai/141027_english_hls_59c637dc3599675_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/BNP_Paribas-Open_web.jpg" group-title="Fancode-Tennis", A Court Feed vs Indian, United States (ATP Masters BNP Paribas Open 2026)
 https://in-mc-fdlive.fancode.com/mumbai/141026_english_hls_4f8e77f3db2561_1ta-di_h264/index.m3u8
