@@ -5,8 +5,14 @@ https://livetv-push.hotstar.com/dash/live/2002466/sshindiwv/master.mpd?|Cookie=h
 http://66.102.120.18:8000/play/a013/index.m3u8
 #EXTINF:-1 group-title="HOTSTAR" tvg-logo="usus",DISNEY HD
 http://66.102.120.18:8000/play/a013/index.m3u8
-404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000015999/1773143576563356_the_hundred_auction_womens_landscape_thumb.jpg" group-title="sonyliv-Cricket", Auction - 11 Mar 2026 [ENG] - The Hundred 2026 (Women's)
-https://sonydaimenew.akamaized.net/hls/live/2005444/DAI07ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773287669~acl=/*~id=77366481282754221229922888294187~hmac=b4679a37c5d8b41e89982dd7cca463e6bf42c6dc2f801dd7559fab3e424cd2a8
+404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016047/1773216472878534_ucl_Bayer_vs_Arsenal_CPC_landscape_thumb.jpg" group-title="sonyliv-Football", Leverkusen vs Arsenal - Round Of 16 - Leg 1 - 11 Mar 2026 [ENG] - UEFA Champions League 2025-26
+https://sonydaimenew.akamaized.net/hls/live/2018458/DAI10ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773291919~acl=/*~id=48945314950755059991009030313250~hmac=0b11f64e55892aea595067269834da5d99e40397284b0f6fb0ad7fcc6586f32f
+#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016047/1773216472878534_ucl_Bayer_vs_Arsenal_CPC_landscape_thumb.jpg" group-title="sonyliv-Football", Leverkusen vs Arsenal - Round Of 16 - Leg 1 - 11 Mar 2026 [HIN] - UEFA Champions League 2025-26
+https://sonydaimenew.akamaized.net/hls/live/2105079/DAI08ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773291919~acl=/*~id=48945314950755059991009030313250~hmac=0b11f64e55892aea595067269834da5d99e40397284b0f6fb0ad7fcc6586f32f
+#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016047/1773216472878534_ucl_Bayer_vs_Arsenal_CPC_landscape_thumb.jpg" group-title="sonyliv-Football", Leverkusen vs Arsenal - Round Of 16 - Leg 1 - 11 Mar 2026 [TAM] - UEFA Champions League 2025-26
+https://sonydaimenew.akamaized.net/hls/live/2094588/DAI04ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773291919~acl=/*~id=48945314950755059991009030313250~hmac=0b11f64e55892aea595067269834da5d99e40397284b0f6fb0ad7fcc6586f32f
+#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016047/1773216472878534_ucl_Bayer_vs_Arsenal_CPC_landscape_thumb.jpg" group-title="sonyliv-Football", Leverkusen vs Arsenal - Round Of 16 - Leg 1 - 11 Mar 2026 [TEL] - UEFA Champions League 2025-26
+https://sonydaimenew.akamaized.net/hls/live/2022319/DAI15ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773291919~acl=/*~id=48945314950755059991009030313250~hmac=0b11f64e55892aea595067269834da5d99e40397284b0f6fb0ad7fcc6586f32f
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141305_6002_MSP_ICN_FC-Web.jpg" group-title="Fancode-Cricket", India Captains vs Mumbai Spartans (Legends League Cricket, 2026)
 https://in-mc-fdlive.fancode.com/mumbai/141305_english_hls_4175807c9651232_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140709_5971_SRN_CAY_fc-Web.jpg" group-title="Fancode-Cricket", Suriname vs Cayman Islands (ICC Men's T20 WC Americas Sub Regional Qualifier B)
