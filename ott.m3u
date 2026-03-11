@@ -5957,8 +5957,8 @@ https://jiotvmblive.cdn.jio.com/bpk-tv/Zing_MOB/WDVLive/index.mpd
 #EXTHTTP:{ "cookie":"__hdnea__=st=1773193670~exp=1773280070~acl=/*~hmac=4ebe72b1c4589b2272e5bbed1f9cda498e125b64f6fbc785619f49e820e2711e" }
 https://jiotvmblive.cdn.jio.com/bpk-tv/Zoom_BTS/output/index.mpd
 404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000015999/1773143576563356_the_hundred_auction_womens_landscape_thumb.jpg" group-title="sonyliv-Cricket", Auction - 11 Mar 2026 [ENG] - The Hundred 2026 (Women's)
-https://sonydaimenew.akamaized.net/hls/live/2005444/DAI07ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773277365~acl=/*~id=27386963130526195247779084974700~hmac=59aa66074c5633bba5c421f5fd53b3fbdf0878f4f0ecf0e2e7465271c0b264c6
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141305_6002_MSP_ICN_FC-Web.jpg" group-title="Fancode-Cricket", Mumbai Spartans vs India Captains (Legends League Cricket, 2026)
+https://sonydaimenew.akamaized.net/hls/live/2005444/DAI07ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773281001~acl=/*~id=91416226875609042779370976104791~hmac=03822730c15637adef03ac8a66e804b403325341211180756596f63fb4436f62
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141305_6002_MSP_ICN_FC-Web.jpg" group-title="Fancode-Cricket", India Captains vs Mumbai Spartans (Legends League Cricket, 2026)
 https://in-mc-fdlive.fancode.com/mumbai/141305_english_hls_4175807c9651232_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://images.fancode.com/aig/match/v1773230659658/140867_CASACARDS_APP.png" group-title="Fancode-Football", Ratchaburi vs Gamba Osaka (AFC Champions League Two 2025-26)
 https://in-mc-fdlive.fancode.com/mumbai/140867_english_hls_246c70c5c570736_1ta-di_h264/index.m3u8
