@@ -5957,15 +5957,15 @@ https://jiotvmblive.cdn.jio.com/bpk-tv/Zing_MOB/WDVLive/index.mpd
 #EXTHTTP:{ "cookie":"__hdnea__=st=1773193670~exp=1773280070~acl=/*~hmac=4ebe72b1c4589b2272e5bbed1f9cda498e125b64f6fbc785619f49e820e2711e" }
 https://jiotvmblive.cdn.jio.com/bpk-tv/Zoom_BTS/output/index.mpd
 404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000015999/1773143576563356_the_hundred_auction_womens_landscape_thumb.jpg" group-title="sonyliv-Cricket", Auction - 11 Mar 2026 [ENG] - The Hundred 2026 (Women's)
-https://sonydaimenew.akamaized.net/hls/live/2005444/DAI07ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773265862~acl=/*~id=18745842165188441167710717466513~hmac=cf1bf899085d91439e6bfd8f06c13336509f02618415ca5d4123ea22e2d30224
+https://sonydaimenew.akamaized.net/hls/live/2005444/DAI07ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773269495~acl=/*~id=31792823785553303960472596072385~hmac=7c8c033a8f8a970c3531100e70284b7efeee47a05a9ef465c9737b989b8d4a42
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Bangladesh-vs-Pakistan_ODI_WEB_1080_x_810.jpg" group-title="Fancode-Cricket", Pakistan vs Bangladesh (Pakistan tour of Bangladesh, 2026)
 https://in-mc-fdlive.fancode.com/mumbai/141406_english_hls_3b0adf748056499_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Tasmania-vs-New-South-Wales_fc-web_1772692426912.jpg" group-title="Fancode-Cricket", Tasmania vs New South Wales (One Day Cup, 2025-26)
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Tillo-Cup-2026-old-card-.jpg" group-title="Fancode-Cricket", CAG Delhi vs NCC Odisha (Tillo Cup 2026)
 https://in-mc-fdlive.fancode.com/mumbai/141264_english_hls_c58cd066a148302_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Mini-Match-Card-(1080x810)-(8).png" group-title="Fancode-Cricket", Rajasthan Emperors vs Tamil Nadu Titans (Thunderbolt T10 League 2026)
+https://in-mc-fdlive.fancode.com/mumbai/141189_english_hls_b0b260f4a193501_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140861_5647_HIR_JDT_FC-Web.png" group-title="Fancode-Football", Sanfrecce Hiroshima vs Johor Darul Ta'zim (AFC Champions League Elite 2025-26)
 https://in-mc-fdlive.fancode.com/mumbai/140861_english_hls_02d17dae4218994_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140860_5647_VIS_SE_FC-Web.png" group-title="Fancode-Football", Vissel Kobe vs Seoul (AFC Champions League Elite 2025-26)
 https://in-mc-fdlive.fancode.com/mumbai/140860_english_hls_4285f8145099209_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Mini-Match-Card-(1080x810)-(8).png" group-title="Fancode-Cricket", Rajasthan Emperors vs Tamil Nadu Titans (Thunderbolt T10 League 2026)
-https://in-mc-fdlive.fancode.com/mumbai/141189_english_hls_b0b260f4a193501_1ta-di_h264/index.m3u8
