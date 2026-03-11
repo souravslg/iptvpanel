@@ -5,5 +5,5 @@ https://livetv-push.hotstar.com/dash/live/2002466/sshindiwv/master.mpd?|Cookie=h
 http://66.102.120.18:8000/play/a013/index.m3u8
 #EXTINF:-1 group-title="HOTSTAR" tvg-logo="usus",DISNEY HD
 http://66.102.120.18:8000/play/a013/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Mini-Match-Card-(1080x810)-(8).png" group-title="Fancode-Cricket", Bengal Royals vs Mumbai Maverics (Thunderbolt T10 League 2026)
-https://in-mc-fdlive.fancode.com/mumbai/141187_english_hls_3aeb163a6331149_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Mini-Match-Card-(1080x810)-(8).png" group-title="Fancode-Cricket", Delhi Champions vs Gujarat Tigers (Thunderbolt T10 League 2026)
+https://in-mc-fdlive.fancode.com/mumbai/141188_english_hls_bda5fb236338500_1ta-di_h264/index.m3u8
