@@ -5957,11 +5957,13 @@ https://jiotvmblive.cdn.jio.com/bpk-tv/Zing_MOB/WDVLive/index.mpd
 #EXTHTTP:{ "cookie":"__hdnea__=st=1773291658~exp=1773378058~acl=/*~hmac=8f2331fd8c8e649de74522ec883a2492dd6ce1b51716d95ca81115a1143aed65" }
 https://jiotvmblive.cdn.jio.com/bpk-tv/Zoom_BTS/output/index.mpd
 404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016058/1773232988888126_IFC_Chanmari_FC-vs-Dempo_Sports_Club_landscape_thumb.jpg" group-title="sonyliv-Football", Chanmari FC vs Dempo Sports Club - 12 Mar 2026 [ENG] - Indian Football League 2026
-https://sonydaimenew.akamaized.net/hls/live/2105080/DAI24ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773365766~acl=/*~id=13510626817602526227897792129420~hmac=cafef0845b41bd9471badb73a9ba60f4b27396b241d9171fc6557aada0d357a0
+https://sonydaimenew.akamaized.net/hls/live/2105080/DAI24ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773368801~acl=/*~id=68955583236060936197145724850340~hmac=85db387c6d71c2bf4d8f5a43d71156a18b233fdfd5a3f23390231dc15fab855a
 #EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000015999/1773143587014356_the_hundred_auction_mens_landscape_thumb.jpg" group-title="sonyliv-Cricket", Auction - 12 Mar 2026 [ENG] - The Hundred 2026 (Men's)
-https://sonydaimenew.akamaized.net/hls/live/2005444/DAI07ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773365766~acl=/*~id=13510626817602526227897792129420~hmac=cafef0845b41bd9471badb73a9ba60f4b27396b241d9171fc6557aada0d357a0
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141306_6002_RRP_ING_FC-Web.jpg" group-title="Fancode-Cricket", Royal Riders Punjab vs India Tigers (Legends League Cricket, 2026)
+https://sonydaimenew.akamaized.net/hls/live/2005444/DAI07ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773368801~acl=/*~id=68955583236060936197145724850340~hmac=85db387c6d71c2bf4d8f5a43d71156a18b233fdfd5a3f23390231dc15fab855a
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141306_6002_RRP_ING_FC-Web.jpg" group-title="Fancode-Cricket", India Tigers vs Royal Riders Punjab (Legends League Cricket, 2026)
 https://in-mc-fdlive.fancode.com/mumbai/141306_english_hls_467683669135471_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140711_5971_MEX_CAY_fc-Web.jpg" group-title="Fancode-Cricket", Cayman Islands vs Mexico (ICC Men's T20 WC Americas Sub Regional Qualifier B)
+https://in-mc-fdlive.fancode.com/mumbai/140711_english_hls_c5e9a01cdd79392_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140869_5648_TAM_BU_FC-WEB.jpg" group-title="Fancode-Football", Tampines Rovers FC vs Bangkok United (AFC Champions League Two 2025-26)
 https://in-mc-fdlive.fancode.com/mumbai/140869_english_hls_aada5696ec98580_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/The-Players_fc-web.jpg" group-title="Fancode-Golf", Main Feed - Day 1 vs Ponte Vedra Beach, Florida (THE PLAYERS Championship 2026)
