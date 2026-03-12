@@ -5957,8 +5957,10 @@ https://jiotvmblive.cdn.jio.com/bpk-tv/Zing_MOB/WDVLive/index.mpd
 #EXTHTTP:{ "cookie":"__hdnea__=st=1773284433~exp=1773370833~acl=/*~hmac=eedcdbd028f6e9ec6ca8b745c85b5f23ae2899e4fd2158641538efe72f691fb5" }
 https://jiotvmblive.cdn.jio.com/bpk-tv/Zoom_BTS/output/index.mpd
 404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000015999/1773143587014356_the_hundred_auction_mens_landscape_thumb.jpg" group-title="sonyliv-Cricket", Auction - 12 Mar 2026 [ENG] - The Hundred 2026 (Men's)
-https://sonydaimenew.akamaized.net/hls/live/2005444/DAI07ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773358491~acl=/*~id=66077136757224438686521009832913~hmac=812ff0df5011263ee0f3c83c45190b865d99db267930acca96ce5c0d9ddca38b
+https://sonydaimenew.akamaized.net/hls/live/2005444/DAI07ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773359704~acl=/*~id=58294405306528316850041183792504~hmac=0a52ae96e0beb70accd96fbc67ddbaa3eb8166b585a729e5d76e8fcbc1473380
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Tillo-Cup-2026-old-card-.jpg" group-title="Fancode-Cricket", NCC Odisha vs SPJ Cargo Delhi (Tillo Cup 2026)
 https://in-mc-fdlive.fancode.com/mumbai/141266_english_hls_8d33a0948e49652_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/The-Players_fc-web.jpg" group-title="Fancode-Golf", Main Feed - Day 1 vs Ponte Vedra Beach, Florida (THE PLAYERS Championship 2026)
 https://in-mc-fdlive.fancode.com/mumbai/141136_english_hls_9a5ab4dcfa40624_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/The-Players_fc-web.jpg" group-title="Fancode-Golf", Featured Holes - Day 1 vs Ponte Vedra Beach, Florida (THE PLAYERS Championship 2026)
+https://in-mc-fdlive.fancode.com/mumbai/141138_english_hls_22c71f583141831_1ta-di_h264/index.m3u8
