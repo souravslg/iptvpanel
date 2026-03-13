@@ -5957,7 +5957,7 @@ https://jiotvmblive.cdn.jio.com/bpk-tv/Zing_MOB/WDVLive/index.mpd
 #EXTHTTP:{ "cookie":"__hdnea__=st=1773378032~exp=1773464432~acl=/*~hmac=25a85cc6a1d3c3c1029575706ae3853e705c66d9046760cf9a47796e8ebb2cbf" }
 https://jiotvmblive.cdn.jio.com/bpk-tv/Zoom_BTS/output/index.mpd
 404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016140/1773384099433718_IFC_Rajasthan_United_FC-vs-Namdhari_FC_landscape_thumb.jpg" group-title="sonyliv-Football", Rajasthan United FC vs Namdhari FC - 13 Mar 2026 [ENG] - Indian Football League 2026
-https://sonydaimenew.akamaized.net/hls/live/2037143/DAI23ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773442145~acl=/*~id=55169625693743511867239663764641~hmac=d0eb58ae95f6111b6fef5af76fd82229965cf5944e4c989c90a02f014614a389
+https://sonydaimenew.akamaized.net/hls/live/2037143/DAI23ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773444576~acl=/*~id=86482559317813119796916412554013~hmac=aa194bd3b5f38b67bedd770da86afaa385bdc5894f6184c37c07f6383e9734a6
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Bangladesh-vs-Pakistan_ODI_WEB_1080_x_810.jpg" group-title="Fancode-Cricket", Pakistan vs Bangladesh (Pakistan tour of Bangladesh, 2026)
 https://in-mc-fdlive.fancode.com/mumbai/141407_english_hls_ab5ff6c24a21542_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Women's-National-Cricket-League_old_v2_1758034980092.jpg" group-title="Fancode-Cricket", ACT Meteors vs Western Australia Women (Women's National Cricket League, 2025-26)
@@ -5970,3 +5970,5 @@ https://in-mc-fdlive.fancode.com/mumbai/141359_english_hls_ee55ec5c7138452_1ta-d
 https://in-mc-fdlive.fancode.com/mumbai/141195_english_hls_6f3dfc540571747_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://images.fancode.com/aig/match/v1773379970336/140812_CASACARDS_APP.png" group-title="Fancode-Football", Australia Women vs DPR Korea Women (AFC Women's Asian Cup, 2026)
 https://in-mc-fdlive.fancode.com/mumbai/140812_english_hls_b2199af4ff86953_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/The-Players_fc-web.jpg" group-title="Fancode-Golf", Main Feed - Day 2 vs Ponte Vedra Beach, Florida (THE PLAYERS Championship 2026)
+https://in-mc-fdlive.fancode.com/mumbai/141140_english_hls_50bdf9501b67602_1ta-di_h264/index.m3u8
