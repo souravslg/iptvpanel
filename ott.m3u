@@ -5957,7 +5957,13 @@ https://jiotvmblive.cdn.jio.com/bpk-tv/Zing_MOB/WDVLive/index.mpd
 #EXTHTTP:{ "cookie":"__hdnea__=st=1773417645~exp=1773504045~acl=/*~hmac=a384920e4bb5c1134bacd1d14caa884565e957d5b0f795fe4cf500698bed7ad2" }
 https://jiotvmblive.cdn.jio.com/bpk-tv/Zoom_BTS/output/index.mpd
 404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000015722/1772378482350152_bliga26_MD26_Borussia_Mgladbach_vs_St_Pauli_1mar_landscape_thumb.jpg" group-title="sonyliv-Football", Borussia M'gladbach vs St. Pauli - MD 26 - 14 Mar 2026 [ENG] - Bundesliga 2025-26
-https://sonydaimenew.akamaized.net/hls/live/2094588/DAI04ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773471237~acl=/*~id=97619685137545516472098413024241~hmac=0a4657378843dd5e26d5bcf865a0a0620f43133e69ed8c6fe386e803811bcd37
+https://sonydaimenew.akamaized.net/hls/live/2094588/DAI04ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773474278~acl=/*~id=43114008127304902348915580200714~hmac=828d732d15c774c5bced714302efb17de581dde57c399b819c7d8f5b2bdf87ad
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140719_5655_ALQ_AAS_fc-web.jpg" group-title="Fancode-Football", Al-Qadsiah FC vs Al-Ahli Saudi FC (Roshn Saudi League 2025-2026)
+https://in-mc-fdlive.fancode.com/mumbai/140719_english_hls_2e44a4771966742_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/131103_5427_ALA_VIL_FC-Web.png" group-title="Fancode-Football", Deportivo Alaves vs Villarreal CF (LALIGA 2025-26)
+https://in-mc-fdlive.fancode.com/mumbai/131103_english_hls_fa4cedcb5039872_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/FC_Sports_Default_Football-old-copy.jpg" group-title="Fancode-Football", Mirandés vs Cádiz (LALIGA Hypermotion 2025-26)
+https://in-mc-fdlive.fancode.com/mumbai/141221_english_hls_68de37110445456_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/The-Players_fc-web.jpg" group-title="Fancode-Golf", Main Feed - Day 2 vs Ponte Vedra Beach, Florida (THE PLAYERS Championship 2026)
 https://in-mc-fdlive.fancode.com/mumbai/141140_english_hls_50bdf9501b67602_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/The-Players_fc-web.jpg" group-title="Fancode-Golf", Featured Holes - Day 2 vs Ponte Vedra Beach, Florida (THE PLAYERS Championship 2026)
