@@ -5956,8 +5956,18 @@ https://jiotvmblive.cdn.jio.com/bpk-tv/Zing_MOB/WDVLive/index.mpd
 #EXTVLCOPT:http-user-agent=billatvoriginals
 #EXTHTTP:{ "cookie":"__hdnea__=st=1773461784~exp=1773548184~acl=/*~hmac=857ff5fdf526b7d1e62948ba2d5278ff96dcd488adfe9e5aadad2623e3a27b9e" }
 https://jiotvmblive.cdn.jio.com/bpk-tv/Zoom_BTS/output/index.mpd
-404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016149/1773404123567628_IFC_Shillong_Lajong_FC-vs-Diamond_Harbour_FC_landscape_thumb.jpg" group-title="sonyliv-Football", Shillong Lajong FC vs Diamond Harbour FC - 14 Mar 2026 [ENG] - Indian Football League 2026
-https://sonydaimenew.akamaized.net/hls/live/2105080/DAI24ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773539066~acl=/*~id=04804275310642247068883596913137~hmac=39b91a2d738139650180019daf8b6e648139c2865f548002008b815aa39b99bb
+404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000015722/1772378810824152_bliga26_MD26_Leverkusen_vs_Bayern_1mar_landscape_thumb.jpg" group-title="sonyliv-Football", Bayer Leverkusen vs Bayern Munich - MD 26 - 14 Mar 2026 [ENG] - Bundesliga 2025-26
+https://sonydaimenew.akamaized.net/hls/live/2094589/DAI05ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773541498~acl=/*~id=93567490851327799664091855034701~hmac=e2f572c8cf3ba834d7ef8e94bad7b900374796f51a5560ea81c0f5ad5c798cd8
+#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000015722/1772379757200152_bliga26_MD26_Dortmund_vs_Augsburg_1mar_landscape_thumb.jpg" group-title="sonyliv-Football", Borussia Dortmund vs FC Augsburg - MD 26 - 14 Mar 2026 [ENG] - Bundesliga 2025-26
+https://sonydaimenew.akamaized.net/hls/live/2105079/DAI08ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773541498~acl=/*~id=93567490851327799664091855034701~hmac=e2f572c8cf3ba834d7ef8e94bad7b900374796f51a5560ea81c0f5ad5c798cd8
+#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016149/1773404123567628_IFC_Shillong_Lajong_FC-vs-Diamond_Harbour_FC_landscape_thumb.jpg" group-title="sonyliv-Football", Shillong Lajong FC vs Diamond Harbour FC - 14 Mar 2026 [ENG] - Indian Football League 2026
+https://sonydaimenew.akamaized.net/hls/live/2105080/DAI24ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773541498~acl=/*~id=93567490851327799664091855034701~hmac=e2f572c8cf3ba834d7ef8e94bad7b900374796f51a5560ea81c0f5ad5c798cd8
+#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000006892/1755929846694147_Bliga26_Goal_Arena_landscape_thumb.jpg" group-title="sonyliv-Football", Goal Arena - MD 26 - 14 Mar 2026 [ENG] - Bundesliga 2025-26
+https://sonydaimenew.akamaized.net/hls/live/2094588/DAI04ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773541498~acl=/*~id=93567490851327799664091855034701~hmac=e2f572c8cf3ba834d7ef8e94bad7b900374796f51a5560ea81c0f5ad5c798cd8
+#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000015722/1772379974561152_bliga26_MD26_Frankfurt_vs_Heidenheim_1mar_landscape_thumb.jpg" group-title="sonyliv-Football", Eintracht Frankfurt vs Heidenheim - MD 26 - 14 Mar 2026 [ENG] - Bundesliga 2025-26
+https://sonydaimenew.akamaized.net/hls/live/2018457/DAI09ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773541498~acl=/*~id=93567490851327799664091855034701~hmac=e2f572c8cf3ba834d7ef8e94bad7b900374796f51a5560ea81c0f5ad5c798cd8
+#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000015722/1772385509250152_bliga26_MD26_Hoffenheim_vs_Wolfsburg_1mar_landscape_thumb.jpg" group-title="sonyliv-Football", Hoffenheim vs VfL Wolfsburg - MD 26 - 14 Mar 2026 [ENG] - Bundesliga 2025-26
+https://sonydaimenew.akamaized.net/hls/live/2022315/DAI11ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773541498~acl=/*~id=93567490851327799664091855034701~hmac=e2f572c8cf3ba834d7ef8e94bad7b900374796f51a5560ea81c0f5ad5c798cd8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141308_6002_MSP_ING_FC-Web_1773487500003.jpg" group-title="Fancode-Cricket", Mumbai Spartans vs India Tigers (Legends League Cricket, 2026)
 https://in-mc-fdlive.fancode.com/mumbai/141308_english_hls_3cea5724ca4868_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140952_5489_CVC_SOU_fc-web.jpg" group-title="Fancode-Football", Coventry City F.C. vs Southampton F.C. (EFL Championship 2025-26)
@@ -5968,6 +5978,8 @@ https://in-mc-fdlive.fancode.com/mumbai/131109_english_hls_ea1716cd6e71536_1ta-d
 https://in-mc-fdlive.fancode.com/mumbai/140462_english_hls_03ef477ba010168_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141177_5973_BFC_MBSG_fc-web.jpg" group-title="Fancode-Football", Bengaluru FC vs Mohun Bagan Super Giant (ISL 2025-26  - Regional)
 https://in-mc-fdlive.fancode.com/mumbai/141177_bengali_hls_32071a8e3c92196_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140713_5971_MEX_ARG_fc-Web.jpg" group-title="Fancode-Cricket", Argentina vs Mexico (ICC Men's T20 WC Americas Sub Regional Qualifier B)
+https://in-mc-fdlive.fancode.com/mumbai/140713_english_hls_f13930d8c23633_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/The-Players_fc-web.jpg" group-title="Fancode-Golf", Main Feed - Day 3 vs Ponte Vedra Beach, Florida (THE PLAYERS Championship 2026)
 https://in-mc-fdlive.fancode.com/mumbai/141144_english_hls_e8d21caf2716048_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/The-Players_fc-web.jpg" group-title="Fancode-Golf", Featured Holes - Day 3 vs Ponte Vedra Beach, Florida (THE PLAYERS Championship 2026)
@@ -5976,9 +5988,3 @@ https://in-mc-fdlive.fancode.com/mumbai/141146_english_hls_fe42beb32191570_1ta-d
 https://in-mc-fdlive.fancode.com/mumbai/141353_english_hls_0c4f4314db70100_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/The-Players_fc-web.jpg" group-title="Fancode-Golf", Featured Groups - Day 3 vs Ponte Vedra Beach, Florida (THE PLAYERS Championship 2026)
 https://in-mc-fdlive.fancode.com/mumbai/141145_english_hls_d0737003e543039_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140461_5956_EBFC_KBFC_FC-Web_1772451223711.jpg" group-title="Fancode-Football", East Bengal FC vs Kerala Blasters FC (ISL 2025-26)
-https://in-mc-fdlive.fancode.com/mumbai/140461_english_hls_1c1164c92c20788_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141175_5973_EBFC_KBFC_fc-web.jpg" group-title="Fancode-Football", East Bengal FC vs Kerala Blasters FC (ISL 2025-26  - Regional)
-https://in-mc-fdlive.fancode.com/mumbai/141176_english_hls_4c0cbdb1a687620_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141176_5973_EBFC_KBFC_fc-web.jpg" group-title="Fancode-Football", East Bengal FC vs Kerala Blasters FC (ISL 2025-26  - Regional)
-https://in-mc-fdlive.fancode.com/mumbai/141175_malayalam_hls_c72faa282927779_1ta-di_h264/index.m3u8
