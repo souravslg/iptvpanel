@@ -6,18 +6,20 @@ http://66.102.120.18:8000/play/a013/index.m3u8
 #EXTINF:-1 group-title="HOTSTAR" tvg-logo="usus",DISNEY HD
 http://66.102.120.18:8000/play/a013/index.m3u8
 404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016185/1773483212603469_bliga26_MD26_Hamburg_SV_vs_FC_Koln_14mar_landscape_thumb.jpg" group-title="sonyliv-Football", Hamburger SV vs FC Koln - MD 26 - 14 Mar 2026 [ENG] - Bundesliga 2025-26
-https://sonydaimenew.akamaized.net/hls/live/2022317/DAI13ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773550611~acl=/*~id=30371008846430061105253312109531~hmac=2bd2215ced11816ae5d68b212afa6558cc29b035bb9cf3dbdbb44b45ff4d8db0
+https://sonydaimenew.akamaized.net/hls/live/2022317/DAI13ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773553033~acl=/*~id=86816494177156397352693188490935~hmac=1f8caf2488a4dfeffa0b18f2cb2140845286c4f301a4331f3b7c99f2a86e85b6
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141308_6002_MSP_ING_FC-Web_1773487500003.jpg" group-title="Fancode-Cricket", Mumbai Spartans vs India Tigers (Legends League Cricket, 2026)
 https://in-mc-fdlive.fancode.com/mumbai/141308_english_hls_3cea5724ca4868_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140713_5971_MEX_ARG_fc-Web.jpg" group-title="Fancode-Cricket", Argentina vs Mexico (ICC Men's T20 WC Americas Sub Regional Qualifier B)
 https://in-mc-fdlive.fancode.com/mumbai/140713_english_hls_f13930d8c23633_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140953_5489_LEI_QPR_fc-web.jpg" group-title="Fancode-Football", Leicester City F.C. vs Queens Park Rangers F.C. (EFL Championship 2025-26)
-https://in-mc-fdlive.fancode.com/mumbai/140953_english_hls_b7b8bba21e59998_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/131105_5427_ATL_GEF_FC-Web.png" group-title="Fancode-Football", Atletico de Madrid vs Getafe CF (LALIGA 2025-26)
-https://in-mc-fdlive.fancode.com/mumbai/131105_english_hls_e7be9609d824136_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/131108_5427_RO_VAL_FC-Web.png" group-title="Fancode-Football", Real Oviedo vs Valencia CF (LALIGA 2025-26)
+https://in-mc-fdlive.fancode.com/mumbai/131108_english_hls_ad236bef6a87088_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://images.fancode.com/aig/match/v1773431102733/141220_CASACARDS_APP.png" group-title="Fancode-Football", Real Zaragoza vs Almería (LALIGA Hypermotion 2025-26)
+https://in-mc-fdlive.fancode.com/mumbai/141220_english_hls_8165071ae751937_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/The-Players_fc-web.jpg" group-title="Fancode-Golf", Main Feed - Day 3 vs Ponte Vedra Beach, Florida (THE PLAYERS Championship 2026)
 https://in-mc-fdlive.fancode.com/mumbai/141144_english_hls_e8d21caf2716048_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/The-Players_fc-web.jpg" group-title="Fancode-Golf", Featured Holes - Day 3 vs Ponte Vedra Beach, Florida (THE PLAYERS Championship 2026)
 https://in-mc-fdlive.fancode.com/mumbai/141146_english_hls_fe42beb32191570_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/The-Players_fc-web.jpg" group-title="Fancode-Golf", Featured Groups - Day 3 vs Ponte Vedra Beach, Florida (THE PLAYERS Championship 2026)
 https://in-mc-fdlive.fancode.com/mumbai/141145_english_hls_d0737003e543039_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/131105_5427_ATL_GEF_FC-Web.png" group-title="Fancode-Football", Atletico de Madrid vs Getafe CF (LALIGA 2025-26)
+https://in-mc-fdlive.fancode.com/mumbai/131105_english_hls_e7be9609d824136_1ta-di_h264/index.m3u8
