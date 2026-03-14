@@ -5956,11 +5956,7 @@ https://jiotvmblive.cdn.jio.com/bpk-tv/Zing_MOB/WDVLive/index.mpd
 #EXTVLCOPT:http-user-agent=billatvoriginals
 #EXTHTTP:{ "cookie":"__hdnea__=st=1773500439~exp=1773586839~acl=/*~hmac=f25e0de485c82879aebd8e7d11f2554157cf03836b8d82db4dd7ea69e266435f" }
 https://jiotvmblive.cdn.jio.com/bpk-tv/Zoom_BTS/output/index.mpd
-404: Not Found#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140721_5655_AFF_AHS_fc-web.jpg" group-title="Fancode-Football", Al-Fateh SC vs Al Hilal SFC (Roshn Saudi League 2025-2026)
-https://in-mc-fdlive.fancode.com/mumbai/140721_english_hls_1f47bf582975056_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140720_5655_AKH_ANF_fc-web.jpg" group-title="Fancode-Football", Al-Khaleej vs Al-Nassr FC (Roshn Saudi League 2025-2026)
-https://in-mc-fdlive.fancode.com/mumbai/140720_english_hls_8a2af43f5360383_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/131100_5427_RM_ELC_FC-Web.png" group-title="Fancode-Football", Real Madrid vs Elche CF (LALIGA 2025-26)
+404: Not Found#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/131100_5427_RM_ELC_FC-Web.png" group-title="Fancode-Football", Real Madrid vs Elche CF (LALIGA 2025-26)
 https://in-mc-fdlive.fancode.com/mumbai/131100_english_hls_4c88e77cd622395_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/The-Players_fc-web.jpg" group-title="Fancode-Golf", Main Feed - Day 3 vs Ponte Vedra Beach, Florida (THE PLAYERS Championship 2026)
 https://in-mc-fdlive.fancode.com/mumbai/141144_english_hls_e8d21caf2716048_1ta-di_h264/index.m3u8
