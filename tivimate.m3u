@@ -5,16 +5,12 @@ https://livetv-push.hotstar.com/dash/live/2002466/sshindiwv/master.mpd?|Cookie=h
 http://66.102.120.18:8000/play/a013/index.m3u8
 #EXTINF:-1 group-title="HOTSTAR" tvg-logo="usus",DISNEY HD
 http://66.102.120.18:8000/play/a013/index.m3u8
-404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016185/1773483212603469_bliga26_MD26_Hamburg_SV_vs_FC_Koln_14mar_landscape_thumb.jpg" group-title="sonyliv-Football", Hamburger SV vs FC Koln - MD 26 - 14 Mar 2026 [ENG] - Bundesliga 2025-26
-https://sonydaimenew.akamaized.net/hls/live/2022317/DAI13ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773559696~acl=/*~id=37907359426502497641210005231399~hmac=740cb30bd18a5611e1816970390f676f2a95db369c79cbf5f3baef6feac7bcb3
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/131108_5427_RO_VAL_FC-Web.png" group-title="Fancode-Football", Real Oviedo vs Valencia CF (LALIGA 2025-26)
-https://in-mc-fdlive.fancode.com/mumbai/131108_english_hls_ad236bef6a87088_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140721_5655_AFF_AHS_fc-web.jpg" group-title="Fancode-Football", Al-Fateh SC vs Al Hilal SFC (Roshn Saudi League 2025-2026)
+404: Not Found#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140721_5655_AFF_AHS_fc-web.jpg" group-title="Fancode-Football", Al-Fateh SC vs Al Hilal SFC (Roshn Saudi League 2025-2026)
 https://in-mc-fdlive.fancode.com/mumbai/140721_english_hls_1f47bf582975056_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140720_5655_AKH_ANF_fc-web.jpg" group-title="Fancode-Football", Al-Khaleej vs Al-Nassr FC (Roshn Saudi League 2025-2026)
 https://in-mc-fdlive.fancode.com/mumbai/140720_english_hls_8a2af43f5360383_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://images.fancode.com/aig/match/v1773431102733/141220_CASACARDS_APP.png" group-title="Fancode-Football", Real Zaragoza vs Almería (LALIGA Hypermotion 2025-26)
-https://in-mc-fdlive.fancode.com/mumbai/141220_english_hls_8165071ae751937_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/131100_5427_RM_ELC_FC-Web.png" group-title="Fancode-Football", Real Madrid vs Elche CF (LALIGA 2025-26)
+https://in-mc-fdlive.fancode.com/mumbai/131100_english_hls_4c88e77cd622395_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/The-Players_fc-web.jpg" group-title="Fancode-Golf", Main Feed - Day 3 vs Ponte Vedra Beach, Florida (THE PLAYERS Championship 2026)
 https://in-mc-fdlive.fancode.com/mumbai/141144_english_hls_e8d21caf2716048_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/The-Players_fc-web.jpg" group-title="Fancode-Golf", Featured Holes - Day 3 vs Ponte Vedra Beach, Florida (THE PLAYERS Championship 2026)
