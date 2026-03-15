@@ -6,9 +6,9 @@ http://66.102.120.18:8000/play/a013/index.m3u8
 #EXTINF:-1 group-title="HOTSTAR" tvg-logo="usus",DISNEY HD
 http://66.102.120.18:8000/play/a013/index.m3u8
 404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000015722/1772390485614152_bliga26_MD26_SC_Freiburg_vs_Union_Berlin_1mar_landscape_thumb.jpg" group-title="sonyliv-Football", SC Freiburg vs Union Berlin - MD 26 - 15 Mar 2026 [ENG] - Bundesliga 2025-26
-https://sonydaimenew.akamaized.net/hls/live/2094589/DAI05ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773640262~acl=/*~id=73258830876465677389163075164721~hmac=b7b3cc463e00b883eebdd62abd9d10c4a78f48c3ebfe6911c0d16d404669dc3e
+https://sonydaimenew.akamaized.net/hls/live/2094589/DAI05ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773643296~acl=/*~id=73599584317369500678526920123606~hmac=5cad27fc78db9283adaa2d8395ec9d5cb4b1ec6810438dac669556082c00ec67
 #EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000015722/1772390887584152_bliga26_MD26_VfB_Stuttgart_vs_RB_Leipzig_1mar_landscape_thumb.jpg" group-title="sonyliv-Football", VfB Stuttgart vs RB Leipzig - MD 26 - 15 Mar 2026 [ENG] - Bundesliga 2025-26
-https://sonydaimenew.akamaized.net/hls/live/2105079/DAI08ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773640262~acl=/*~id=73258830876465677389163075164721~hmac=b7b3cc463e00b883eebdd62abd9d10c4a78f48c3ebfe6911c0d16d404669dc3e
+https://sonydaimenew.akamaized.net/hls/live/2105079/DAI08ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773643296~acl=/*~id=73599584317369500678526920123606~hmac=5cad27fc78db9283adaa2d8395ec9d5cb4b1ec6810438dac669556082c00ec67
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/131107_5427_RB_CEV_FC-Web.png" group-title="Fancode-Football", Real Betis vs RC Celta (LALIGA 2025-26)
 https://in-mc-fdlive.fancode.com/mumbai/131107_english_hls_5bd74dd81b45462_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/The-Players_fc-web.jpg" group-title="Fancode-Golf", Main Feed - Day 4 vs Ponte Vedra Beach, Florida (THE PLAYERS Championship 2026)
@@ -19,5 +19,3 @@ https://in-mc-fdlive.fancode.com/mumbai/141150_english_hls_1da6e708136467_1ta-di
 https://in-mc-fdlive.fancode.com/mumbai/141149_english_hls_f00ff0b1e358700_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/The-Players_fc-web.jpg" group-title="Fancode-Golf", World Feed - Day 4 vs Ponte Vedra Beach, Florida (THE PLAYERS Championship 2026)
 https://in-mc-fdlive.fancode.com/mumbai/141147_english_hls_c7c72ac39374750_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/131106_5427_BAR_SEV_FC-Web.png" group-title="Fancode-Football", FC Barcelona vs Sevilla FC (LALIGA 2025-26)
-https://in-mc-fdlive.fancode.com/mumbai/131106_english_hls_213e87a9b333328_1ta-di_h264/index.m3u8
