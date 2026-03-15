@@ -6,25 +6,19 @@ http://66.102.120.18:8000/play/a013/index.m3u8
 #EXTINF:-1 group-title="HOTSTAR" tvg-logo="usus",DISNEY HD
 http://66.102.120.18:8000/play/a013/index.m3u8
 404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000015722/1772389374116152_bliga26_MD26_Werder_Bremen_vs_Mainz_1mar_landscape_thumb.jpg" group-title="sonyliv-Football", Werder Bremen vs Mainz - MD 26 - 15 Mar 2026 [ENG] - Bundesliga 2025-26
-https://sonydaimenew.akamaized.net/hls/live/2094588/DAI04ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773628145~acl=/*~id=93729627593713613364748955938857~hmac=11a4429be9a877e02a8dea6f59ad7f303e103baa18d802b81106bf8b274c077f
+https://sonydaimenew.akamaized.net/hls/live/2094588/DAI04ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773629963~acl=/*~id=65670825275120579537605575924046~hmac=6fa5f3745439112ef30a890c3108f0ed646ae2d86ef44355d021e9302122dbc5
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Bangladesh-vs-Pakistan_ODI_WEB_1080_x_810.jpg" group-title="Fancode-Cricket", Bangladesh vs Pakistan (Pakistan tour of Bangladesh, 2026)
 https://in-mc-fdlive.fancode.com/mumbai/141408_english_hls_916665824985616_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141309_6002_KSO_RRP_FC-Web_1773487500736.jpg" group-title="Fancode-Cricket", Royal Riders Punjab vs Konark Suryas Odisha (Legends League Cricket, 2026)
 https://in-mc-fdlive.fancode.com/mumbai/141309_english_hls_8213e64c3a5573_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141152_5826_LCL_ARS-W_FC-Web.jpg" group-title="Fancode-Football", London City Lionesses vs Arsenal Women (Women's Super League 2025-26)
-https://in-mc-fdlive.fancode.com/mumbai/141152_english_hls_71b1b3f2f777248_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141151_5826_TOT-W_EVE-W_FC-Web.jpg" group-title="Fancode-Football", Tottenham Hotspur Women vs Everton Women (Women's Super League 2025-26)
-https://in-mc-fdlive.fancode.com/mumbai/141151_english_hls_8751b4770c83353_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141154_5826_AST-W_MCI-W_FC-Web.jpg" group-title="Fancode-Football", Aston Villa Women vs Manchester City Women (Women's Super League 2025-26)
-https://in-mc-fdlive.fancode.com/mumbai/141154_english_hls_65d987952780975_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141153_5826_LIV-W_LEI-W_FC-Web.jpg" group-title="Fancode-Football", Liverpool Women vs Leicester City Women (Women's Super League 2025-26)
-https://in-mc-fdlive.fancode.com/mumbai/141153_english_hls_a5ce61877090277_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140715_5971_SRN_MEX_fc-Web.jpg" group-title="Fancode-Cricket", Mexico vs Suriname (ICC Men's T20 WC Americas Sub Regional Qualifier B)
+https://in-mc-fdlive.fancode.com/mumbai/140715_english_hls_0e3839b81c99066_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/131101_5427_MRC_ESL_FC-Web.png" group-title="Fancode-Football", RCD Mallorca vs RCD Espanyol (LALIGA 2025-26)
 https://in-mc-fdlive.fancode.com/mumbai/131101_english_hls_5ec1aac60a82106_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140464_5956_KSHI_MCFC_FC-Web_1772451528781.jpg" group-title="Fancode-Football", Inter Kashi FC vs Mumbai City FC (ISL 2025-26)
 https://in-mc-fdlive.fancode.com/mumbai/140464_english_hls_facb766be656513_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140715_5971_SRN_MEX_fc-Web.jpg" group-title="Fancode-Cricket", Mexico vs Suriname (ICC Men's T20 WC Americas Sub Regional Qualifier B)
-https://in-mc-fdlive.fancode.com/mumbai/140715_english_hls_0e3839b81c99066_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/131106_5427_BAR_SEV_FC-Web.png" group-title="Fancode-Football", FC Barcelona vs Sevilla FC (LALIGA 2025-26)
+https://in-mc-fdlive.fancode.com/mumbai/131106_english_hls_213e87a9b333328_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://images.fancode.com/aig/match/v1773462131183/141424_CASACARDS_APP.png" group-title="Fancode-Football", Chelsea F.C. Women vs Manchester United Women (Subway Women's League Cup 2025-26)
 https://in-mc-fdlive.fancode.com/mumbai/141424_english_hls_582f6e46a38427_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/The-Players_fc-web.jpg" group-title="Fancode-Golf", Main Feed - Day 4 vs Ponte Vedra Beach, Florida (THE PLAYERS Championship 2026)
