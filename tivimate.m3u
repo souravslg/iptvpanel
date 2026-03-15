@@ -5,18 +5,14 @@ https://livetv-push.hotstar.com/dash/live/2002466/sshindiwv/master.mpd?|Cookie=h
 http://66.102.120.18:8000/play/a013/index.m3u8
 #EXTINF:-1 group-title="HOTSTAR" tvg-logo="usus",DISNEY HD
 http://66.102.120.18:8000/play/a013/index.m3u8
-404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000015722/1772389374116152_bliga26_MD26_Werder_Bremen_vs_Mainz_1mar_landscape_thumb.jpg" group-title="sonyliv-Football", Werder Bremen vs Mainz - MD 26 - 15 Mar 2026 [ENG] - Bundesliga 2025-26
-https://sonydaimenew.akamaized.net/hls/live/2094588/DAI04ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773633599~acl=/*~id=11590877690946939100264761763189~hmac=b26da03b17fae65557bc4f7b254609cfed169fb4b328b1d1a4412bdc6763155d
-#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000015722/1772390485614152_bliga26_MD26_SC_Freiburg_vs_Union_Berlin_1mar_landscape_thumb.jpg" group-title="sonyliv-Football", SC Freiburg vs Union Berlin - MD 26 - 15 Mar 2026 [ENG] - Bundesliga 2025-26
-https://sonydaimenew.akamaized.net/hls/live/2094589/DAI05ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773633599~acl=/*~id=11590877690946939100264761763189~hmac=b26da03b17fae65557bc4f7b254609cfed169fb4b328b1d1a4412bdc6763155d
+404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000015722/1772390485614152_bliga26_MD26_SC_Freiburg_vs_Union_Berlin_1mar_landscape_thumb.jpg" group-title="sonyliv-Football", SC Freiburg vs Union Berlin - MD 26 - 15 Mar 2026 [ENG] - Bundesliga 2025-26
+https://sonydaimenew.akamaized.net/hls/live/2094589/DAI05ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773636026~acl=/*~id=19484408491172761673936961980534~hmac=8f582cb6848376040ab1af89a707b86c5eeeb4201274526a0737c7455c49274b
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Bangladesh-vs-Pakistan_ODI_WEB_1080_x_810.jpg" group-title="Fancode-Cricket", Bangladesh vs Pakistan (Pakistan tour of Bangladesh, 2026)
 https://in-mc-fdlive.fancode.com/mumbai/141408_english_hls_916665824985616_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141309_6002_KSO_RRP_FC-Web_1773487500736.jpg" group-title="Fancode-Cricket", Royal Riders Punjab vs Konark Suryas Odisha (Legends League Cricket, 2026)
 https://in-mc-fdlive.fancode.com/mumbai/141309_english_hls_8213e64c3a5573_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140715_5971_SRN_MEX_fc-Web.jpg" group-title="Fancode-Cricket", Mexico vs Suriname (ICC Men's T20 WC Americas Sub Regional Qualifier B)
 https://in-mc-fdlive.fancode.com/mumbai/140715_english_hls_0e3839b81c99066_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140464_5956_KSHI_MCFC_FC-Web_1772451528781.jpg" group-title="Fancode-Football", Inter Kashi FC vs Mumbai City FC (ISL 2025-26)
-https://in-mc-fdlive.fancode.com/mumbai/140464_english_hls_facb766be656513_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/131106_5427_BAR_SEV_FC-Web.png" group-title="Fancode-Football", FC Barcelona vs Sevilla FC (LALIGA 2025-26)
 https://in-mc-fdlive.fancode.com/mumbai/131106_english_hls_213e87a9b333328_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://images.fancode.com/aig/match/v1773462131183/141424_CASACARDS_APP.png" group-title="Fancode-Football", Chelsea F.C. Women vs Manchester United Women (Subway Women's League Cup 2025-26)
