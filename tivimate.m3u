@@ -5,14 +5,14 @@ https://livetv-push.hotstar.com/dash/live/2002466/sshindiwv/master.mpd?|Cookie=h
 http://66.102.120.18:8000/play/a013/index.m3u8
 #EXTINF:-1 group-title="HOTSTAR" tvg-logo="usus",DISNEY HD
 http://66.102.120.18:8000/play/a013/index.m3u8
-404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016171/1773425954701340_NZvsSA26_womens_1t20i_13mar_landscape_thumb.jpg" group-title="sonyliv-Cricket", 1st T20I - 15 Mar 2026 [ENG] - South Africa Women's Tour of New Zealand 2026
-https://sonydaimenew.akamaized.net/hls/live/2018457/DAI35-criclive/std_lrh-800300010.m3u8?hdnea=exp=1773587569~acl=/*~id=06695714746641007469470546357189~hmac=b0772e75001f0f98d242608660caa110ea22f8d6692bbc3cdab0a20c798a5f45
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/South-Africa-Women's-tour-of-New-Zealand-old.jpg" group-title="Fancode-Cricket", New Zealand Women vs South Africa Women (South Africa Women's tour of New Zealand, 2026)
-https://sonypartnersdaimenew.akamaized.net/hls/live/2018457/DAI35ME-SAVZM/master.m3u8?hdnea=exp=1773581413~acl=/*~id=28157409657579721435147709114167~hmac=235ba334a76b5af5cd1a69722335405b065a9347451099d3df53530d03c6a70a
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/WPL_web.jpg" group-title="Fancode-Cricket", Hong Kong Cricket Club Women vs Craigengower Cricket Club Women (Women's Premier League T20 2026)
+404: Not Found#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/WPL_web.jpg" group-title="Fancode-Cricket", Hong Kong Cricket Club Women vs Craigengower Cricket Club Women (Women's Premier League T20 2026)
 https://in-mc-fdlive.fancode.com/mumbai/140613_english_hls_73830c40c155202_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141362_6007_CC_HT_FC-Web.jpg" group-title="Fancode-Cricket", Chambal Chargers vs Hindon Titans (Ayodhya Premier League)
 https://in-mc-fdlive.fancode.com/mumbai/141362_english_hls_da30ecdd1c7696_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Mini-Match-Card-(1080x810)-(8).png" group-title="Fancode-Cricket", Gujarat Tigers vs Tamil Nadu Titans (Thunderbolt T10 League 2026)
+https://in-mc-fdlive.fancode.com/mumbai/141199_english_hls_0dbc67b0c182691_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://images.fancode.com/aig/match/v1773380049877/140815_CASACARDS_APP.png" group-title="Fancode-Football", Japan Women vs Philippines Women (AFC Women's Asian Cup, 2026)
+https://in-mc-fdlive.fancode.com/mumbai/140815_english_hls_4df32c67809210_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/134043_5609_TAS_QUN_FC-Web.png" group-title="Fancode-Cricket", Tasmania vs Queensland (Sheffield Shield, 2025-26)
 https://in-mc-fdlive.fancode.com/mumbai/134043_english_hls_ad224acef214446_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/134042_5609_VCT_SAU_FC-Web.png" group-title="Fancode-Cricket", South Australia vs Victoria (Sheffield Shield, 2025-26)
@@ -21,5 +21,5 @@ https://in-mc-fdlive.fancode.com/mumbai/134042_english_hls_bb67f89f6d46872_1ta-d
 https://in-mc-fdlive.fancode.com/mumbai/134041_english_hls_327851520357185_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Mini-Match-Card-(1080x810)-(9).png" group-title="Fancode-Golf", Day 4 vs Koonyonga Club (Women's Australian Open 2026)
 https://in-mc-fdlive.fancode.com/mumbai/140790_english_hls_f146afce1927037_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/F1-Academy-China_fc-web.jpg" group-title="Fancode-Motorsports", Race 2 vs China (F1 ACADEMY CHINA 2026)
-https://in-mc-fdlive.fancode.com/mumbai/139680_english_hls_54cdf650be72204_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/F1_China_GP_web-match-card-(1).jpg" group-title="Fancode-Formula 1", Race vs China (F1 HEINEKEN CHINESE GRAND PRIX 2026)
+https://in-mc-fdlive.fancode.com/mumbai/139379_english_hls_2bea38ea8f78455_1ta-di_h264/index.m3u8
