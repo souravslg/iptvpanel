@@ -5956,9 +5956,7 @@ https://jiotvmblive.cdn.jio.com/bpk-tv/Zing_MOB/WDVLive/index.mpd
 #EXTVLCOPT:http-user-agent=billatvoriginals
 #EXTHTTP:{ "cookie":"__hdnea__=st=1773588706~exp=1773675106~acl=/*~hmac=31e5bc68930de3e1ecadf60d21871af0cc0106c2c21b562c0e653b075411a40d" }
 https://jiotvmblive.cdn.jio.com/bpk-tv/Zoom_BTS/output/index.mpd
-404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000015722/1772390887584152_bliga26_MD26_VfB_Stuttgart_vs_RB_Leipzig_1mar_landscape_thumb.jpg" group-title="sonyliv-Football", VfB Stuttgart vs RB Leipzig - MD 26 - 15 Mar 2026 [ENG] - Bundesliga 2025-26
-https://sonydaimenew.akamaized.net/hls/live/2105079/DAI08ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773649357~acl=/*~id=84912792784306403270681243670269~hmac=aba43d5df2becc12dab82172ab84a23e043b6f50fc55e35d83615d0aa991911c
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140716_5971_ARG_CAY_fc-Web.jpg" group-title="Fancode-Cricket", Argentina vs Cayman Islands (ICC Men's T20 WC Americas Sub Regional Qualifier B)
+404: Not Found#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140716_5971_ARG_CAY_fc-Web.jpg" group-title="Fancode-Cricket", Argentina vs Cayman Islands (ICC Men's T20 WC Americas Sub Regional Qualifier B)
 https://in-mc-fdlive.fancode.com/mumbai/140716_english_hls_53c5c3b5c414563_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/131104_5427_RS_OSN_FC-Web.png" group-title="Fancode-Football", Real Sociedad vs CA Osasuna (LALIGA 2025-26)
 https://in-mc-fdlive.fancode.com/mumbai/131104_english_hls_733d12806760145_1ta-di_h264/index.m3u8
@@ -5972,3 +5970,5 @@ https://in-mc-fdlive.fancode.com/mumbai/141150_english_hls_1da6e708136467_1ta-di
 https://in-mc-fdlive.fancode.com/mumbai/141149_english_hls_f00ff0b1e358700_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/The-Players_fc-web.jpg" group-title="Fancode-Golf", World Feed - Day 4 vs Ponte Vedra Beach, Florida (THE PLAYERS Championship 2026)
 https://in-mc-fdlive.fancode.com/mumbai/141147_english_hls_c7c72ac39374750_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Daniil-Medvedev-vs-Jannik-Sinner_fc-web.jpg" group-title="Fancode-Tennis", Men's Singles - Finals vs Indian, United States (ATP Masters BNP Paribas Open 2026)
+https://in-mc-fdlive.fancode.com/mumbai/141033_english_hls_4946d14fc960773_1ta-di_h264/index.m3u8
