@@ -5956,5 +5956,7 @@ https://jiotvmblive.cdn.jio.com/bpk-tv/Zing_MOB/WDVLive/index.mpd
 #EXTVLCOPT:http-user-agent=billatvoriginals
 #EXTHTTP:{ "cookie":"__hdnea__=st=1773640841~exp=1773727241~acl=/*~hmac=27d34ea77527789e03ca5d21784f0eed4efef679652c5f4c66027250fec9302a" }
 https://jiotvmblive.cdn.jio.com/bpk-tv/Zoom_BTS/output/index.mpd
-404: Not Found#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Mini-Match-Card-(1080x810)-(8).png" group-title="Fancode-Cricket", Punjab Lions vs Tamil Nadu Titans (Thunderbolt T10 League 2026)
-https://in-mc-fdlive.fancode.com/mumbai/141204_english_hls_23a7ff3fad10401_1ta-di_h264/index.m3u8
+404: Not Found#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141310_6002_ICN_SSS_FC-Web_1773487499999.jpg" group-title="Fancode-Cricket", India Captains vs Southern Super Stars (Legends League Cricket, 2026)
+https://in-mc-fdlive.fancode.com/mumbai/141310_english_hls_ee51db257464891_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140465_5956_PFC_FCG_FC-Web_1772451606522.jpg" group-title="Fancode-Football", Punjab FC vs FC Goa (ISL 2025-26)
+https://in-mc-fdlive.fancode.com/mumbai/140465_english_hls_f6249f294f36729_1ta-di_h264/index.m3u8
