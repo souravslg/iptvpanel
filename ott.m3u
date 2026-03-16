@@ -5956,7 +5956,4 @@ https://jiotvmblive.cdn.jio.com/bpk-tv/Zing_MOB/WDVLive/index.mpd
 #EXTVLCOPT:http-user-agent=billatvoriginals
 #EXTHTTP:{ "cookie":"__hdnea__=st=1773640841~exp=1773727241~acl=/*~hmac=27d34ea77527789e03ca5d21784f0eed4efef679652c5f4c66027250fec9302a" }
 https://jiotvmblive.cdn.jio.com/bpk-tv/Zoom_BTS/output/index.mpd
-404: Not Found#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/131102_5427_RVL_LE_FC-Web.png" group-title="Fancode-Football", Rayo Vallecano vs Levante (LALIGA 2025-26)
-https://in-mc-fdlive.fancode.com/mumbai/131102_english_hls_4a67ec7e3854176_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140954_5489_PRM_DER_fc-web.jpg" group-title="Fancode-Football", Portsmouth F.C. vs Derby County Football Club (EFL Championship 2025-26)
-https://in-mc-fdlive.fancode.com/mumbai/140954_english_hls_0625253ab356734_1ta-di_h264/index.m3u8
+404: Not Found
