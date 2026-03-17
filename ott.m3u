@@ -5956,7 +5956,5 @@ https://jiotvmblive.cdn.jio.com/bpk-tv/Zing_MOB/WDVLive/index.mpd
 #EXTVLCOPT:http-user-agent=billatvoriginals
 #EXTHTTP:{ "cookie":"__hdnea__=st=1773640841~exp=1773727241~acl=/*~hmac=27d34ea77527789e03ca5d21784f0eed4efef679652c5f4c66027250fec9302a" }
 https://jiotvmblive.cdn.jio.com/bpk-tv/Zoom_BTS/output/index.mpd
-404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016248/1773648405773805_IFC_Rajasthan_United_FC-vs-Real_Kashmir_landscape_thumb.jpg" group-title="sonyliv-Football", Rajasthan United FC vs Real Kashmir FC - 17 Mar 2026 [ENG] - Indian Football League 2026
-https://sonydaimenew.akamaized.net/hls/live/2037143/DAI23ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773793540~acl=/*~id=30002909826516052813476742096389~hmac=db80419e1842207c91d021818767e794083be38d90cb81b76a03cdb1ffa35d6f
-#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016254/1773655717648712_UYL_QF_Atletico-vs-Club_Brugge_live_landscape_thumb.jpg" group-title="sonyliv-Football", Atletico vs Club Brugge - 17 Mar 2026 [ENG] - UEFA Youth League 2025-26
-https://sonydaimenew.akamaized.net/hls/live/20000091/DAI08-M5/std_lrh-800300010.m3u8?hdnea=exp=1773793540~acl=/*~id=30002909826516052813476742096389~hmac=db80419e1842207c91d021818767e794083be38d90cb81b76a03cdb1ffa35d6f
+404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016254/1773655717648712_UYL_QF_Atletico-vs-Club_Brugge_live_landscape_thumb.jpg" group-title="sonyliv-Football", Atletico vs Club Brugge - 17 Mar 2026 [ENG] - UEFA Youth League 2025-26
+https://sonydaimenew.akamaized.net/hls/live/20000091/DAI08-M5/std_lrh-800300010.m3u8?hdnea=exp=1773798994~acl=/*~id=82452607616574523837446194787018~hmac=d8dbef289a82ef0860d232f16dd516520381538b418f76259a99942ad33f9a34
