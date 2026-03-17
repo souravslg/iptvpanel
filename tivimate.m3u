@@ -6,6 +6,6 @@ http://66.102.120.18:8000/play/a013/index.m3u8
 #EXTINF:-1 group-title="HOTSTAR" tvg-logo="usus",DISNEY HD
 http://66.102.120.18:8000/play/a013/index.m3u8
 404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016248/1773648405773805_IFC_Rajasthan_United_FC-vs-Real_Kashmir_landscape_thumb.jpg" group-title="sonyliv-Football", Rajasthan United FC vs Real Kashmir FC - 17 Mar 2026 [ENG] - Indian Football League 2026
-https://sonydaimenew.akamaized.net/hls/live/2037143/DAI23ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773786269~acl=/*~id=41424663031553420340222191654473~hmac=6291ba7c876523891e724edaf22190b43763442777466f76f0b99470b0a49570
+https://sonydaimenew.akamaized.net/hls/live/2037143/DAI23ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773789904~acl=/*~id=02785839552956903683442157137757~hmac=944dce0aec2ce873a6f97cb304bb3207ef976e16f63622414d4c1080413e8e4f
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141367_6007_BB_YSK_FC-Web.jpg" group-title="Fancode-Cricket", Yamuna Super Kings vs Betwa Blasters (Ayodhya Premier League)
 https://in-mc-fdlive.fancode.com/mumbai/141367_english_hls_22b3ead34299937_1ta-di_h264/index.m3u8
