@@ -5956,13 +5956,7 @@ https://jiotvmblive.cdn.jio.com/bpk-tv/Zing_MOB/WDVLive/index.mpd
 #EXTVLCOPT:http-user-agent=billatvoriginals
 #EXTHTTP:{ "cookie":"__hdnea__=st=1773640841~exp=1773727241~acl=/*~hmac=27d34ea77527789e03ca5d21784f0eed4efef679652c5f4c66027250fec9302a" }
 https://jiotvmblive.cdn.jio.com/bpk-tv/Zoom_BTS/output/index.mpd
-404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016263/1773666401317489_NZ_vs_SA_2nd_T20I_landscape_thumb.jpg" group-title="sonyliv-Cricket", 2nd T20I - 17 Mar 2026 [ENG] - South Africa Tour of New Zealand 2026
-https://sonydaimenew.akamaized.net/hls/live/2037141/DAI21-criclive/std_lrh-800300010.m3u8?hdnea=exp=1773782635~acl=/*~id=45741017886741458479721097388036~hmac=47ef73d591cbd5a8a72207abef546f04fbc640606a5d3463ed6b971d3b7041bf
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/NZ_SA_Web_1080_x_810.jpg" group-title="Fancode-Cricket", New Zealand vs South Africa (South Africa tour of New Zealand, 2026)
-https://sonypartnersdaimenew.akamaized.net/hls/live/2037141/DAI21SAVSZM/master.m3u8?hdnea=exp=1773770946~acl=/*~id=74083786858051206737013589365506~hmac=e7a1e9d42370042c81ab9751c3b80af7ec9c734b04c68af9d3aa5d29acdba58c
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Mini-Match-Card-(1080x810)-(8).png" group-title="Fancode-Cricket", Bengal Royals vs Tamil Nadu Titans (Thunderbolt T10 League 2026)
-https://in-mc-fdlive.fancode.com/mumbai/141206_english_hls_bb06a7f2298559_1ta-di_h264/index.m3u8
+404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016248/1773648405773805_IFC_Rajasthan_United_FC-vs-Real_Kashmir_landscape_thumb.jpg" group-title="sonyliv-Football", Rajasthan United FC vs Real Kashmir FC - 17 Mar 2026 [ENG] - Indian Football League 2026
+https://sonydaimenew.akamaized.net/hls/live/2037143/DAI23ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773786269~acl=/*~id=41424663031553420340222191654473~hmac=6291ba7c876523891e724edaf22190b43763442777466f76f0b99470b0a49570
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141367_6007_BB_YSK_FC-Web.jpg" group-title="Fancode-Cricket", Yamuna Super Kings vs Betwa Blasters (Ayodhya Premier League)
 https://in-mc-fdlive.fancode.com/mumbai/141367_english_hls_22b3ead34299937_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://images.fancode.com/aig/match/v1773733471726/140916_CASACARDS_APP.png" group-title="Fancode-Football", Sydney FC vs Melbourne City (A League 2025-26)
-https://in-mc-fdlive.fancode.com/mumbai/140916_english_hls_f436e9426f16006_1ta-di_h264/index.m3u8
