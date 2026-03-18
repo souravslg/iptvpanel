@@ -5,3 +5,5 @@ https://livetv-push.hotstar.com/dash/live/2002466/sshindiwv/master.mpd?|Cookie=h
 http://66.102.120.18:8000/play/a013/index.m3u8
 #EXTINF:-1 group-title="HOTSTAR" tvg-logo="usus",DISNEY HD
 http://66.102.120.18:8000/play/a013/index.m3u8
+404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016254/1773654982357712_UYL_QF_Real_Madrid-vs-Sporting_CP_live_landscape_thumb.jpg" group-title="sonyliv-Football", Real Madrid vs Sporting CP - 18 Mar 2026 [ENG] - UEFA Youth League 2025-26
+https://sonydaimenew.akamaized.net/hls/live/2022316/DAI12ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773884498~acl=/*~id=93986382507503872166011079090800~hmac=5e4f80d4bbc745f7ce489078204a1a8197f25539818f870414a082811386aa19
