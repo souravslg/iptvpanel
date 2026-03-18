@@ -5956,5 +5956,7 @@ https://jiotvmblive.cdn.jio.com/bpk-tv/Zing_MOB/WDVLive/index.mpd
 #EXTVLCOPT:http-user-agent=billatvoriginals
 #EXTHTTP:{ "cookie":"__hdnea__=st=1773763037~exp=1773849437~acl=/*~hmac=29027351cf587732244b3cb2496c4ce1426023f70eb9ab10625656e84d81b4e1" }
 https://jiotvmblive.cdn.jio.com/bpk-tv/Zoom_BTS/output/index.mpd
-404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016254/1773654982357712_UYL_QF_Real_Madrid-vs-Sporting_CP_live_landscape_thumb.jpg" group-title="sonyliv-Football", Real Madrid vs Sporting CP - 18 Mar 2026 [ENG] - UEFA Youth League 2025-26
-https://sonydaimenew.akamaized.net/hls/live/2022316/DAI12ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773884498~acl=/*~id=93986382507503872166011079090800~hmac=5e4f80d4bbc745f7ce489078204a1a8197f25539818f870414a082811386aa19
+404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016105/1773040631802489_UEL_26_R-16-Leg-2_Braga-vs-Ferencvaros_landscape_thumb.jpg" group-title="sonyliv-Football", Braga vs Ferencvaros - Round of 16 - Leg 2 - 18 Mar 2026 [ENG] - UEFA Europa League 2025-26
+https://sonydaimenew.akamaized.net/hls/live/2022322/DAI18ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773889356~acl=/*~id=52104845194709009831159221557642~hmac=dc133bdf12f04efdf5d8f7a7d34d3351a504e2face304292dc4d2c6b2c6ff7b5
+#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016254/1773656924807712_UYL_QF_Inter-vs-Benfica_live_landscape_thumb.jpg" group-title="sonyliv-Football", Inter vs Benfica - 18 Mar 2026 [ENG] - UEFA Youth League 2025-26
+https://sonydaimenew.akamaized.net/hls/live/2094589/DAI05ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1773889356~acl=/*~id=52104845194709009831159221557642~hmac=dc133bdf12f04efdf5d8f7a7d34d3351a504e2face304292dc4d2c6b2c6ff7b5
