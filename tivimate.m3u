@@ -5,3 +5,5 @@ https://livetv-push.hotstar.com/dash/live/2002466/sshindiwv/master.mpd?|Cookie=h
 http://66.102.120.18:8000/play/a013/index.m3u8
 #EXTINF:-1 group-title="HOTSTAR" tvg-logo="usus",DISNEY HD
 http://66.102.120.18:8000/play/a013/index.m3u8
+404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000015719/1772376102379740_ABB_FIA_FormulaE_WC26_Round6_Madrid_EPrix_Qualifying_Race_1mar_landscape_thumb.jpg" group-title="sonyliv-Racing", Round 6 - Madrid E-Prix - Qualifying Race- 21 Mar 2026 [ENG] - ABB FIA Formula E World Championship
+https://sonydaimenew.akamaized.net/hls/live/2022322/DAI18ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1774129442~acl=/*~id=91384845744282660227107471980064~hmac=7f4e478088c15b0764fbab7d0d79118c78181772afce02bc1e6853774c54804d
