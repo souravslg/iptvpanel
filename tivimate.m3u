@@ -5,7 +5,5 @@ https://livetv-push.hotstar.com/dash/live/2002466/sshindiwv/master.mpd?|Cookie=h
 http://66.102.120.18:8000/play/a013/index.m3u8
 #EXTINF:-1 group-title="HOTSTAR" tvg-logo="usus",DISNEY HD
 http://66.102.120.18:8000/play/a013/index.m3u8
-404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016421/1773970017958830_NZvsSA26_4thT20I_20mar_landscape_thumb.jpg" group-title="sonyliv-Cricket", 4th T20I - 22 Mar 2026 [ENG] - South Africa Tour of New Zealand 2026
-https://sonydaimenew.akamaized.net/hls/live/2037141/DAI21-criclive/std_lrh-800300010.m3u8?hdnea=exp=1774216201~acl=/*~id=69453564008205460259701248817867~hmac=04f29b2ecf8f10a6ef743a1fb90c722ff45b395d9b803d8fd4b5bbfdac3acf0d
-#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016394/1773922645704180_Golf_SA_Day4_landscape_thumb.jpg" group-title="sonyliv-Golf", Day 4 - 22 Mar 2026 [ENG] - LIV Golf
-https://sonydaimenew.akamaized.net/hls/live/2005444/DAI07ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1774216201~acl=/*~id=69453564008205460259701248817867~hmac=04f29b2ecf8f10a6ef743a1fb90c722ff45b395d9b803d8fd4b5bbfdac3acf0d
+404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016394/1773922645704180_Golf_SA_Day4_landscape_thumb.jpg" group-title="sonyliv-Golf", Day 4 - 22 Mar 2026 [ENG] - LIV Golf
+https://sonydaimenew.akamaized.net/hls/live/2005444/DAI07ME-V3/std_lrh-800300010.m3u8?hdnea=exp=1774218629~acl=/*~id=28078983826143901816512909390336~hmac=2ed777be6fccc1af8c71c3e16026f2ea609680c82092e42f842ee538491d3a0e
