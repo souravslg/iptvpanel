@@ -5956,4 +5956,5 @@ https://jiotvmblive.cdn.jio.com/bpk-tv/Zing_MOB/WDVLive/index.mpd
 #EXTVLCOPT:http-user-agent=billatvoriginals
 #EXTHTTP:{ "cookie":"__hdnea__=st=1774108842~exp=1774195242~acl=/*~hmac=7d89a833c6261bebfe33598dc7c636cd4a316f855fac910c88eeb6ef56d36204" }
 https://jiotvmblive.cdn.jio.com/bpk-tv/Zoom_BTS/output/index.mpd
-404: Not Found
+404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016423/1773977174347113_NZwvsSAw26_4th_T20I_20mar_landscape.jpg" group-title="sonyliv-Cricket", 4th T20I - 22 Mar 2026 [ENG] - South Africa Women's Tour of New Zealand 2026
+https://sonydaimenew.akamaized.net/hls/live/2018457/DAI35-criclive/std_lrh-800300010.m3u8?hdnea=exp=1774189484~acl=/*~id=99445541941093842498178002770450~hmac=bb7255ab60ca33d96da8018fed68b7719267a5e6d32982a889406f0c200f0981
