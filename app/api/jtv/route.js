@@ -35,6 +35,9 @@ export async function GET() {
                     ztvContent += `#KODIPROP:inputstream.adaptive.license_type=clearkey\n`;
                     ztvContent += `#KODIPROP:inputstream.adaptive.license_key=${lic}\n`;
                 }
+                if (url && url.includes('.mpd')) {
+                    ztvContent += `#KODIPROP:inputstream.adaptive.manifest_type=mpd\n`;
+                }
 
                 if (cookie) {
                     ztvContent += `#EXTHTTP:{"cookie":"${cookie}"}\n`;

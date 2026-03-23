@@ -142,6 +142,9 @@ export async function GET(request) {
                 m3u += `#KODIPROP:inputstream.adaptive.license_type=clearkey\n`;
                 m3u += `#KODIPROP:inputstream.adaptive.license_key=${stream.drm_key_id}:${stream.drm_key}\n`;
             }
+            if (stream.stream_format === 'mpd' || (stream.url && stream.url.includes('.mpd'))) {
+                m3u += `#KODIPROP:inputstream.adaptive.manifest_type=mpd\n`;
+            }
 
             // 3. User-Agent (if present)
             if (stream.headers) {

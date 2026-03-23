@@ -58,6 +58,14 @@ export async function GET(request) {
         // Add stream info
         m3u += `#EXTINF:-1 group-title="${category}" tvg-logo="${logo}",${name}\n`;
 
+        if (stream.drm_scheme === 'clearkey' && stream.drm_key_id && stream.drm_key) {
+            m3u += `#KODIPROP:inputstream.adaptive.license_type=clearkey\n`;
+            m3u += `#KODIPROP:inputstream.adaptive.license_key=${stream.drm_key_id}:${stream.drm_key}\n`;
+        }
+        if (stream.stream_format === 'mpd' || (stream.url && stream.url.includes('.mpd'))) {
+            m3u += `#KODIPROP:inputstream.adaptive.manifest_type=mpd\n`;
+        }
+
         // Add headers if present (for JTV streams)
         if (stream.headers) {
             const headers = typeof stream.headers === 'string' ? JSON.parse(stream.headers) : stream.headers;

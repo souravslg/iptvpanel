@@ -49,11 +49,16 @@ function parseM3U(m3uContent) {
 
 export async function GET(request) {
     try {
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+        const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+        if (!supabaseUrl || !supabaseKey) {
+            console.error('Missing Supabase environment variables');
+            return NextResponse.json({ error: 'Server configuration error' }, { status: 500 });
+        }
+
         // Initialize Supabase client at runtime (not build time)
-        const supabase = createClient(
-            process.env.NEXT_PUBLIC_SUPABASE_URL,
-            process.env.SUPABASE_SERVICE_ROLE_KEY
-        );
+        const supabase = createClient(supabaseUrl, supabaseKey);
 
         // Verify authorization (cron secret or admin)
         const authHeader = request.headers.get('authorization');
