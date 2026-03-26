@@ -5,7 +5,5 @@ https://livetv-push.hotstar.com/dash/live/2002466/sshindiwv/master.mpd?|Cookie=h
 http://66.102.120.18:8000/play/a013/index.m3u8
 #EXTINF:-1 group-title="HOTSTAR" tvg-logo="usus",DISNEY HD
 http://66.102.120.18:8000/play/a013/index.m3u8
-404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016478/17741598426996_IFC_Rajasthan_United_FC-vs-Diamond_Harbour_FC_landscape_thumb.jpg" group-title="sonyliv-Football", Rajasthan United FC vs Diamond Harbour FC - 26 Mar 2026 [ENG] - Indian Football League 2026
-https://sonydaimenew.akamaized.net/hls/live/20000099/Rajastha2603/ENG/std_lrh-800300010.m3u8?hdnea=exp=1774569081~acl=/*~id=93359635120813514018056143529257~hmac=64428260040a71841333ede0c2c5cf41e59a9f7eff7f6f18294e2b1686c255b1
-#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016532/177435943318137_DP_World_Tour26_Hero_Indian_Open_day1_24mar_landscape_thumb.jpg" group-title="sonyliv-Golf", Hero Indian Open Day 1 - 26 Mar 2026 [ENG] - DP World Tour
-https://sonydaimenew.akamaized.net/hls/live/2022315/Hero_Ind2603/ENG/std_lrh-800300010.m3u8?hdnea=exp=1774569081~acl=/*~id=93359635120813514018056143529257~hmac=64428260040a71841333ede0c2c5cf41e59a9f7eff7f6f18294e2b1686c255b1
+404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016478/17741600276016_IFC_Gokulam_Kerala_FC-vs-Shillong_Lajong_FC_landscape_thumb.jpg" group-title="sonyliv-Football", Gokulam Kerala FC vs Shillong Lajong FC - 26 Mar 2026 [ENG] - Indian Football League 2026
+https://sonydaimenew.akamaized.net/hls/live/2094588/Gokulam_2603/ENG/std_lrh-800300010.m3u8?hdnea=exp=1774576378~acl=/*~id=02439118243080152421743663958324~hmac=b5800dc6d4d20f365ff7c4036e9e6a4f5cabe84a3bd06c3d69968f742f8a6a19
