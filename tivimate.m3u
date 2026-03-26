@@ -1,5 +1,11 @@
 #EXTM3U
-For more on scraping GitHub and how it may affect your rights, please review our Terms of Service (https://docs.github.com/en/site-policy/github-terms/github-terms-of-service).#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016478/17741598426996_IFC_Rajasthan_United_FC-vs-Diamond_Harbour_FC_landscape_thumb.jpg" group-title="sonyliv-Football", Rajasthan United FC vs Diamond Harbour FC - 26 Mar 2026 [ENG] - Indian Football League 2026
-https://sonydaimenew.akamaized.net/hls/live/20000099/Rajastha2603/ENG/std_lrh-800300010.m3u8?hdnea=exp=1774566654~acl=/*~id=31539393240788202737737238055503~hmac=d49d01f825c02e2248443ec26ee3141176ba75853a24097edd32dc4d349757f2
+#EXTINF:-1 group-title="HOTSTAR" tvg-logo="usus",24/7 BIG BOSS
+https://livetv-push.hotstar.com/dash/live/2002466/sshindiwv/master.mpd?|Cookie=hdntl=exp=1766237995~acl=*sshindi*~id=a272c620b60b4d5379a1ec54e5cac97c~data=hdntl~hmac=64223c8bf63067364f35cad5a50c7b038f40bc4c9a97c8aa05a9c2cb99a575b9&User-agent=Hotstar;in.startv.hotstar/25.02.24.8.11169%20(Android/15)&Referer=https://www.hotstar.com/&Origin=https://www.hotstar.com&drmScheme=clearkey&drmLicense=fe7718fbb3fb4ba78c07cc0f578744e6:624e24b1843b459fab0a949609416f0d
+#EXTINF:-1 group-title="HOTSTAR" tvg-logo="usus",DISNEY HD
+http://66.102.120.18:8000/play/a013/index.m3u8
+#EXTINF:-1 group-title="HOTSTAR" tvg-logo="usus",DISNEY HD
+http://66.102.120.18:8000/play/a013/index.m3u8
+404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016478/17741598426996_IFC_Rajasthan_United_FC-vs-Diamond_Harbour_FC_landscape_thumb.jpg" group-title="sonyliv-Football", Rajasthan United FC vs Diamond Harbour FC - 26 Mar 2026 [ENG] - Indian Football League 2026
+https://sonydaimenew.akamaized.net/hls/live/20000099/Rajastha2603/ENG/std_lrh-800300010.m3u8?hdnea=exp=1774569081~acl=/*~id=93359635120813514018056143529257~hmac=64428260040a71841333ede0c2c5cf41e59a9f7eff7f6f18294e2b1686c255b1
 #EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016532/177435943318137_DP_World_Tour26_Hero_Indian_Open_day1_24mar_landscape_thumb.jpg" group-title="sonyliv-Golf", Hero Indian Open Day 1 - 26 Mar 2026 [ENG] - DP World Tour
-https://sonydaimenew.akamaized.net/hls/live/2022315/Hero_Ind2603/ENG/std_lrh-800300010.m3u8?hdnea=exp=1774566654~acl=/*~id=31539393240788202737737238055503~hmac=d49d01f825c02e2248443ec26ee3141176ba75853a24097edd32dc4d349757f2
+https://sonydaimenew.akamaized.net/hls/live/2022315/Hero_Ind2603/ENG/std_lrh-800300010.m3u8?hdnea=exp=1774569081~acl=/*~id=93359635120813514018056143529257~hmac=64428260040a71841333ede0c2c5cf41e59a9f7eff7f6f18294e2b1686c255b1
