@@ -6,4 +6,6 @@ http://66.102.120.18:8000/play/a013/index.m3u8
 #EXTINF:-1 group-title="HOTSTAR" tvg-logo="usus",DISNEY HD
 http://66.102.120.18:8000/play/a013/index.m3u8
 404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016471/1774102318265959_INT_Friendlies26_Lithuania_vs_Georgia_20mar_landscape_thumb.jpg" group-title="sonyliv-Football", Lithuania vs Georgia - 29 Mar 2026 [ENG] - UEFA International Friendlies
-https://sonydaimenew.akamaized.net/hls/live/2018457/Lithuani2903/ENG/std_lrh-800300010.m3u8?hdnea=exp=1774833469~acl=/*~id=69996003804738350873817777787904~hmac=61393e7ec6a005b008bdf99711a66f4a30195f098263ddb0da801aae8a1e1cef
+https://sonydaimenew.akamaized.net/hls/live/2018457/Lithuani2903/ENG/std_lrh-800300010.m3u8?hdnea=exp=1774835895~acl=/*~id=68838936204311434221655622709021~hmac=2f64862405bf628587f545f0437e5a5ce3abf705753cf3921538658203f07b1b
+#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016470/1774103639842735_INT_Friendlies26_Armenia_vs_Belarus_20mar_landscape_thumb.jpg" group-title="sonyliv-Football", Armenia vs Belarus - 29 Mar 2026 [ENG] - UEFA International Friendlies
+https://sonydaimenew.akamaized.net/hls/live/2018458/ArmeniaV2903/ENG/std_lrh-800300010.m3u8?hdnea=exp=1774835895~acl=/*~id=68838936204311434221655622709021~hmac=2f64862405bf628587f545f0437e5a5ce3abf705753cf3921538658203f07b1b
