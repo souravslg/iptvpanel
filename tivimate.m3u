@@ -5,7 +5,5 @@ https://livetv-push.hotstar.com/dash/live/2002466/sshindiwv/master.mpd?|Cookie=h
 http://66.102.120.18:8000/play/a013/index.m3u8
 #EXTINF:-1 group-title="HOTSTAR" tvg-logo="usus",DISNEY HD
 http://66.102.120.18:8000/play/a013/index.m3u8
-404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016471/1774102318265959_INT_Friendlies26_Lithuania_vs_Georgia_20mar_landscape_thumb.jpg" group-title="sonyliv-Football", Lithuania vs Georgia - 29 Mar 2026 [ENG] - UEFA International Friendlies
-https://sonydaimenew.akamaized.net/hls/live/2018457/Lithuani2903/ENG/std_lrh-800300010.m3u8?hdnea=exp=1774838930~acl=/*~id=53304763367139819351096187766499~hmac=ad594f8e6a674845be01e94f471f97825218f8cf02129784de041c4e667124a7
-#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016470/1774103639842735_INT_Friendlies26_Armenia_vs_Belarus_20mar_landscape_thumb.jpg" group-title="sonyliv-Football", Armenia vs Belarus - 29 Mar 2026 [ENG] - UEFA International Friendlies
-https://sonydaimenew.akamaized.net/hls/live/2018458/ArmeniaV2903/ENG/std_lrh-800300010.m3u8?hdnea=exp=1774838930~acl=/*~id=53304763367139819351096187766499~hmac=ad594f8e6a674845be01e94f471f97825218f8cf02129784de041c4e667124a7
+404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016470/1774103639842735_INT_Friendlies26_Armenia_vs_Belarus_20mar_landscape_thumb.jpg" group-title="sonyliv-Football", Armenia vs Belarus - 29 Mar 2026 [ENG] - UEFA International Friendlies
+https://sonydaimenew.akamaized.net/hls/live/2018458/ArmeniaV2903/ENG/std_lrh-800300010.m3u8?hdnea=exp=1774841356~acl=/*~id=70779741708545096447574615337784~hmac=7035c812a3c96fd9fa5a079dc11244d07e17e69c64740d728f225cece26b7d4e
