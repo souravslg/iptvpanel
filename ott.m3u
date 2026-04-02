@@ -5956,4 +5956,5 @@ https://jiotvmblive.cdn.jio.com/bpk-tv/Zing_MOB/WDVLive/index.mpd
 #EXTVLCOPT:http-user-agent=billatvoriginals
 #EXTHTTP:{ "cookie":"__hdnea__=st=1774954758~exp=1775041158~acl=/*~hmac=a20e729141b8bc125c792f1baa584868890d8fe36d8c2faa3f21c6dea5738ee5" }
 https://jiotvmblive.cdn.jio.com/bpk-tv/Zoom_BTS/output/index.mpd
-404: Not Found
+404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016579/1774439433270819_IFC_Real_Kashmir_FC_vs_Diamond_Harbour_FC_landscape_thumb.jpg" group-title="sonyliv-Football", Real Kashmir FC vs Diamond Harbour FC - 2 Apr 2026 [ENG] - Indian Football League 2026
+https://sonydaimenew.akamaized.net/hls/live/20000291/RealKash0204/ENG/std_lrh-800300010.m3u8?hdnea=exp=1775167488~acl=/*~id=82135331392709689576983769599108~hmac=f9bcc7267c1fd386d33aba483bcbfc7383c6e0a2d3877b3f92c1ae523cccf102
