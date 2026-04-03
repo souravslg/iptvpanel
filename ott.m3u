@@ -5956,11 +5956,7 @@ https://jiotvmblive.cdn.jio.com/bpk-tv/Zing_MOB/WDVLive/index.mpd
 #EXTVLCOPT:http-user-agent=billatvoriginals
 #EXTHTTP:{ "cookie":"__hdnea__=st=1774954758~exp=1775041158~acl=/*~hmac=a20e729141b8bc125c792f1baa584868890d8fe36d8c2faa3f21c6dea5738ee5" }
 https://jiotvmblive.cdn.jio.com/bpk-tv/Zoom_BTS/output/index.mpd
-404: Not Found#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141430_5489_LEI_PST_fc-web.jpg" group-title="Fancode-Football", Leicester City F.C. vs Preston North End F.C. (EFL Championship 2025-26)
-https://in-mc-fblive.fancode.com/mumbai/141430_english_hls_4c4dba8e4341017_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141429_5489_OU_HUL_fc-web.jpg" group-title="Fancode-Football", Oxford United vs Hull City (EFL Championship 2025-26)
-https://in-mc-fblive.fancode.com/mumbai/141429_english_hls_06913c2dd066902_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Mini-Match-Card-(1080x810)-(13).png" group-title="Fancode-Tennis", Tiriac Open - Day 5 vs Bucharest, Romania (ATP 250 - Tiriac Open presented by UniCredit Bank )
+404: Not Found#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Mini-Match-Card-(1080x810)-(13).png" group-title="Fancode-Tennis", Tiriac Open - Day 5 vs Bucharest, Romania (ATP 250 - Tiriac Open presented by UniCredit Bank )
 https://in-mc-fblive.fancode.com/mumbai/141292_english_hls_d4d450b76e54741_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Grand-Prix-Hassan-II-Clay,-ATP-250-old-.png" group-title="Fancode-Tennis", Grand Prix Hassan II - Day 5 vs Marrakech, Morocco (ATP 250 - Grand Prix Hassan ll 2026)
 https://in-mc-fblive.fancode.com/mumbai/141281_english_hls_120db2f0fd56654_1ta-di_h264/index.m3u8
