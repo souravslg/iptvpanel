@@ -6,20 +6,10 @@ http://66.102.120.18:8000/play/a013/index.m3u8
 #EXTINF:-1 group-title="HOTSTAR" tvg-logo="usus",DISNEY HD
 http://66.102.120.18:8000/play/a013/index.m3u8
 404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016646/1774623473828696_NZw_vs_SAw_3rd_ODI_landscape_thumb.jpg" group-title="sonyliv-Cricket", 3rd ODI - 4 Apr 2026 [ENG] - South Africa Women's Tour of New Zealand 2026
-https://sonydaimenew.akamaized.net/hls/live/20000291/NZW_vs_S0304/ENG/std_lrh-800300010.m3u8?hdnea=exp=1775298967~acl=/*~id=47944860317501754073870130649775~hmac=e1759bbaa4b548d680841e890e828f62fd9ce7a8215e31708b641c0fe60d7ef5
+https://sonydaimenew.akamaized.net/hls/live/20000291/NZW_vs_S0304/ENG/std_lrh-800300010.m3u8?hdnea=exp=1775301394~acl=/*~id=83574997600425360456638218314606~hmac=177f173b9accb260b96f41280de917c954c1054526e5f988b582597e674297dc
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/South-Africa-Women's-tour-of-New-Zealand-ODIs-old.jpg" group-title="Fancode-Cricket", New Zealand Women vs South Africa Women (South Africa Women's tour of New Zealand, 2026)
 https://sonypartnersdaimenew.akamaized.net/hls/live/2018457/DAI35ME-SAVZM/master.m3u8?hdnea=exp=1775295224~acl=/*~id=33658840612715757185021581830779~hmac=ad67637dbad96562a33eb52c3d7b14a0e5af8cfef165bec5d26d528779c4361c
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Valero-Texas-Open-2026-old-card-.png" group-title="Fancode-Golf", Main Feed - Day 2 vs San Antonio, Texas (Valero Texas Open 2026)
-https://in-mc-fblive.fancode.com/mumbai/141782_english_hls_8c2308b36687728_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Valero-Texas-Open-2026-old-card-.png" group-title="Fancode-Golf", Marquee Feed - Day 2 vs San Antonio, Texas (Valero Texas Open 2026)
-https://in-mc-fblive.fancode.com/mumbai/141785_english_hls_7b026b687d23060_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Valero-Texas-Open-2026-old-card-.png" group-title="Fancode-Golf", Featured Holes - Day 2 vs San Antonio, Texas (Valero Texas Open 2026)
-https://in-mc-fblive.fancode.com/mumbai/141783_english_hls_d18c4cb3fe48446_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Valero-Texas-Open-2026-old-card-.png" group-title="Fancode-Golf", Featured Groups - Day 2 vs San Antonio, Texas (Valero Texas Open 2026)
-https://in-mc-fblive.fancode.com/mumbai/141784_english_hls_c7d627509145135_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/ATP--250-Clay-Court-Championship_fc-web.jpg" group-title="Fancode-Tennis", A Court Feed vs Houston, United States (ATP 250 - Fayez Sarofim & Co. U.S. Men's Clay)
 https://in-mc-fblive.fancode.com/mumbai/141082_english_hls_7abee4125127971_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Valero-Texas-Open-2026-old-card-.png" group-title="Fancode-Golf", World Feed - Day 2 vs San Antonio, Texas (Valero Texas Open 2026)
-https://in-mc-fblive.fancode.com/mumbai/141786_english_hls_347a7b576641298_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Mini-Match-Card-(1080x810)-(14).png" group-title="Fancode-Golf", Day 2 vs Shadow Creek Golf Club (Aramco Championship USA 2026)
 https://in-mc-fblive.fancode.com/mumbai/141637_english_hls_fff9c6209f21576_1ta-di_h264/index.m3u8
