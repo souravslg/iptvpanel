@@ -6,7 +6,7 @@ http://66.102.120.18:8000/play/a013/index.m3u8
 #EXTINF:-1 group-title="HOTSTAR" tvg-logo="usus",DISNEY HD
 http://66.102.120.18:8000/play/a013/index.m3u8
 404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016646/1774623473828696_NZw_vs_SAw_3rd_ODI_landscape_thumb.jpg" group-title="sonyliv-Cricket", 3rd ODI - 4 Apr 2026 [ENG] - South Africa Women's Tour of New Zealand 2026
-https://sonydaimenew.akamaized.net/hls/live/20000291/NZW_vs_S0304/ENG/std_lrh-800300010.m3u8?hdnea=exp=1775296542~acl=/*~id=70904047811471805378121220136451~hmac=9f85db95528c8c3149ff79ab39d07c1bdbd1e40953dad9d55bc9cb198adad464
+https://sonydaimenew.akamaized.net/hls/live/20000291/NZW_vs_S0304/ENG/std_lrh-800300010.m3u8?hdnea=exp=1775298967~acl=/*~id=47944860317501754073870130649775~hmac=e1759bbaa4b548d680841e890e828f62fd9ce7a8215e31708b641c0fe60d7ef5
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/South-Africa-Women's-tour-of-New-Zealand-ODIs-old.jpg" group-title="Fancode-Cricket", New Zealand Women vs South Africa Women (South Africa Women's tour of New Zealand, 2026)
 https://sonypartnersdaimenew.akamaized.net/hls/live/2018457/DAI35ME-SAVZM/master.m3u8?hdnea=exp=1775295224~acl=/*~id=33658840612715757185021581830779~hmac=ad67637dbad96562a33eb52c3d7b14a0e5af8cfef165bec5d26d528779c4361c
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Valero-Texas-Open-2026-old-card-.png" group-title="Fancode-Golf", Main Feed - Day 2 vs San Antonio, Texas (Valero Texas Open 2026)
