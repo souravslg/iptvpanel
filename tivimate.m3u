@@ -6,10 +6,8 @@ http://66.102.120.18:8000/play/a013/index.m3u8
 #EXTINF:-1 group-title="HOTSTAR" tvg-logo="usus",DISNEY HD
 http://66.102.120.18:8000/play/a013/index.m3u8
 404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016646/1774623473828696_NZw_vs_SAw_3rd_ODI_landscape_thumb.jpg" group-title="sonyliv-Cricket", 3rd ODI - 4 Apr 2026 [ENG] - South Africa Women's Tour of New Zealand 2026
-https://sonydaimenew.akamaized.net/hls/live/20000291/NZW_vs_S0304/ENG/std_lrh-800300010.m3u8?hdnea=exp=1775303211~acl=/*~id=74034966616828410715447983941501~hmac=64e293d8bccec5d8848eee941632eccf7347ed71b339faf93c60a16df982464e
+https://sonydaimenew.akamaized.net/hls/live/20000291/NZW_vs_S0304/ENG/std_lrh-800300010.m3u8?hdnea=exp=1775313519~acl=/*~id=39281230496512247876395016707327~hmac=28099a32943449895d9c9fab0c3f11748118bd3c56f91d12d122e99269765f75
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/South-Africa-Women's-tour-of-New-Zealand-ODIs-old.jpg" group-title="Fancode-Cricket", New Zealand Women vs South Africa Women (South Africa Women's tour of New Zealand, 2026)
 https://sonypartnersdaimenew.akamaized.net/hls/live/2018457/DAI35ME-SAVZM/master.m3u8?hdnea=exp=1775295224~acl=/*~id=33658840612715757185021581830779~hmac=ad67637dbad96562a33eb52c3d7b14a0e5af8cfef165bec5d26d528779c4361c
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/ATP--250-Clay-Court-Championship_fc-web.jpg" group-title="Fancode-Tennis", A Court Feed vs Houston, United States (ATP 250 - Fayez Sarofim & Co. U.S. Men's Clay)
 https://in-mc-fblive.fancode.com/mumbai/141082_english_hls_7abee4125127971_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Mini-Match-Card-(1080x810)-(14).png" group-title="Fancode-Golf", Day 2 vs Shadow Creek Golf Club (Aramco Championship USA 2026)
-https://in-mc-fblive.fancode.com/mumbai/141637_english_hls_fff9c6209f21576_1ta-di_h264/index.m3u8
