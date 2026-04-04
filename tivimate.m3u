@@ -6,7 +6,7 @@ http://66.102.120.18:8000/play/a013/index.m3u8
 #EXTINF:-1 group-title="HOTSTAR" tvg-logo="usus",DISNEY HD
 http://66.102.120.18:8000/play/a013/index.m3u8
 404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016634/1774600644373142_FC_Cup_26_QF_Southampton_vs_Arsenal_landscape_thumb.jpg" group-title="sonyliv-Football", Southampton vs Arsenal - Quarter-Final - 5 Apr 2026 [ENG] - The Emirates FA Cup 2025-26
-https://sonydaimenew.akamaized.net/hls/live/2005445/Southamp0404/ENG/std_lrh-800300010.m3u8?hdnea=exp=1775377923~acl=/*~id=40733819520412877957163536203736~hmac=2b18e70145e77c535d3e823febae492a295170686059313d02e3ef26390559dd
+https://sonydaimenew.akamaized.net/hls/live/2005445/Southamp0404/ENG/std_lrh-800300010.m3u8?hdnea=exp=1775379134~acl=/*~id=18509800787392771225939895061613~hmac=60884a14b50504a21189ed5a016724a465c06507423938341bad1826877fc0cd
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/131124_5427_ATL_BAR_FC-Web.png" group-title="Fancode-Football", Atletico de Madrid vs FC Barcelona (LALIGA 2025-26)
 https://dai-partner.fancode.com/primary/131124_english_hls_374401ca1c84222_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Valero-Texas-Open-2026-old-card-.png" group-title="Fancode-Golf", Main Feed - Day 3 vs San Antonio, Texas (Valero Texas Open 2026)
@@ -21,3 +21,5 @@ https://in-mc-fblive.fancode.com/mumbai/141788_english_hls_dc32e82bc911968_1ta-d
 https://in-mc-fblive.fancode.com/mumbai/141789_english_hls_2e767d7bc227964_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/ATP--250-Clay-Court-Championship_fc-web.jpg" group-title="Fancode-Tennis", ATP 250 - Fayez Sarofim & Co. U.S. Men's Clay vs Houston, United States (ATP 250 - Fayez Sarofim & Co. U.S. Men's Clay)
 https://in-mc-fblive.fancode.com/mumbai/141083_english_hls_f5b8ba693468055_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Mini-Match-Card-(1080x810)-(14).png" group-title="Fancode-Golf", Day 3 vs Shadow Creek Golf Club (Aramco Championship USA 2026)
+https://in-mc-fblive.fancode.com/mumbai/141638_english_hls_be4963802778972_1ta-di_h264/index.m3u8
