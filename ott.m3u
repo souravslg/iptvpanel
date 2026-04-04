@@ -5956,7 +5956,5 @@ https://jiotvmblive.cdn.jio.com/bpk-tv/Zing_MOB/WDVLive/index.mpd
 #EXTVLCOPT:http-user-agent=billatvoriginals
 #EXTHTTP:{ "cookie":"__hdnea__=st=1775249050~exp=1775270650~acl=/*~hmac=cf952815c19d06aeb132768f26941af64df386380c874702978563ede50e0bff" }
 https://jiotvmblive.cdn.jio.com/bpk-tv/Zoom_BTS/output/index.mpd
-404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016646/1774623473828696_NZw_vs_SAw_3rd_ODI_landscape_thumb.jpg" group-title="sonyliv-Cricket", 3rd ODI - 4 Apr 2026 [ENG] - South Africa Women's Tour of New Zealand 2026
-https://sonydaimenew.akamaized.net/hls/live/20000291/NZW_vs_S0304/ENG/std_lrh-800300010.m3u8?hdnea=exp=1775324398~acl=/*~id=91962001334841805717577250514788~hmac=505b337295115860aefcf1f4ae7ba00cb1f553cf547d94af80d91b6d44c64b68
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/South-Africa-Women's-tour-of-New-Zealand-ODIs-old.jpg" group-title="Fancode-Cricket", New Zealand Women vs South Africa Women (South Africa Women's tour of New Zealand, 2026)
-https://sonypartnersdaimenew.akamaized.net/hls/live/2018457/DAI35ME-SAVZM/master.m3u8?hdnea=exp=1775324398~acl=/*~id=91962001334841805717577250514788~hmac=505b337295115860aefcf1f4ae7ba00cb1f553cf547d94af80d91b6d44c64b68
+404: Not Found#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140926_5802_CCM_PG_fc-web.jpg" group-title="Fancode-Football", Central Coast Mariners vs Perth Glory (A League 2025-26)
+https://in-mc-fblive.fancode.com/mumbai/140926_english_hls_f7bec02ece54917_1ta-di_h264/index.m3u8
