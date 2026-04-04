@@ -5956,11 +5956,7 @@ https://jiotvmblive.cdn.jio.com/bpk-tv/Zing_MOB/WDVLive/index.mpd
 #EXTVLCOPT:http-user-agent=billatvoriginals
 #EXTHTTP:{ "cookie":"__hdnea__=st=1775299210~exp=1775320810~acl=/*~hmac=df800a88c7a9bbafdcb79f6a1cc631a7c46a1e0acac3746881482f622aa518b5" }
 https://jiotvmblive.cdn.jio.com/bpk-tv/Zoom_BTS/output/index.mpd
-404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016634/1774600644373142_FC_Cup_26_QF_Southampton_vs_Arsenal_landscape_thumb.jpg" group-title="sonyliv-Football", Southampton vs Arsenal - Quarter-Final - 5 Apr 2026 [ENG] - The Emirates FA Cup 2025-26
-https://sonydaimenew.akamaized.net/hls/live/2005445/Southamp0404/ENG/std_lrh-800300010.m3u8?hdnea=exp=1775379134~acl=/*~id=18509800787392771225939895061613~hmac=60884a14b50504a21189ed5a016724a465c06507423938341bad1826877fc0cd
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/131124_5427_ATL_BAR_FC-Web.png" group-title="Fancode-Football", Atletico de Madrid vs FC Barcelona (LALIGA 2025-26)
-https://dai-partner.fancode.com/primary/131124_english_hls_374401ca1c84222_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Valero-Texas-Open-2026-old-card-.png" group-title="Fancode-Golf", Main Feed - Day 3 vs San Antonio, Texas (Valero Texas Open 2026)
+404: Not Found#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Valero-Texas-Open-2026-old-card-.png" group-title="Fancode-Golf", Main Feed - Day 3 vs San Antonio, Texas (Valero Texas Open 2026)
 https://in-mc-fblive.fancode.com/mumbai/141787_english_hls_58f076aa5795568_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Valero-Texas-Open-2026-old-card-.png" group-title="Fancode-Golf", Featured Holes - Day 3 vs San Antonio, Texas (Valero Texas Open 2026)
 https://in-mc-fblive.fancode.com/mumbai/141790_english_hls_8d5efe8ac837924_1ta-di_h264/index.m3u8
