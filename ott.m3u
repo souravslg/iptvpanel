@@ -5956,9 +5956,5 @@ https://jiotvmblive.cdn.jio.com/bpk-tv/Zing_MOB/WDVLive/index.mpd
 #EXTVLCOPT:http-user-agent=billatvoriginals
 #EXTHTTP:{ "cookie":"__hdnea__=st=1775383204~exp=1775469604~acl=/*~hmac=25cf48ada1ee673d569ef881934921daede02394f8748c1cf766be476ef89979" }
 https://jiotvmblive.cdn.jio.com/bpk-tv/Zoom_BTS/output/index.mpd
-404: Not Found#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Valero-Texas-Open-2026-old-card-.png" group-title="Fancode-Golf", World Feed - Day 4 vs San Antonio, Texas (Valero Texas Open 2026)
-https://in-mc-fblive.fancode.com/mumbai/141796_english_hls_cc7b77cfaf46848_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/ATP--250-Clay-Court-Championship_fc-web.jpg" group-title="Fancode-Tennis", Fayez Sarofim & Co. - Day 7 vs Houston, United States (ATP 250 - Fayez Sarofim & Co. U.S. Men's Clay)
-https://in-mc-fblive.fancode.com/mumbai/141084_english_hls_1364aff90b80711_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Mini-Match-Card-(1080x810)-(14).png" group-title="Fancode-Golf", Day 4 vs Shadow Creek Golf Club (Aramco Championship USA 2026)
+404: Not Found#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Mini-Match-Card-(1080x810)-(14).png" group-title="Fancode-Golf", Day 4 vs Shadow Creek Golf Club (Aramco Championship USA 2026)
 https://in-mc-fblive.fancode.com/mumbai/141639_english_hls_4f99a5f19e43597_1ta-di_h264/index.m3u8
