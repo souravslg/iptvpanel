@@ -5956,5 +5956,5 @@ https://jiotvmblive.cdn.jio.com/bpk-tv/Zing_MOB/WDVLive/index.mpd
 #EXTVLCOPT:http-user-agent=billatvoriginals
 #EXTHTTP:{ "cookie":"__hdnea__=st=1775383204~exp=1775469604~acl=/*~hmac=25cf48ada1ee673d569ef881934921daede02394f8748c1cf766be476ef89979" }
 https://jiotvmblive.cdn.jio.com/bpk-tv/Zoom_BTS/output/index.mpd
-404: Not Found#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Mini-Match-Card-(1080x810)-(14).png" group-title="Fancode-Golf", Day 4 vs Shadow Creek Golf Club (Aramco Championship USA 2026)
-https://in-mc-fblive.fancode.com/mumbai/141639_english_hls_4f99a5f19e43597_1ta-di_h264/index.m3u8
+404: Not Found#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Hong-Kong,-China-A-tour-of-Malaysia-A-2026-old-card.jpg" group-title="Fancode-Cricket", Malaysia A vs Hong Kong, China-A (Hong Kong, China-A tour of Malaysia-A 2026)
+https://dai-partner.fancode.com/primary/141774_english_hls_2e577d3f956045_1ta-di_h264/index.m3u8
