@@ -6,11 +6,7 @@ http://66.102.120.18:8000/play/a013/index.m3u8
 #EXTINF:-1 group-title="HOTSTAR" tvg-logo="usus",DISNEY HD
 http://66.102.120.18:8000/play/a013/index.m3u8
 404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016586/1774440804721616_IFC_Rajasthan_United_FC_vs_Gokulam_Kerala_FC_landscape_thumb.jpg" group-title="sonyliv-Football", Rajasthan United FC vs Gokulam Kerala FC - 7 Apr 2026 [ENG] - Indian Football League 2026
-https://sonydaimenew.akamaized.net/hls/live/20000291/Rajastha0704/ENG/std_lrh-800300010.m3u8?hdnea=exp=1775601541~acl=/*~id=54223380238881054101244856422977~hmac=0f7c78423d1b89ce1e120d8b499d1159a1a2178126cfff7c2000c9d0723ef004
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Kalahari-Women's-T20I-Series--old--psd_1775545196262.png" group-title="Fancode-Cricket", Botswana Women vs Mozambique Women (Kalahari Women's T20 2026)
-https://in-mc-fblive.fancode.com/mumbai/141893_english_hls_dbe5fa62ee85348_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141747_6028_EVF_PUW_FC-WEB.jpg" group-title="Fancode-Cricket", Everest Falcons vs Perth United Warriors (Brisbane Champions League 2026)
-https://in-mc-fblive.fancode.com/mumbai/141747_english_hls_20df4d0dd660812_1ta-di_h264/index.m3u8
+https://sonydaimenew.akamaized.net/hls/live/20000291/Rajastha0704/ENG/std_lrh-800300010.m3u8?hdnea=exp=1775604577~acl=/*~id=83672738919980855487132508721030~hmac=c881f7aaaa5ccd1edda0aea39c6f161a26a3515d931ebbf9e105ba652eb082ba
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Rolex-Monte-Carlo-Masters_fc-web.jpg" group-title="Fancode-Tennis", Court EA de Massy vs Monte-Carlo (ATP Masters Rolex Monte-Carlo 2026)
 https://in-mc-fblive.fancode.com/mumbai/141666_english_hls_62dfe1360970694_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Rolex-Monte-Carlo-Masters_fc-web.jpg" group-title="Fancode-Tennis", Court Ranier III vs Monte-Carlo (ATP Masters Rolex Monte-Carlo 2026)
