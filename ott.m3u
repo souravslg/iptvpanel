@@ -5956,14 +5956,20 @@ https://jiotvioslive.cdn.jio.com/bpk-tv/Zing_MOB/WDVLive/index.mpd
 #EXTVLCOPT:http-user-agent=billatvoriginals
 #EXTHTTP:{ "cookie":"__hdnea__=st=1775473002~exp=1775494602~acl=/*~hmac=22220b042d6d115420befc5dade032719fe9f7703f18a0876d1cff326ec574d7" }
 https://jiotvmblive.cdn.jio.com/bpk-tv/Zoom_BTS/output/index.mpd
-404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016586/1774440804721616_IFC_Rajasthan_United_FC_vs_Gokulam_Kerala_FC_landscape_thumb.jpg" group-title="sonyliv-Football", Rajasthan United FC vs Gokulam Kerala FC - 7 Apr 2026 [ENG] - Indian Football League 2026
-https://sonydaimenew.akamaized.net/hls/live/20000291/Rajastha0704/ENG/std_lrh-800300010.m3u8?hdnea=exp=1775608215~acl=/*~id=78993403778023484460780831007537~hmac=b4a35168a30668933fc024e846430f37cbaa46b973111ede2c8a7c0094d5cc70
-#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016586/1774440984292617_IFC_Dempo_Sports_Club_vs_Shillong_Lajong_FC_landscape_thumb.jpg" group-title="sonyliv-Football", Dempo Sports Club vs Shillong Lajong FC - 7 Apr 2026 [ENG] - Indian Football League 2026
-https://sonydaimenew.akamaized.net/hls/live/20000292/DempoSpo0704/ENG/std_lrh-800300010.m3u8?hdnea=exp=1775608215~acl=/*~id=78993403778023484460780831007537~hmac=b4a35168a30668933fc024e846430f37cbaa46b973111ede2c8a7c0094d5cc70
+404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016586/1774440984292617_IFC_Dempo_Sports_Club_vs_Shillong_Lajong_FC_landscape_thumb.jpg" group-title="sonyliv-Football", Dempo Sports Club vs Shillong Lajong FC - 7 Apr 2026 [ENG] - Indian Football League 2026
+https://sonydaimenew.akamaized.net/hls/live/20000292/DempoSpo0704/ENG/std_lrh-800300010.m3u8?hdnea=exp=1775614275~acl=/*~id=57802302727383236871562703907934~hmac=3c40e86ed4ee3addecb545024921ae0a752548c10fece380abea355a265b1532
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Kalahari-Women's-T20I-Series--old--psd_1775545196262.png" group-title="Fancode-Cricket", Lesotho Women vs Zambia Women (Kalahari Women's T20 2026)
 https://in-mc-fblive.fancode.com/mumbai/141894_english_hls_6c82b32aff15066_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Kalahari-Women's-T20I-Series--old--psd_1775545196262.png" group-title="Fancode-Cricket", Brazil Women vs Mozambique Women (Kalahari Women's T20 2026)
 https://in-mc-fblive.fancode.com/mumbai/141895_english_hls_dfb922a04866200_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140478_5956_CFC_KSHI_FC-Web_1772460695978.jpg" group-title="Fancode-Football", Chennaiyin FC vs Inter Kashi (ISL 2025-26)
+https://dai-partner.fancode.com/primary/140478_english_hls_ae356cf4fe38136_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141805_5973_CFC_KSHI_fc-web.jpg" group-title="Fancode-Football", Chennaiyin FC vs Inter Kashi (ISL 2025-26  - Regional)
+https://dai-partner.fancode.com/primary/141805_tamil_hls_d5280afba171364_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141624_6021_VIE-U20_BAN-U20_FC-Web.png" group-title="Fancode-Football", Vietnam U20 vs Bangladesh U20 (AFC U20 Women's Asian Cup 2026)
+https://in-mc-fblive.fancode.com/mumbai/141624_english_hls_b4922472f031833_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141623_6021_THA-U20_CHN-U20_FC-Web.png" group-title="Fancode-Football", Thailand U20 vs China PR U20 (AFC U20 Women's Asian Cup 2026)
+https://in-mc-fblive.fancode.com/mumbai/141623_english_hls_3b3b4ef30145979_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Rolex-Monte-Carlo-Masters_fc-web.jpg" group-title="Fancode-Tennis", Court EA de Massy vs Monte-Carlo (ATP Masters Rolex Monte-Carlo 2026)
 https://in-mc-fblive.fancode.com/mumbai/141666_english_hls_62dfe1360970694_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Rolex-Monte-Carlo-Masters_fc-web.jpg" group-title="Fancode-Tennis", Court Ranier III vs Monte-Carlo (ATP Masters Rolex Monte-Carlo 2026)
