@@ -7,8 +7,8 @@ http://66.102.120.18:8000/play/a013/index.m3u8
 http://66.102.120.18:8000/play/a013/index.m3u8
 #EXTINF:-1 group-title="HOTSTAR" tvg-logo="usus",DISNEY HD
 http://66.102.120.18:8000/play/a013/index.m3u8
-404: Not Found#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141649_6025_SCO_OMN_fc-Web.jpg" group-title="Fancode-Cricket", Oman vs Scotland (ICC CWC League 2, Namibia)
-https://in-mc-fblive.fancode.com/mumbai/141649_english_hls_c92f0ee7b791285_1ta-di_h264/index.m3u8
+404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016836/1774841627666488_UEL26_QuarterFinal_Leg1_Braga_vs_Real_Betis_30mar_landscape_thumb.jpg" group-title="sonyliv-Football", Braga vs Real Betis - Quarter-Final - Leg 1 - 8 Apr 2026 [ENG] - UEFA Europa League 2025-26
+https://sonydaimenew.akamaized.net/hls/live/2005445/Braga_vs0804/ENG/std_lrh-800300010.m3u8?hdnea=exp=1775710031~acl=/*~id=20470833846188624532358622537662~hmac=9b6aab4cfe51686f980c789df0634a103376ad3acfc4181dca6e436a451c8a9b
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Rolex-Monte-Carlo-Masters_fc-web.jpg" group-title="Fancode-Tennis", World Feed vs Monte-Carlo (ATP Masters Rolex Monte-Carlo 2026)
 https://in-mc-fblive.fancode.com/mumbai/141670_english_hls_405235b21c67435_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Rolex-Monte-Carlo-Masters_fc-web.jpg" group-title="Fancode-Tennis", Court Ranier III vs Monte-Carlo (ATP Masters Rolex Monte-Carlo 2026)
