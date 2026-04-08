@@ -7,9 +7,7 @@ http://66.102.120.18:8000/play/a013/index.m3u8
 http://66.102.120.18:8000/play/a013/index.m3u8
 #EXTINF:-1 group-title="HOTSTAR" tvg-logo="usus",DISNEY HD
 http://66.102.120.18:8000/play/a013/index.m3u8
-404: Not Found#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Hong-Kong,-China-A-tour-of-Malaysia-A-2026-old-card.jpg" group-title="Fancode-Cricket", Malaysia A vs Hong Kong, China-A (Hong Kong, China-A tour of Malaysia-A 2026)
-https://dai-partner.fancode.com/primary/141775_english_hls_844378ce6977337_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/New-Zealand-A-Tour-of-Sri-Lanka_FC-WEB.jpg" group-title="Fancode-Cricket", Sri Lanka A vs New Zealand A (New Zealand A Tour of Sri Lanka 2026)
+404: Not Found#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/New-Zealand-A-Tour-of-Sri-Lanka_FC-WEB.jpg" group-title="Fancode-Cricket", Sri Lanka A vs New Zealand A (New Zealand A Tour of Sri Lanka 2026)
 https://in-mc-fblive.fancode.com/mumbai/141799_english_hls_62e20d2f7c4005_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Kalahari-Women's-T20I-Series--old--psd_1775545196262.png" group-title="Fancode-Cricket", Botswana Women vs Malawi Women (Kalahari Women's T20 2026)
 https://in-mc-fblive.fancode.com/mumbai/141896_english_hls_d661bab74127013_1ta-di_h264/index.m3u8
@@ -17,3 +15,17 @@ https://in-mc-fblive.fancode.com/mumbai/141896_english_hls_d661bab74127013_1ta-d
 https://in-mc-fblive.fancode.com/mumbai/141649_english_hls_c92f0ee7b791285_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Kalahari-Women's-T20I-Series--old--psd.png" group-title="Fancode-Cricket", Brazil Women vs Zambia Women (Kalahari Women's T20 2026)
 https://in-mc-fblive.fancode.com/mumbai/141897_english_hls_9a6871b27d45579_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141744_6028_SYK_BNA_FC-WEB.jpg" group-title="Fancode-Cricket", Sydney Kangaroos vs Brisbane Napoleans (Brisbane Champions League 2026)
+https://in-mc-fblive.fancode.com/mumbai/141744_english_hls_74bb2a100a65247_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141626_6021_CT-U20_IND-U20_FC-Web.png" group-title="Fancode-Football", Chinese Taipei U20 vs India U20 (AFC U20 Women's Asian Cup 2026)
+https://in-mc-fblive.fancode.com/mumbai/141626_english_hls_95a26ef25294285_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141625_6021_JP-U20_AUS-U20_FC-Web.png" group-title="Fancode-Football", Japan U20 vs Australia U20 (AFC U20 Women's Asian Cup 2026)
+https://in-mc-fblive.fancode.com/mumbai/141625_english_hls_5bb12f4bd765686_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Rolex-Monte-Carlo-Masters_fc-web.jpg" group-title="Fancode-Tennis", World Feed vs Monte-Carlo (ATP Masters Rolex Monte-Carlo 2026)
+https://in-mc-fblive.fancode.com/mumbai/141670_english_hls_405235b21c67435_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Rolex-Monte-Carlo-Masters_fc-web.jpg" group-title="Fancode-Tennis", Court Ranier III vs Monte-Carlo (ATP Masters Rolex Monte-Carlo 2026)
+https://in-mc-fblive.fancode.com/mumbai/141669_english_hls_b05cdbd5fd30470_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Rolex-Monte-Carlo-Masters_fc-web.jpg" group-title="Fancode-Tennis", Court EA de Massy vs Monte-Carlo (ATP Masters Rolex Monte-Carlo 2026)
+https://in-mc-fblive.fancode.com/mumbai/141668_english_hls_b00e126fa09178_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Rolex-Monte-Carlo-Masters_fc-web.jpg" group-title="Fancode-Tennis", Court des Princes vs Monte-Carlo (ATP Masters Rolex Monte-Carlo 2026)
+https://in-mc-fblive.fancode.com/mumbai/141667_english_hls_021b1ecdd33291_1ta-di_h264/index.m3u8
