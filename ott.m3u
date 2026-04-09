@@ -6729,14 +6729,10 @@ https://jiotvpllive.cdn.jio.com/World_Chess/World_Chess.m3u8?#__hdnea__=st=17757
 #EXTVLCOPT:http-user-agent=plaYtv/7.1.3 (Linux;Android 13) ygx/824.1 ExoPlayerLib/824.0
 #EXTHTTP:{"cookie":"__hdnea__=st=1775732710~exp=1775754310~acl=/*~hmac=ad94f6260ac6e609cc7fdb04c6b0447be91615cc343bffe62dbf98277dea80bf"}
 https://jiotvpllive.cdn.jio.com/bpk-tv/Kadak_MOB/WDVLive/index.mpd?#__hdnea__=st=1775732710~exp=1775754310~acl=/*~hmac=ad94f6260ac6e609cc7fdb04c6b0447be91615cc343bffe62dbf98277dea80bf&xxx=||cookie=__hdnea__=st=1775732710~exp=1775754310~acl=/*~hmac=ad94f6260ac6e609cc7fdb04c6b0447be91615cc343bffe62dbf98277dea80bf
-404: Not Found#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Kalahari-Women's-T20I-Series--old--psd.png" group-title="Fancode-Cricket", Malawi Women vs Zambia Women (Kalahari Women's T20 2026)
-https://in-mc-fblive.fancode.com/mumbai/141902_english_hls_1a68816a1550239_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140479_5956_JFC_MCFC_FC-Web_1772460771796.jpg" group-title="Fancode-Football", Jamshedpur FC vs Mumbai City FC (ISL 2025-26)
+404: Not Found#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140479_5956_JFC_MCFC_FC-Web_1772460771796.jpg" group-title="Fancode-Football", Jamshedpur FC vs Mumbai City FC (ISL 2025-26)
 https://dai-partner.fancode.com/primary/140479_english_hls_502eb3759347250_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Rolex-Monte-Carlo-Masters_fc-web.jpg" group-title="Fancode-Tennis", Court des Princes vs Monaco (ATP Masters Rolex Monte-Carlo 2026)
 https://in-mc-fblive.fancode.com/mumbai/141914_english_hls_9d6e9a100662092_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo=" https://www.fancode.com/skillup-uploads/cms-media/Rolex-Monte-Carlo-Masters_fc-web.jpg" group-title="Fancode-Tennis", Court EA de Massy vs Monaco (ATP Masters Rolex Monte-Carlo 2026)
-https://in-mc-fblive.fancode.com/mumbai/141913_english_hls_1c9425c52880359_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo=" https://www.fancode.com/skillup-uploads/cms-media/Rolex-Monte-Carlo-Masters_fc-web.jpg" group-title="Fancode-Tennis", Court Ranier III vs Monaco (ATP Masters Rolex Monte-Carlo 2026)
 https://in-mc-fblive.fancode.com/mumbai/141912_english_hls_c9ab7fb4d72740_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Rolex-Monte-Carlo-Masters_fc-web.jpg" group-title="Fancode-Tennis", C. Alcaraz vs T. Etcheverry vs Monaco (ATP Masters Rolex Monte-Carlo 2026)
