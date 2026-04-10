@@ -6729,9 +6729,7 @@ https://jiotvpllive.cdn.jio.com/World_Chess/World_Chess.m3u8?#__hdnea__=st=17758
 #EXTVLCOPT:http-user-agent=plaYtv/7.1.3 (Linux;Android 13) ygx/824.1 ExoPlayerLib/824.0
 #EXTHTTP:{"cookie":"__hdnea__=st=1775836783~exp=1775858383~acl=/*~hmac=1220492c08f847578b9b1d8b414af725466c3e0dbffd85339f1726c1c12ac78f"}
 https://jiotvpllive.cdn.jio.com/bpk-tv/Kadak_MOB/WDVLive/index.mpd?#__hdnea__=st=1775836783~exp=1775858383~acl=/*~hmac=1220492c08f847578b9b1d8b414af725466c3e0dbffd85339f1726c1c12ac78f&xxx=||cookie=__hdnea__=st=1775836783~exp=1775858383~acl=/*~hmac=1220492c08f847578b9b1d8b414af725466c3e0dbffd85339f1726c1c12ac78f
-404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016905/1774527805629658_BLIGA_26_MD29_Augsburg-vs-Hoffenheim__landscape_thumb.jpg" group-title="sonyliv-Football", Augsburg vs Hoffenheim - MD 29 - 10 Apr 2026 [ENG] - Bundesliga 2025-26
-https://sonydaimenew.akamaized.net/hls/live/2018458/Bundesli1004/ENG/std_lrh-800300010.m3u8?hdnea=exp=1775893657~acl=/*~id=21812421234267838819668498283972~hmac=608db01a991c2bfb92f964cdd258c1e19dbcb38be9e91c1ba04c2f37a14806a2
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/131131_5427_RM_GIR_FC-Web.png" group-title="Fancode-Football", Real Madrid vs Girona FC (LALIGA 2025-26)
+404: Not Found#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/131131_5427_RM_GIR_FC-Web.png" group-title="Fancode-Football", Real Madrid vs Girona FC (LALIGA 2025-26)
 https://dai-partner.fancode.com/primary/131131_english_hls_91561b107916133_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141437_5489_WBA_MLW_fc-web-v2.jpg" group-title="Fancode-Football", West Bromwich Albion F.C. vs Millwall F.C. (EFL Championship 2025-26)
 https://in-mc-fblive.fancode.com/mumbai/141437_english_hls_6c04199f6116421_1ta-di_h264/index.m3u8
