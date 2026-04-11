@@ -6731,5 +6731,11 @@ https://jiotvpllive.cdn.jio.com/World_Chess/World_Chess.m3u8?#__hdnea__=st=17758
 https://jiotvpllive.cdn.jio.com/bpk-tv/Kadak_MOB/WDVLive/index.mpd?#__hdnea__=st=1775887422~exp=1775909022~acl=/*~hmac=f5129d6248aa9d2e55f100f073113c2835a5d07b306be5010ca35c6f0e7c0af0&xxx=||cookie=__hdnea__=st=1775887422~exp=1775909022~acl=/*~hmac=f5129d6248aa9d2e55f100f073113c2835a5d07b306be5010ca35c6f0e7c0af0
 404: Not Found#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/New-Zealand-A-Tour-of-Sri-Lanka_FC-WEB.jpg" group-title="Fancode-Cricket", New Zealand A vs Sri Lanka A (New Zealand A Tour of Sri Lanka 2026)
 https://in-mc-fblive.fancode.com/mumbai/141800_english_hls_3ff8d8df5f63436_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Kalahari-Women's-T20I-Series--old--psd.png" group-title="Fancode-Cricket", Botswana Women vs Mozambique Women (Kalahari Women's T20 2026)
+https://in-mc-fblive.fancode.com/mumbai/141903_english_hls_66f955913e1829_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Kalahari-Women's-T20I-Series--old--psd.png" group-title="Fancode-Cricket", Zambia Women vs Lesotho Women (Kalahari Women's T20 2026)
+https://in-mc-fblive.fancode.com/mumbai/141908_english_hls_79c621efba67547_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140930_5802_AFC_MLV_fc-web.jpg" group-title="Fancode-Football", Auckland vs Melbourne Victory (A League 2025-26)
 https://in-mc-fblive.fancode.com/mumbai/140930_english_hls_02ad009f5d53407_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140931_5802_NJ_ADL_fc-web.jpg" group-title="Fancode-Football", Newcastle Jets vs Adelaide United (A League 2025-26)
+https://in-mc-fblive.fancode.com/mumbai/140931_english_hls_152f8c40cc88896_1ta-di_h264/index.m3u8
