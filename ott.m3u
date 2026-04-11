@@ -6730,17 +6730,11 @@ https://jiotvpllive.cdn.jio.com/World_Chess/World_Chess.m3u8?#__hdnea__=st=17759
 #EXTHTTP:{"cookie":"__hdnea__=st=1775921944~exp=1775943544~acl=/*~hmac=58e6faa5b049c6a818d20e89ebcf7fba0c68f4bc3f73f41307ff06225c23f202"}
 https://jiotvpllive.cdn.jio.com/bpk-tv/Kadak_MOB/WDVLive/index.mpd?#__hdnea__=st=1775921944~exp=1775943544~acl=/*~hmac=58e6faa5b049c6a818d20e89ebcf7fba0c68f4bc3f73f41307ff06225c23f202&xxx=||cookie=__hdnea__=st=1775921944~exp=1775943544~acl=/*~hmac=58e6faa5b049c6a818d20e89ebcf7fba0c68f4bc3f73f41307ff06225c23f202
 404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016905/1774592255713658_BLIGA_26_MD29_St-Pauli-vs-Bayern_landscape_thumb.jpg" group-title="sonyliv-Football", St. Pauli vs Bayern Munich - MD 29 - 11 Apr 2026 [ENG] - Bundesliga 2025-26
-https://sonydaimenew.akamaized.net/hls/live/2022315/Bundesli1104/ENG/std_lrh-800300010.m3u8?hdnea=exp=1775966409~acl=/*~id=68458015581502969046690065469547~hmac=c3eef575990790d3e226634b2154bb8528a6746755c849c3b85009e9c93f6c67
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Kalahari-Women's-T20I-Series--old--psd.png" group-title="Fancode-Cricket", Mozambique Women vs Malawi Women (Kalahari Women's T20 2026)
-https://in-mc-fblive.fancode.com/mumbai/141909_english_hls_9e7e59ed4d37507_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140483_5956_BFC_KBFC_FC-Web_1772461151506.jpg" group-title="Fancode-Football", Bengaluru FC vs Kerala Blasters FC (ISL 2025-26)
-https://dai-partner.fancode.com/primary/140483_english_hls_1d6ba5eb1c10238_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141439_5489_SHF_HUL_fc-web.jpg" group-title="Fancode-Football", Sheffield United F.C. vs Hull City (EFL Championship 2025-26)
-https://in-mc-fblive.fancode.com/mumbai/141439_english_hls_af148e395e63721_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141809_5973_BFC_KBFC_fc-web.jpg" group-title="Fancode-Football", Bengaluru FC vs Kerala Blasters FC (ISL 2025-26  - Regional)
-https://dai-partner.fancode.com/primary/141809_malayalam_hls_e5aee569bb60816_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/131135_5427_ELC_VAL_FC-Web.png" group-title="Fancode-Football", Elche CF vs Valencia CF (LALIGA 2025-26)
-https://dai-partner.fancode.com/primary/131135_english_hls_4d9c4b24e87603_1ta-di_h264/index.m3u8
+https://sonydaimenew.akamaized.net/hls/live/2022315/Bundesli1104/ENG/std_lrh-800300010.m3u8?hdnea=exp=1775969441~acl=/*~id=02386197655893396378299516862497~hmac=6f4589899c555a8a8e0f0f8cfbfae16330ec20af3a870b7604ea0e36e55c65f5
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/131133_5427_BAR_ESL_FC-Web.png" group-title="Fancode-Football", FC Barcelona vs RCD Espanyol (LALIGA 2025-26)
+https://dai-partner.fancode.com/primary/131133_english_hls_33189ff1aa81176_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://images.fancode.com/aig/match/v1774680543089/141687_CASACARDS_APP.png" group-title="Fancode-Football", Málaga vs Las Palmas (LALIGA Hypermotion 2025-26)
+https://in-mc-fblive.fancode.com/mumbai/141687_english_hls_5f599c909f70274_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Rolex-Monte-Carlo-Masters_fc-web.jpg" group-title="Fancode-Tennis", Doubles Semi-final vs Monaco (ATP Masters Rolex Monte-Carlo 2026)
 https://in-mc-fblive.fancode.com/mumbai/141919_english_hls_49cc79ff2753775_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/The-Masters-Augusta-old-card-.jpg" group-title="Fancode-Golf", Day 3 vs Georgia, USA (The Augusta Masters 2026)
