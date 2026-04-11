@@ -6730,12 +6730,10 @@ https://jiotvpllive.cdn.jio.com/World_Chess/World_Chess.m3u8?#__hdnea__=st=17759
 #EXTHTTP:{"cookie":"__hdnea__=st=1775921944~exp=1775943544~acl=/*~hmac=58e6faa5b049c6a818d20e89ebcf7fba0c68f4bc3f73f41307ff06225c23f202"}
 https://jiotvpllive.cdn.jio.com/bpk-tv/Kadak_MOB/WDVLive/index.mpd?#__hdnea__=st=1775921944~exp=1775943544~acl=/*~hmac=58e6faa5b049c6a818d20e89ebcf7fba0c68f4bc3f73f41307ff06225c23f202&xxx=||cookie=__hdnea__=st=1775921944~exp=1775943544~acl=/*~hmac=58e6faa5b049c6a818d20e89ebcf7fba0c68f4bc3f73f41307ff06225c23f202
 404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016905/1774592255713658_BLIGA_26_MD29_St-Pauli-vs-Bayern_landscape_thumb.jpg" group-title="sonyliv-Football", St. Pauli vs Bayern Munich - MD 29 - 11 Apr 2026 [ENG] - Bundesliga 2025-26
-https://sonydaimenew.akamaized.net/hls/live/2022315/Bundesli1104/ENG/std_lrh-800300010.m3u8?hdnea=exp=1775969441~acl=/*~id=02386197655893396378299516862497~hmac=6f4589899c555a8a8e0f0f8cfbfae16330ec20af3a870b7604ea0e36e55c65f5
+https://sonydaimenew.akamaized.net/hls/live/2022315/Bundesli1104/ENG/std_lrh-800300010.m3u8?hdnea=exp=1775971868~acl=/*~id=35983108150456708323966907574764~hmac=cba34064a03e5fe3cc1cb92431dedc8b0f92b4eeb3b0c4cfca09179a3f0db2da
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/131133_5427_BAR_ESL_FC-Web.png" group-title="Fancode-Football", FC Barcelona vs RCD Espanyol (LALIGA 2025-26)
 https://dai-partner.fancode.com/primary/131133_english_hls_33189ff1aa81176_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://images.fancode.com/aig/match/v1774680543089/141687_CASACARDS_APP.png" group-title="Fancode-Football", Málaga vs Las Palmas (LALIGA Hypermotion 2025-26)
 https://in-mc-fblive.fancode.com/mumbai/141687_english_hls_5f599c909f70274_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Rolex-Monte-Carlo-Masters_fc-web.jpg" group-title="Fancode-Tennis", Doubles Semi-final vs Monaco (ATP Masters Rolex Monte-Carlo 2026)
-https://in-mc-fblive.fancode.com/mumbai/141919_english_hls_49cc79ff2753775_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/The-Masters-Augusta-old-card-.jpg" group-title="Fancode-Golf", Day 3 vs Georgia, USA (The Augusta Masters 2026)
 https://in-mc-fblive.fancode.com/mumbai/141878_english_hls_4e46a6a11037634_1ta-di_h264/index.m3u8
