@@ -6731,3 +6731,7 @@ https://jiotvpllive.cdn.jio.com/World_Chess/World_Chess.m3u8?#__hdnea__=st=17760
 https://jiotvpllive.cdn.jio.com/bpk-tv/Kadak_MOB/WDVLive/index.mpd?#__hdnea__=st=1776064600~exp=1776086200~acl=/*~hmac=163dd3a962dabfdeec105690569c4dcd6f675d7ff684141af03ac74b4785a066&xxx=||cookie=__hdnea__=st=1776064600~exp=1776086200~acl=/*~hmac=163dd3a962dabfdeec105690569c4dcd6f675d7ff684141af03ac74b4785a066
 404: Not Found#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141758_6028_MET_BRS_FC-WEB.jpg" group-title="Fancode-Cricket", Melbourne Tuskers vs Brisbane Stars (Brisbane Champions League 2026)
 https://in-mc-fblive.fancode.com/mumbai/141758_english_hls_8073cf914682599_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Barcelona-Open-Banc-Sabadell_FC-Web.jpg" group-title="Fancode-Tennis", World Feed vs Barcelona (ATP 500 - Barcelona Open Banc Sabadell 2026)
+https://in-mc-fblive.fancode.com/mumbai/141825_english_hls_e1f9fcb2993640_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/BMW-Open-by-Bitpanda_fc-web.jpg" group-title="Fancode-Tennis", World Feed vs Munich, Germany (ATP 500 - BMW Open by Bitpanda 2026)
+https://in-mc-fblive.fancode.com/mumbai/141839_english_hls_cc280e91f951257_1ta-di_h264/index.m3u8
