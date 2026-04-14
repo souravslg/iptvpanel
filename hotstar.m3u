@@ -1,5 +1,5 @@
 #EXTM3U
-# Last Updated: 2026-04-14 04:43:40 UTC
+# Last Updated: 2026-04-14 06:27:42 UTC
 #EXTINF:-1 tvg-logo="https://img10.hotstar.com/image/upload/f_auto,q_90,w_384/sources/r1/cms/prod/1199/1752742701199-h" group-title="⛨ 𝔼𝕩𝕥𝕣𝕒  | Jio Cinema",STAR VIJAY SUPER SINGER
 https://livetv.hotstar.com/mp2/gec-india/c65ada10b4604667a9cd9495f1387e87/index_7.m3u8|User-Agent=Hotstar;in.startv.hotstar/25.02.24.8.11169 (Android/15)
 #EXTINF:-1 tvg-logo="https://img10.hotstar.com/image/upload/f_auto,q_90,w_256/sources/r1/cms/prod/7405/1752743467405-h" group-title="⛨ 𝔼𝕩𝕥𝕣𝕒  | Jio Cinema",STAR VIJAY CLASSIC
@@ -19,23 +19,28 @@ https://livetv.hotstar.com/mp2/gec-india/60b51adb7eae4ae492e6ba6c156a1efe/index_
 #EXTINF:-1 tvg-logo="https://img10.hotstar.com/image/upload/f_auto,q_90,w_1920/sources/r1/cms/prod/7430/567430-h" group-title="⛨ 𝔼𝕩𝕥𝕣𝕒  | Jio Cinema",Star Sports HD1
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=fe7718fbb3fb4ba78c07cc0f578744e6:624e24b1843b459fab0a949609416f0d
-https://livetv-push.hotstar.com/dash/live/2002464/sshd1livetvwv/master.mpd|User-Agent=Hotstar;in.startv.hotstar/25.02.24.8.11169 (Android/15)
+https://livetv.hotstar.com/mp1/gec-india-1540065782/fce958099ca84fc3b980e651a4a668a8/index.mpd|User-Agent=Hotstar;in.startv.hotstar/25.02.24.8.11169 (Android/15)
+https://livetv-push.hotstar.com/dash/live/2002464/sshd1livetvwv/master.mpd|User-Agent=ExoPlayer
 #EXTINF:-1 tvg-logo="https://img10.hotstar.com/image/upload/f_auto,q_90,w_1920/sources/r1/cms/prod/7432/567432-h" group-title="⛨ 𝔼𝕩𝕥𝕣𝕒  | Jio Cinema",Star Sports HD2
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=fe7718fbb3fb4ba78c07cc0f578744e6:624e24b1843b459fab0a949609416f0d
-https://livetv-push.hotstar.com/dash/live/2002465/sshd2livetvwv/master.mpd|User-Agent=Hotstar;in.startv.hotstar/25.02.24.8.11169 (Android/15)
+https://livetv.hotstar.com/mp2/gec-india-1540065785/a00717b1324f45eb814eec9e48a12db8/index.mpd|User-Agent=Hotstar;in.startv.hotstar/25.02.24.8.11169 (Android/15)
+https://livetv-push.hotstar.com/dash/live/2002465/sshd2livetvwv/master.mpd|User-Agent=ExoPlayer
 #EXTINF:-1 tvg-logo="https://img10.hotstar.com/image/upload/f_auto,q_90,w_1920/sources/r1/cms/prod/7433/567433-h" group-title="⛨ 𝔼𝕩𝕥𝕣𝕒  | Jio Cinema",Star Sports Hindi HD1
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=fe7718fbb3fb4ba78c07cc0f578744e6:624e24b1843b459fab0a949609416f0d
-https://livetv-push.hotstar.com/dash/live/2002466-b/sshindiwv/master.mpd|User-Agent=Hotstar;in.startv.hotstar/25.02.24.8.11169 (Android/15)
+https://livetv.hotstar.com/mp1/gec-india-1540065788/fa6a4f0005ef4f90ab24484d165b0aaf/index.mpd|User-Agent=Hotstar;in.startv.hotstar/25.02.24.8.11169 (Android/15)
+https://livetv-push.hotstar.com/dash/live/2002466-b/sshindiwv/master.mpd|User-Agent=ExoPlayer
 #EXTINF:-1 tvg-logo="https://img10.hotstar.com/image/upload/f_auto,q_90,w_1920/sources/r1/cms/prod/7435/567435-h" group-title="⛨ 𝔼𝕩𝕥𝕣𝕒  | Jio Cinema",Star Sports Select HD1
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=fe7718fbb3fb4ba78c07cc0f578744e6:624e24b1843b459fab0a949609416f0d
-https://livetv-push.hotstar.com/dash/live/2002470-b/ssselecthd1wv/master.mpd|User-Agent=Hotstar;in.startv.hotstar/25.02.24.8.11169 (Android/15)
+https://livetv.hotstar.com/mp2/gec-india-1540065791/8bb5cd7a8e274186977473a6771d9352/index.mpd|User-Agent=Hotstar;in.startv.hotstar/25.02.24.8.11169 (Android/15)
+https://livetv-push.hotstar.com/dash/live/2002470-b/ssselecthd1wv/master.mpd|User-Agent=ExoPlayer
 #EXTINF:-1 tvg-logo="https://img10.hotstar.com/image/upload/f_auto,q_90,w_1920/sources/r1/cms/prod/7437/567437-h" group-title="⛨ 𝔼𝕩𝕥𝕣𝕒  | Jio Cinema",Star Sports Select HD2
 #KODIPROP:inputstream.adaptive.license_type=clearkey
 #KODIPROP:inputstream.adaptive.license_key=fe7718fbb3fb4ba78c07cc0f578744e6:624e24b1843b459fab0a949609416f0d
-https://livetv-push.hotstar.com/dash/live/2002471/ssselecthd2wv/master.mpd|User-Agent=Hotstar;in.startv.hotstar/25.02.24.8.11169 (Android/15)
+https://livetv.hotstar.com/mp1/gec-india-1540065794/e2408fbafb9d4a5ab23775b69e5737d7/index.mpd|User-Agent=Hotstar;in.startv.hotstar/25.02.24.8.11169 (Android/15)
+https://livetv-push.hotstar.com/dash/live/2002471/ssselecthd2wv/master.mpd|User-Agent=ExoPlayer
 #EXTINF:-1 tvg-logo="https://dvdh7g0f0hwck.cloudfront.net/assets/images/channel/StarSports2HindiHD_Transparent_c72d6289-27aa-422d-8420-40135329a5b6.png" group-title="⛨ 𝔼𝕩𝕥𝕣𝕒  | Jio Cinema",Star Sports 2 Hindi HD
 https://jcevents.hotstar.com/bpk-tv/f0e3e64ae415771d8e460317ce97aa5e/Fallback/f0e3e64ae415771d8e460317ce97aa5e.m3u8|User-Agent=Hotstar;in.startv.hotstar/25.02.24.8.11169 (Android/15)
 #EXTINF:-1 tvg-logo="https://dvdh7g0f0hwck.cloudfront.net/assets/images/channel/StarSports2Hindi_Transparent_e2c035d5-8451-4c1e-930f-4cb4449d1901.png" group-title="⛨ 𝔼𝕩𝕥𝕣𝕒  | Jio Cinema",Star Sports 2 Hindi
