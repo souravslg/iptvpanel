@@ -1,41 +1,17 @@
 #EXTM3U
-#EXTINF:-1 group-title="HOTSTAR" tvg-logo="usus",24/7 BIG BOSS
-https://livetv-push.hotstar.com/dash/live/2002466/sshindiwv/master.mpd?|Cookie=hdntl=exp=1766237995~acl=*sshindi*~id=a272c620b60b4d5379a1ec54e5cac97c~data=hdntl~hmac=64223c8bf63067364f35cad5a50c7b038f40bc4c9a97c8aa05a9c2cb99a575b9&User-agent=Hotstar;in.startv.hotstar/25.02.24.8.11169%20(Android/15)&Referer=https://www.hotstar.com/&Origin=https://www.hotstar.com&drmScheme=clearkey&drmLicense=fe7718fbb3fb4ba78c07cc0f578744e6:624e24b1843b459fab0a949609416f0d
-#EXTINF:-1 group-title="HOTSTAR" tvg-logo="usus",DISNEY HD
-http://66.102.120.18:8000/play/a013/index.m3u8
-#EXTINF:-1 group-title="HOTSTAR" tvg-logo="usus",DISNEY HD
-http://66.102.120.18:8000/play/a013/index.m3u8
-#EXTINF:-1 group-title="HOTSTAR" tvg-logo="usus",DISNEY HD
-http://66.102.120.18:8000/play/a013/index.m3u8
-404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016949/1775435407474802_UCL26_QF_leg2_Atletico_vs_Barcelona_5apr_SP_landscape_thumb.jpg" group-title="sonyliv-Football", Atletico vs Barcelona - Quarter-Final - Leg 2 - 14 Apr 2026 [ENG] - UEFA Champions League 2025-26
-https://sonydaimenew.akamaized.net/hls/live/2094588/UCL_Atle1404/ENG/std_lrh-800300010.m3u8?hdnea=exp=1776240443~acl=/*~id=22345437278338545181348615028679~hmac=ad9eb0988c91132aaa3a1e3991a586d8b69603a4c0bef9587a41a2dce0251530
-#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016949/1775435407474802_UCL26_QF_leg2_Atletico_vs_Barcelona_5apr_SP_landscape_thumb.jpg" group-title="sonyliv-Football", Atletico vs Barcelona - Quarter-Final - Leg 2 - 14 Apr 2026 [HIN] - UEFA Champions League 2025-26
-https://sonydaimenew.akamaized.net/hls/live/2094588/UCL_Atle1404/HIN/std_lrh-800300010.m3u8?hdnea=exp=1776240443~acl=/*~id=22345437278338545181348615028679~hmac=ad9eb0988c91132aaa3a1e3991a586d8b69603a4c0bef9587a41a2dce0251530
-#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016949/1775435407474802_UCL26_QF_leg2_Atletico_vs_Barcelona_5apr_SP_landscape_thumb.jpg" group-title="sonyliv-Football", Atletico vs Barcelona - Quarter-Final - Leg 2 - 14 Apr 2026 [TAM] - UEFA Champions League 2025-26
-https://sonydaimenew.akamaized.net/hls/live/2094588/UCL_Atle1404/TAM/std_lrh-800300010.m3u8?hdnea=exp=1776240443~acl=/*~id=22345437278338545181348615028679~hmac=ad9eb0988c91132aaa3a1e3991a586d8b69603a4c0bef9587a41a2dce0251530
-#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016949/1775435407474802_UCL26_QF_leg2_Atletico_vs_Barcelona_5apr_SP_landscape_thumb.jpg" group-title="sonyliv-Football", Atletico vs Barcelona - Quarter-Final - Leg 2 - 14 Apr 2026 [TEL] - UEFA Champions League 2025-26
-https://sonydaimenew.akamaized.net/hls/live/2094588/UCL_Atle1404/TEL/std_lrh-800300010.m3u8?hdnea=exp=1776240443~acl=/*~id=22345437278338545181348615028679~hmac=ad9eb0988c91132aaa3a1e3991a586d8b69603a4c0bef9587a41a2dce0251530
-#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016949/1775435407474802_UCL26_QF_leg2_Atletico_vs_Barcelona_5apr_SP_landscape_thumb.jpg" group-title="sonyliv-Football", Atletico vs Barcelona - Quarter-Final - Leg 2 - 14 Apr 2026 [KAN] - UEFA Champions League 2025-26
-https://sonydaimenew.akamaized.net/hls/live/2094588/UCL_Atle1404/KAN/std_lrh-800300010.m3u8?hdnea=exp=1776240443~acl=/*~id=22345437278338545181348615028679~hmac=ad9eb0988c91132aaa3a1e3991a586d8b69603a4c0bef9587a41a2dce0251530
-#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016949/1775432852519802_UCL26_QF_leg2_liverpool_vs_psg_5apr_SP_landscape_thumb.jpg" group-title="sonyliv-Football", Liverpool vs PSG - Quarter-Final - Leg 2 - 14 Apr 2026 [ENG] - UEFA Champions League 2025-26
-https://sonydaimenew.akamaized.net/hls/live/2005444/UCL_Live1404/ENG/std_lrh-800300010.m3u8?hdnea=exp=1776240443~acl=/*~id=22345437278338545181348615028679~hmac=ad9eb0988c91132aaa3a1e3991a586d8b69603a4c0bef9587a41a2dce0251530
+Error: Failed to fetch source: 404404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016949/1775432852519802_UCL26_QF_leg2_liverpool_vs_psg_5apr_SP_landscape_thumb.jpg" group-title="sonyliv-Football", Liverpool vs PSG - Quarter-Final - Leg 2 - 14 Apr 2026 [ENG] - UEFA Champions League 2025-26
+https://sonydaimenew.akamaized.net/hls/live/2005444/UCL_Live1404/ENG/std_lrh-800300010.m3u8?hdnea=exp=1776245309~acl=/*~id=01176084506342230740166855684441~hmac=2b8ee17d0019c6cad2efe841f0488236a6d00058099efa26a8bf9ead293b7f63
 #EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016949/1775432852519802_UCL26_QF_leg2_liverpool_vs_psg_5apr_SP_landscape_thumb.jpg" group-title="sonyliv-Football", Liverpool vs PSG - Quarter-Final - Leg 2 - 14 Apr 2026 [HIN] - UEFA Champions League 2025-26
-https://sonydaimenew.akamaized.net/hls/live/2005444/UCL_Live1404/HIN/std_lrh-800300010.m3u8?hdnea=exp=1776240443~acl=/*~id=22345437278338545181348615028679~hmac=ad9eb0988c91132aaa3a1e3991a586d8b69603a4c0bef9587a41a2dce0251530
+https://sonydaimenew.akamaized.net/hls/live/2005444/UCL_Live1404/HIN/std_lrh-800300010.m3u8?hdnea=exp=1776245309~acl=/*~id=01176084506342230740166855684441~hmac=2b8ee17d0019c6cad2efe841f0488236a6d00058099efa26a8bf9ead293b7f63
 #EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016949/1775432852519802_UCL26_QF_leg2_liverpool_vs_psg_5apr_SP_landscape_thumb.jpg" group-title="sonyliv-Football", Liverpool vs PSG - Quarter-Final - Leg 2 - 14 Apr 2026 [TAM] - UEFA Champions League 2025-26
-https://sonydaimenew.akamaized.net/hls/live/2005444/UCL_Live1404/TAM/std_lrh-800300010.m3u8?hdnea=exp=1776240443~acl=/*~id=22345437278338545181348615028679~hmac=ad9eb0988c91132aaa3a1e3991a586d8b69603a4c0bef9587a41a2dce0251530
+https://sonydaimenew.akamaized.net/hls/live/2005444/UCL_Live1404/TAM/std_lrh-800300010.m3u8?hdnea=exp=1776245309~acl=/*~id=01176084506342230740166855684441~hmac=2b8ee17d0019c6cad2efe841f0488236a6d00058099efa26a8bf9ead293b7f63
 #EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016949/1775432852519802_UCL26_QF_leg2_liverpool_vs_psg_5apr_SP_landscape_thumb.jpg" group-title="sonyliv-Football", Liverpool vs PSG - Quarter-Final - Leg 2 - 14 Apr 2026 [TEL] - UEFA Champions League 2025-26
-https://sonydaimenew.akamaized.net/hls/live/2005444/UCL_Live1404/TEL/std_lrh-800300010.m3u8?hdnea=exp=1776240443~acl=/*~id=22345437278338545181348615028679~hmac=ad9eb0988c91132aaa3a1e3991a586d8b69603a4c0bef9587a41a2dce0251530
+https://sonydaimenew.akamaized.net/hls/live/2005444/UCL_Live1404/TEL/std_lrh-800300010.m3u8?hdnea=exp=1776245309~acl=/*~id=01176084506342230740166855684441~hmac=2b8ee17d0019c6cad2efe841f0488236a6d00058099efa26a8bf9ead293b7f63
 #EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016949/1775432852519802_UCL26_QF_leg2_liverpool_vs_psg_5apr_SP_landscape_thumb.jpg" group-title="sonyliv-Football", Liverpool vs PSG - Quarter-Final - Leg 2 - 14 Apr 2026 [KAN] - UEFA Champions League 2025-26
-https://sonydaimenew.akamaized.net/hls/live/2005444/UCL_Live1404/KAN/std_lrh-800300010.m3u8?hdnea=exp=1776240443~acl=/*~id=22345437278338545181348615028679~hmac=ad9eb0988c91132aaa3a1e3991a586d8b69603a4c0bef9587a41a2dce0251530
+https://sonydaimenew.akamaized.net/hls/live/2005444/UCL_Live1404/KAN/std_lrh-800300010.m3u8?hdnea=exp=1776245309~acl=/*~id=01176084506342230740166855684441~hmac=2b8ee17d0019c6cad2efe841f0488236a6d00058099efa26a8bf9ead293b7f63
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/WI-Test_web.jpg" group-title="Fancode-Cricket", Leeward Islands Hurricanes vs Trinidad & Tobago Red Force (West Indies Championship 2026)
 https://in-mc-fblive.fancode.com/mumbai/141947_english_hls_bcd49d97e794830_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/WI-Test_web.jpg" group-title="Fancode-Cricket", Windward Islands Volcanoes vs Guyana Harpy Eagles (West Indies Championship 2026)
 https://in-mc-fblive.fancode.com/mumbai/141949_english_hls_16bf057d1866957_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/WI-Test_web.jpg" group-title="Fancode-Cricket", Jamaica Scorpions vs Barbados Pride (West Indies Championship 2026)
 https://in-mc-fblive.fancode.com/mumbai/141948_english_hls_81e187044a67116_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/140859_5647_ITT_ALW_FC-Web_1772186975951.png" group-title="Fancode-Football", Al-Ittihad vs Al Wahda (AFC Champions League Elite 2025-26)
-https://in-mc-fblive.fancode.com/mumbai/140859_english_hls_10ae3bbc462499_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141525_5489_PRM_IPT_fc-web_1776167542322.jpg" group-title="Fancode-Football", Portsmouth F.C. vs Ipswich Town F.C. (EFL Championship 2025-26)
-https://in-mc-fblive.fancode.com/mumbai/141525_english_hls_f95abd3e4c59640_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141928_5489_SOU_BLK_fc-web.jpg" group-title="Fancode-Football", Southampton F.C. vs Blackburn Rovers F.C. (EFL Championship 2025-26)
-https://in-mc-fblive.fancode.com/mumbai/141928_english_hls_5089477c5115646_1ta-di_h264/index.m3u8
