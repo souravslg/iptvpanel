@@ -1,8 +1,6 @@
 #EXTM3U
 Error: Failed to fetch source: 404404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000017239/177624350505752_Golf_Mexico_Day3_landscape_thumb.jpg" group-title="sonyliv-Golf", Mexico City - Day 3 - 18 Apr 2026 [ENG] - LIV Golf
-https://sonydaimenew.akamaized.net/hls/live/2018458/Golf_Mex1804/ENG/std_lrh-800300010.m3u8?hdnea=exp=1776582498~acl=/*~id=35284274268586465259934071910080~hmac=f09e4f753cd10e76966e27423b353e6a76a0128763fb402024680dd668bfec86
-#EXTINF:-1, tvg-logo="https://images.fancode.com/aig/match/v1776321743564/141676_CASACARDS_APP.png" group-title="Fancode-Football", Buriram United vs Shabab Al Ahli (AFC Champions League Elite 2025-26)
-https://in-mc-fblive.fancode.com/mumbai/141676_english_hls_79f456fac341916_1ta-di_h264/index.m3u8
+https://sonydaimenew.akamaized.net/hls/live/2018458/Golf_Mex1804/ENG/std_lrh-800300010.m3u8?hdnea=exp=1776584924~acl=/*~id=30508317158221756035037562182489~hmac=58cb3c35a8932835103255dc04ef8827dbca42f6d9de09e5fe74bcc0c2b8066a
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Atletico-de-Madrid_vs_Real-Sociedad_FC-WEB.jpg" group-title="Fancode-Football", Atletico de Madrid vs Real Sociedad (Copa del Rey, 2025-26)
 https://in-mc-fblive.fancode.com/mumbai/141270_english_hls_8cc908beff74419_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/RBC_web.jpg" group-title="Fancode-Golf", Featured Groups - Day 3 vs Harbour Town Golf Links - Hilton Head Island, Sout (RBC Heritage 2026)
