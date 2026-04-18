@@ -1,5 +1,7 @@
 #EXTM3U
-Error: Failed to fetch source: 404404: Not Found#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/142046_6045_RWA-W_ITA-W_fc-web.jpg" group-title="Fancode-Cricket", Italy Women vs Rwanda Women (ICC Women's T20I Challenge Trophy, 2026)
+Error: Failed to fetch source: 404404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016703/1774788286763263_IFC_Diamond_Harbour_FC_vs_Gokulam_Kerala_FC_landscape_thumb.jpg" group-title="sonyliv-Football", Diamond Harbour FC vs Gokulam Kerala FC - 18 Apr 2026 [ENG] - Indian Football League 2026
+https://sonydaimenew.akamaized.net/hls/live/2005444/Diamond_1804/ENG/std_lrh-800300010.m3u8?hdnea=exp=1776549707~acl=/*~id=84742821364225413320849252191536~hmac=c38f7c4333682390d31a223885099d22318f01ae8a47437d085ad6cb52f6650e
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/142046_6045_RWA-W_ITA-W_fc-web.jpg" group-title="Fancode-Cricket", Italy Women vs Rwanda Women (ICC Women's T20I Challenge Trophy, 2026)
 https://in-mc-fblive.fancode.com/mumbai/142046_english_hls_faa8740a7951582_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Melbourne-Tusker-vs-Everest-Falcons_FC-WEB.jpg" group-title="Fancode-Cricket", Melbourne Tuskers vs Everest Falcons (Brisbane Champions League 2026)
 https://in-mc-fblive.fancode.com/mumbai/141765_english_hls_c6781c240a66109_1ta-di_h264/index.m3u8
