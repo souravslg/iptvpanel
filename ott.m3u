@@ -1,10 +1,12 @@
 #EXTM3U
-Error: Failed to fetch source: 404404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016703/1774788631646263_IFC_Dempo_Sports_Club_vs_Rajasthan_United_FC_landscape_thumb.jpg" group-title="sonyliv-Football", Dempo Sports Club vs Rajasthan United FC - 19 Apr 2026 [ENG] - Indian Football League 2026
-https://sonydaimenew.akamaized.net/hls/live/2022316/I_League1904/ENG/std_lrh-800300010.m3u8?hdnea=exp=1776642504~acl=/*~id=71157783172891289081172486046398~hmac=a90099ea5954c325399f7da7c26cf18787c07369b2dfc641e23b6754b76a1ee5
+Error: Failed to fetch source: 404404: Not Found#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016703/1774788759173263_IFC_Real_Kashmir_FC_vs_Sreenidi_Deccan_FC_landscape_thumb.jpg" group-title="sonyliv-Football", Real Kashmir FC vs Sreenidi Deccan FC - 19 Apr 2026 [ENG] - Indian Football League 2026
+https://sonydaimenew.akamaized.net/hls/live/2022317/IFL_Real1904/ENG/std_lrh-800300010.m3u8?hdnea=exp=1776646751~acl=/*~id=86313639917349346698498828385143~hmac=8211315a15041f271e3cb944974748f98d7cc174d8e2ba3e965f52b2ec48c8e1
+#EXTINF:-1 tvg-logo="https://origin-staticv2.sonyliv.com/videoasset_images/manage_file/1000016952/1775439762234352_bliga26_MD30_Freiburg_vs_Heidenheim_5apr_landscape_thumb.jpg" group-title="sonyliv-Football", Freiburg vs Heidenheim - MD 30 - 19 Apr 2026 [ENG] - Bundesliga 2025-26
+https://sonydaimenew.akamaized.net/hls/live/2022320/BLIGA_Fr1904/ENG/std_lrh-800300010.m3u8?hdnea=exp=1776646751~acl=/*~id=86313639917349346698498828385143~hmac=8211315a15041f271e3cb944974748f98d7cc174d8e2ba3e965f52b2ec48c8e1
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/142049_6045_ITA-W_NP-W_fc-web.jpg" group-title="Fancode-Cricket", Nepal Women vs Italy Women (ICC Women's T20I Challenge Trophy, 2026)
 https://in-mc-fblive.fancode.com/mumbai/142049_english_hls_2a3d94763215903_1ta-di_h264/index.m3u8
-#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141529_5489_IPT_MIDD_fc-web_1776167542451.jpg" group-title="Fancode-Football", Ipswich Town F.C. vs Middlesbrough F.C. (EFL Championship 2025-26)
-https://in-mc-fblive.fancode.com/mumbai/141529_english_hls_89dd645d9579772_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Scottish_Cup_2026_FC-Web.jpg" group-title="Fancode-Football", Celtic vs St. Mirren (Scottish Cup 2025-26)
+https://in-mc-fblive.fancode.com/mumbai/141498_english_hls_106242db1f54440_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/BMW-Open-by-Bitpanda_fc-web.jpg" group-title="Fancode-Tennis", Doubles Finals vs Munich, Germany (ATP 500 - BMW Open by Bitpanda 2026)
 https://in-mc-fblive.fancode.com/mumbai/141850_english_hls_308f5eda6715209_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/Mini-Match-Card-(1080x810)-(14)_1776151284392.png" group-title="Fancode-Golf", Day 2 vs Randpark Golf Club (Joburg Ladies Open 2026)
@@ -19,3 +21,5 @@ https://in-mc-fblive.fancode.com/mumbai/141944_english_hls_469f625d3b46982_1ta-d
 https://in-mc-fblive.fancode.com/mumbai/141851_english_hls_f6e0f9ba3751869_1ta-di_h264/index.m3u8
 #EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/RBC_web.jpg" group-title="Fancode-Golf", Main Feed - Day 4 vs Harbour Town Golf Links - Hilton Head Island, Sout (RBC Heritage 2026)
 https://in-mc-fblive.fancode.com/mumbai/141943_english_hls_e9ba27849391223_1ta-di_h264/index.m3u8
+#EXTINF:-1, tvg-logo="https://www.fancode.com/skillup-uploads/cms-media/141529_5489_IPT_MIDD_fc-web_1776167542451.jpg" group-title="Fancode-Football", Ipswich Town F.C. vs Middlesbrough F.C. (EFL Championship 2025-26)
+https://in-mc-fblive.fancode.com/mumbai/141529_english_hls_89dd645d9579772_1ta-di_h264/index.m3u8
